@@ -64,7 +64,7 @@ ConfigProgrammatic.setOptions({
   defaultContainerElement: "#content",
 });
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 
 window.onload = function () {
   new Vue({
