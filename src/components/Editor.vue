@@ -5,7 +5,7 @@
         <div class="column">
           <b-field grouped group-multiline position="is-centered">
             <!-- Tuning -->
-            <b-field label="here">
+            <b-field label="Tuning">
               <b-autocomplete
                 v-model="usr_tuning"
                 :data="tuning_search"
@@ -19,7 +19,7 @@
                 style="min-width: 350px"
                 @input="saveSettings"
               >
-                <template v-slot="props">
+                <template slot-scope="props">
                   <div style="display: flex">
                     <div style="flex: 1 1 0px">{{ props.option.name }}</div>
                     <div style="flex: 1 1 0px">{{ props.option.tuning }}</div>
@@ -27,12 +27,9 @@
                 </template>
               </b-autocomplete>
             </b-field>
-            <b-field label="Apply Tuning">
-              <b-button @click="printOut"> </b-button>
-            </b-field>
 
             <!-- Tonic + Scale -->
-            <b-field label="there:">
+            <b-field label="Tonic:">
               <b-input
                 v-model="scale.tonic"
                 icon="music"
@@ -52,7 +49,7 @@
 
             <!-- Settings -->
             <b-field>
-              <template v-slot:label>
+              <template slot="label">
                 <span style="color: transparent; user-select: none">More</span>
               </template>
 
@@ -137,7 +134,13 @@
                         </b-field>
                         <!-- <b-checkbox>Show piano</b-checkbox>-->
                       </section>
-                      <footer class="modal-card-foot"></footer>
+                      <footer class="modal-card-foot">
+                        <b-button
+                          @click="$emit('remove-fretboard')"
+                          icon-left="trash"
+                          >remove fretboard</b-button
+                        >
+                      </footer>
                     </div>
                   </form>
                 </b-dropdown-item>
@@ -150,7 +153,6 @@
 
       <div class="card-image" style="text-align: center; overflow-x: auto">
         <Fretboard
-          ref="editorFretboard"
           :tuning="tuning"
           :notes="notes"
           :notation="notation"
@@ -165,9 +167,6 @@
         :scale="scale_info"
         :scale-name="scale_info.name"
       />
-      <b-button @click="$emit('remove-fretboard')" icon-left="trash"
-        >Remove Fretboard</b-button
-      >
     </div>
   </div>
 </template>
@@ -254,9 +253,6 @@ export default {
   methods: {
     saveSettings() {
       localStorage.setItem("tuning", this.usr_tuning);
-      console.log("changing tuning");
-      this.$refs.editorFretboard.refresh_fretboard();
-      // window.location.reload();
     },
     normalize(notes) {
       return notes.map((x) => x % 12);
