@@ -5,7 +5,7 @@
       <div class="column" style="align-items: flex-end">
         <b-field grouped group-multiline position="is-centered">
           <b-field>
-            <template slot="label">
+            <template v-slot:label>
               Tuning
               <b-dropdown
                 position="is-bottom-right"
