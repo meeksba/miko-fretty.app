@@ -154,15 +154,22 @@
           :scale="scale_info"
         />
       </div>
-      <Chords v-if="this.ShowChords == 'true'" :chords="scaleChords" style="margin-bottom: 50px" />
+      <Chords
+        v-if="this.ShowChords == 'true'"
+        :chords="scaleChords"
+        style="margin-bottom: 50px"
+      />
       <Notation
         v-if="this.ShowMusicSheet == 'true'"
         :scale="scale_info"
         :scale-name="scale_info.name"
       />
     </div>
-    <b-button style="margin-bottom: 75px" @click="$emit('remove-fretboard')" icon-left="trash"
-    >Remove Fretboard</b-button
+    <b-button
+      style="margin-bottom: 75px"
+      @click="$emit('remove-fretboard')"
+      icon-left="trash"
+      >Remove Fretboard</b-button
     >
     <!-- <b-button class="mb-3" @click="$emit('remove-fretboard')" icon-left="trash" -->
   </div>
