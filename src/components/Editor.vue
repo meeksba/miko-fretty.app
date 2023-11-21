@@ -134,13 +134,6 @@
                         </b-field>
                         <!-- <b-checkbox>Show piano</b-checkbox>-->
                       </section>
-                      <footer class="modal-card-foot">
-                        <b-button
-                          @click="$emit('remove-fretboard')"
-                          icon-left="trash"
-                          >remove fretboard</b-button
-                        >
-                      </footer>
                     </div>
                   </form>
                 </b-dropdown-item>
@@ -168,6 +161,9 @@
         :scale-name="scale_info.name"
       />
     </div>
+    <b-button @click="$emit('remove-fretboard')" icon-left="trash"
+      >Remove Fretboard</b-button
+    >
   </div>
 </template>
 
@@ -201,7 +197,7 @@ export default {
       notation: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "minor" },
-      ShowMusicSheet: "false",
+      ShowMusicSheet: "true",
       ShowChords: "true",
     };
   },

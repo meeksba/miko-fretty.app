@@ -5,7 +5,7 @@
       <Editor v-on:remove-fretboard="remove(editor)" />
     </div>
     <div class="container has-text-centered">
-      <a @click="add">+ Add Fretboard</a>
+      <a @click="add">+ Fretboard Game</a>
     </div>
   </section>
 </template>
@@ -30,8 +30,8 @@ export default {
       this.editors.push(Math.max(...this.editors) + 1);
     },
     remove: function (editor) {
-      // console.log("remove");
-      // console.log(editor);
+      console.log("remove");
+      console.log(editor);
       const index = this.editors.indexOf(editor);
       if (index > -1) {
         this.editors.splice(index, 1);
