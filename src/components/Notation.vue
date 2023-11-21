@@ -45,7 +45,7 @@ export default {
       renderer.resize(width, 200);
       const context = renderer.getContext();
       // Create a VexFlow stave
-      const stave = new Stave(10, 40, width);
+      const stave = new Stave(0, -10, width);
       stave.addClef("treble").addTimeSignature("4/4");
       stave.setContext(context).draw();
       const scaleNotes = this.scale.notes;
