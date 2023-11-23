@@ -28,7 +28,7 @@
 
       <!-- string lines -->
       <line
-        v-for="string in strings"
+        v-for="string in this.string"
         :key="'string_' + string.nr"
         x1="0"
         :y1="string.y"
@@ -62,7 +62,7 @@
       />
 
       <!-- notes -->
-      <g v-for="string in this.strings" :key="'ng_' + string.nr">
+      <g v-for="string in strings" :key="'ng_' + string.nr">
         <!-- hidden notes -->
         <g v-for="note in string.hidden" :key="note.key">
           <transition name="fade">
@@ -178,9 +178,18 @@ export default {
     return {
       string_spacing: 25,
       hover_note: -1,
+      string: [],
+      fretsShape: [],
+      polys: [],
+      fretboardWidth: 0,
+      fretboardHeight: 0,
     };
   },
-
+  mounted() {
+    this.fretsShape = this.fret_lines;
+    this.polys = this.inlay_polys;
+    this.string = this.strings;
+  },
   computed: {
     width: function () {
       return this.fretpos(this.frets - 1);
@@ -188,6 +197,7 @@ export default {
     height: function () {
       return (this.tuning.length - 1) * this.string_spacing;
     },
+  
     strings: function () {
       let result = [];
       this.tuning.forEach((tuning, string) => {
@@ -210,7 +220,6 @@ export default {
             hidden.push(note);
           }
         }
-
         if (tuning != undefined) {
           result.push({
             nr: string,
