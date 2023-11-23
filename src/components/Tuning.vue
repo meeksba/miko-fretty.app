@@ -119,7 +119,7 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: "E A D G B E",
+      usr_tuning: "E A D G",
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "minor pentatonic" },

@@ -20,7 +20,7 @@
 
       <!-- fret inlays -->
       <polygon
-        v-for="inlay in this.polys"
+        v-for="inlay in inlay_polys"
         :key="'inlay_' + inlay.fret"
         :points="inlay.points"
         style="fill: #eee"
@@ -28,7 +28,7 @@
 
       <!-- string lines -->
       <line
-        v-for="string in this.strings"
+        v-for="string in this.string"
         :key="'string_' + string.nr"
         x1="0"
         :y1="string.y"
@@ -50,20 +50,19 @@
       />
 
       <!-- frets -->
-
       <line
-        v-for="fret in this.fretsShape.lines"
+        v-for="fret in fret_lines.lines"
         :key="'fret_' + fret.nr"
         :x1="fret.x"
-        :y1="fretsShape.y1"
+        :y1="fret_lines.y1"
         :x2="fret.x"
-        :y2="fretsShape.y2"
+        :y2="fret_lines.y2"
         stroke="#000"
         :stroke-width="fret.width"
       />
 
       <!-- notes -->
-      <g v-for="string in this.strings" :key="'ng_' + string.nr">
+      <g v-for="string in strings" :key="'ng_' + string.nr">
         <!-- hidden notes -->
         <g v-for="note in string.hidden" :key="note.key">
           <transition name="fade">
@@ -179,7 +178,7 @@ export default {
     return {
       string_spacing: 25,
       hover_note: -1,
-      strings: [],
+      string: [],
       fretsShape: [],
       polys: [],
       fretboardWidth: 0,
@@ -187,31 +186,19 @@ export default {
     };
   },
   mounted() {
-    this.fretsShape = this.fret_lines();
-    this.polys = this.inlay_polys();
-    this.strings = this.getStrings();
-  },
-  watch: {
-    notes: function (newval) {
-      if (newval.length == 0) return;
-      this.strings = this.getStrings();
-    },
-    notation: function () {
-      this.strings = this.getStrings();
-    },
+    this.fretsShape = this.fret_lines;
+    this.polys = this.inlay_polys;
+    this.string = this.strings;
   },
   computed: {
     width: function () {
       return this.fretpos(this.frets - 1);
     },
     height: function () {
-      let tunningLength = 6;
-      if (this.tuning.length > 0) tunningLength = this.tuning.length;
-      return (tunningLength - 1) * this.string_spacing;
+      return (this.tuning.length - 1) * this.string_spacing;
     },
-  },
-  methods: {
-    getStrings: function () {
+  
+    strings: function () {
       let result = [];
       this.tuning.forEach((tuning, string) => {
         // find notes
@@ -233,7 +220,6 @@ export default {
             hidden.push(note);
           }
         }
-
         if (tuning != undefined) {
           result.push({
             nr: string,
@@ -254,7 +240,6 @@ export default {
           x: this.fretpos(i),
         });
       }
-
       return {
         y1: this.height == 0 ? -this.string_spacing / 4 : 0,
         y2: this.height == 0 ? this.string_spacing / 4 : this.height,
@@ -313,6 +298,9 @@ export default {
       }
       return result;
     },
+  },
+
+  methods: {
     fretpos(n) {
       // https://www.liutaiomottola.com/formulae/fret.htm
       if (n <= 20) {
