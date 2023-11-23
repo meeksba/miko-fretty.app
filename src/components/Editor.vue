@@ -201,8 +201,8 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
-      notation: "sharps",
+      usr_tuning: localStorage.getItem("tuning") || "E A D G",
+      sharps: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "minor" },
       ShowMusicSheet: "true",
