@@ -1,5 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
+import VueRouter from "vue-router";
+import FretboardGame from "./Views/FretboardGame.vue";
+
 import {
   ConfigProgrammatic,
   Autocomplete,
@@ -66,8 +69,25 @@ ConfigProgrammatic.setOptions({
 
 Vue.config.productionTip = false;
 
+Vue.use(VueRouter);
+
+const routes = [
+  { path: "/", name: "App", component: App },
+  {
+    path: "/FretboardGame",
+    name: "FretboardGame",
+    component: FretboardGame,
+  },
+];
+
+const router = new VueRouter({
+  mode: "history",
+  routes,
+});
+
 window.onload = function () {
   new Vue({
+    router,
     render: (h) => h(App),
   }).$mount("#app");
 };

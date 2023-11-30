@@ -177,7 +177,7 @@ export default {
   data() {
     return {
       string_spacing: 25,
-      hover_note: -1
+      hover_note: -1,
       // string: [],
       // fretsShape: [],
       // polys: [],
@@ -197,7 +197,7 @@ export default {
     height: function () {
       return (this.tuning.length - 1) * this.string_spacing;
     },
-  
+
     strings: function () {
       let result = [];
       this.tuning.forEach((tuning, string) => {

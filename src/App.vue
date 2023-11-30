@@ -7,6 +7,12 @@
     <div class="container has-text-centered">
       <a @click="add">+ Add Fretboard</a>
     </div>
+    <div class="container has-text-centered">
+      <router-link to="/FretboardGame">
+        <b-button>Game</b-button>
+      </router-link>
+      <router-view></router-view>
+    </div>
   </section>
 </template>
 
@@ -30,8 +36,6 @@ export default {
       this.editors.push(Math.max(...this.editors) + 1);
     },
     remove: function (editor) {
-      // console.log("remove");
-      // console.log(editor);
       const index = this.editors.indexOf(editor);
       if (index > -1) {
         this.editors.splice(index, 1);
