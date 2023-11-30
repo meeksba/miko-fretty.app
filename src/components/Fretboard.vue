@@ -28,7 +28,7 @@
 
       <!-- string lines -->
       <line
-        v-for="string in this.string"
+        v-for="string in strings"
         :key="'string_' + string.nr"
         x1="0"
         :y1="string.y"
@@ -177,19 +177,19 @@ export default {
   data() {
     return {
       string_spacing: 25,
-      hover_note: -1,
-      string: [],
-      fretsShape: [],
-      polys: [],
-      fretboardWidth: 0,
-      fretboardHeight: 0,
+      hover_note: -1
+      // string: [],
+      // fretsShape: [],
+      // polys: [],
+      // fretboardWidth: 0,
+      // fretboardHeight: 0,
     };
   },
-  mounted() {
-    this.fretsShape = this.fret_lines;
-    this.polys = this.inlay_polys;
-    this.string = this.strings;
-  },
+  // mounted() {
+  //   this.fretsShape = this.fret_lines;
+  //   this.polys = this.inlay_polys;
+  //   this.string = this.strings;
+  // },
   computed: {
     width: function () {
       return this.fretpos(this.frets - 1);
