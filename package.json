@@ -17,6 +17,7 @@
     "vexflow": "^4.2.3",
     "vue": "^2.7.14",
     "vue-router": "^3.5.2",
+    "vuex": "^3.6.2",
     "webpack": "^5.75.0"
   },
   "devDependencies": {
