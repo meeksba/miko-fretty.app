@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="editor">
+    <div v-if="showEditor" class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
           <b-field grouped group-multiline position="is-centered">
@@ -140,6 +140,11 @@
               </b-dropdown>
             </b-field>
             <!-- /Settings -->
+            <div>
+              <router-link to="/FretboardGame">
+                <b-button @click="toggleEditor">Game</b-button>
+              </router-link>
+            </div>
           </b-field>
         </div>
       </div>
@@ -165,6 +170,7 @@
         :scale-name="scale_info.name"
       />
     </div>
+    <FretboardGame v-else />
     <b-button
       style="margin-bottom: 75px"
       @click="$emit('remove-fretboard')"
@@ -172,7 +178,8 @@
       >Remove Fretboard</b-button
     >
     <!-- <b-button class="mb-3" @click="$emit('remove-fretboard')" icon-left="trash" -->
-  </div>
+      <router-view></router-view>
+    </div>
 </template>
 
 <script>
@@ -207,6 +214,7 @@ export default {
       scale: { tonic: "A", type: "minor" },
       ShowMusicSheet: "true",
       ShowChords: "true",
+      showEditor: true,
     };
   },
 
@@ -271,6 +279,9 @@ export default {
       if (x == "") {
         return;
       }
+    },
+    toggleEditor() {
+      this.showEditor = false;
     },
   },
 };

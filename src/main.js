@@ -72,7 +72,6 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", name: "App", component: App },
   {
     path: "/FretboardGame",
     name: "FretboardGame",

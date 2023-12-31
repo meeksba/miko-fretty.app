@@ -7,12 +7,6 @@
     <div class="container has-text-centered">
       <a @click="add">+ Add Fretboard</a>
     </div>
-    <div class="container has-text-centered">
-      <router-link to="/FretboardGame">
-        <b-button>Game</b-button>
-      </router-link>
-      <router-view></router-view>
-    </div>
   </section>
 </template>
 
