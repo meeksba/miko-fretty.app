@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showEditor" class="editor">
+    <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
           <b-field grouped group-multiline position="is-centered">
@@ -139,12 +139,6 @@
                 </b-dropdown-item>
               </b-dropdown>
             </b-field>
-            <!-- /Settings -->
-            <div>
-              <router-link to="/FretboardGame">
-                <b-button @click="toggleShowEditor">Game</b-button>
-              </router-link>
-            </div>
           </b-field>
         </div>
       </div>
@@ -176,7 +170,6 @@
         >Remove Fretboard</b-button
       >
     </div>
-    <FretboardGame v-else />
     <router-view></router-view>
   </div>
 </template>
@@ -188,7 +181,6 @@ import Notation from "./Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
-import { mapGetters } from "vuex";
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -259,9 +251,6 @@ export default {
       });
       return newData;
     },
-    ...mapGetters({
-      showEditor: "getShowEditor"
-    }),
   },
 
   methods: {
@@ -282,10 +271,6 @@ export default {
         return;
       }
     },
-    toggleShowEditor(){
-      console.log("hello");
-      this.$store.dispatch("toggleEditor");
-    }
   },
 };
 </script>

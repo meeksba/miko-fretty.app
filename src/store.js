@@ -4,7 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
-    showEditor: true, //not sure 
+    showEditor: true, //not sure
   },
   mutations: {
     setShowEditor(state, val) {
@@ -15,7 +15,7 @@ export default new Vuex.Store({
   actions: {
     toggleEditor({ commit }) {
       let temp = !this.state.showEditor; //sets showEditor to the its opposite value
-      console.log("herehere");
+      console.log("herehere" + temp);
       commit("setShowEditor", temp);
     },
   },
