@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from "vue-router";
 import FretboardGame from "./Views/FretboardGame.vue";
+import store from "./store.js";
 
 import {
   ConfigProgrammatic,
@@ -87,6 +88,7 @@ const router = new VueRouter({
 window.onload = function () {
   new Vue({
     router,
+    store,
     render: (h) => h(App),
   }).$mount("#app");
 };

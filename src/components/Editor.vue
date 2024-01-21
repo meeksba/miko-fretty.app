@@ -142,7 +142,7 @@
             <!-- /Settings -->
             <div>
               <router-link to="/FretboardGame">
-                <b-button @click="toggleEditor">Game</b-button>
+                <b-button @click="toggleShowEditor">Game</b-button>
               </router-link>
             </div>
           </b-field>
@@ -169,17 +169,16 @@
         :scale="scale_info"
         :scale-name="scale_info.name"
       />
+      <b-button
+        style="margin-bottom: 75px"
+        @click="$emit('remove-fretboard')"
+        icon-left="trash"
+        >Remove Fretboard</b-button
+      >
     </div>
     <FretboardGame v-else />
-    <b-button
-      style="margin-bottom: 75px"
-      @click="$emit('remove-fretboard')"
-      icon-left="trash"
-      >Remove Fretboard</b-button
-    >
-    <!-- <b-button class="mb-3" @click="$emit('remove-fretboard')" icon-left="trash" -->
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -189,6 +188,7 @@ import Notation from "./Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
+import { mapGetters } from "vuex";
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -214,7 +214,6 @@ export default {
       scale: { tonic: "A", type: "minor" },
       ShowMusicSheet: "true",
       ShowChords: "true",
-      showEditor: true,
     };
   },
 
@@ -260,6 +259,9 @@ export default {
       });
       return newData;
     },
+    ...mapGetters({
+      showEditor: "getShowEditor"
+    }),
   },
 
   methods: {
@@ -280,9 +282,10 @@ export default {
         return;
       }
     },
-    toggleEditor() {
-      this.showEditor = false;
-    },
+    toggleShowEditor(){
+      console.log("hello");
+      this.$store.dispatch("toggleEditor");
+    }
   },
 };
 </script>
