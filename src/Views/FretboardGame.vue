@@ -9,7 +9,7 @@
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
-              <b-field label="Difficulty"> 
+              <b-field label="Difficulty">
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Easy"
@@ -58,18 +58,17 @@
       class="has-text-centered"
       style="display: flex; justify-content: space-between"
     >
-      <b-dropdown aria-role="list">
-        <template #trigger="{ active }">
-          <b-button
-            label="Answers"
-            :icon-right="active ? 'caret-up' : 'caret-down'"
-          />
-        </template>
-
-        <b-dropdown-item aria-role="listitem">Action</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem">Another action</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem">Something else</b-dropdown-item>
-      </b-dropdown>
+      <b-field label="Answer">
+        <b-select placeholder="Select a key">
+          <option
+            v-for="option in majScale"
+            :value="option.id"
+            :key="option.id"
+          >
+            {{ option.user.first_name }}
+          </option>
+        </b-select>
+      </b-field>
       <b-button v-if="showBegin" @click="start_game()" label="Begin" />
     </section>
     <!-- <Chords
@@ -99,6 +98,9 @@ for (var scale of ScaleType.all()) {
   ALL_SCALES.push(...scale.aliases);
 }
 
+const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
+
+// let userScore = 0;
 
 export default {
   name: "FretboardGame",
@@ -186,15 +188,26 @@ export default {
     },
     start_game() {
       console.log("game started");
-      let temp = this.calculate_scale();
+      let temp = this.calculate_tonic();
       this.scale.tonic = temp;
     },
-    calculate_scale(){                //this function calculates a random scale for the game
-      let scales = ['A','B','C','D','E','F','G'];
-      let random = Math.floor(Math.random() * scales.length);
-      return (scales[random]);
-    }
-
+    calculate_tonic() {
+      //this function calculates a tonic note for the game
+      let random = Math.floor(Math.random() * tonicArray.length);
+      let tonic = tonicArray[random];
+      // console.log(tempScale + " temp");
+      // console.log(this.scale.tonic + " tonic");
+      // console.log("equality " + (tempScale == this.scale.tonic));
+      while (tonic == this.scale.tonic) {
+        //this loop ensures the same key wont be chosen twice in a row
+        random = Math.floor(Math.random() * tonicArray.length);
+        tonic = tonicArray[random];
+        if (tonic != this.scale.tonic) {
+          break;
+        }
+      }
+      return tonic;
+    },
   },
 };
 </script>
