@@ -1,5 +1,40 @@
 <template>
   <div>
+    <b-dropdown append-to-body aria-role="menu" trap-focus>
+      <b-button class="button" slot="trigger" icon-left="cog"
+        >Settings</b-button
+      >
+
+      <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
+        <form action>
+          <div class="modal-card" style="width: 300px">
+            <section class="modal-card-body">
+              <b-radio-button
+                v-model="radioButton"
+                native-value="Easy"
+                type="is-primary is-light is-outlined"
+              >
+                Easy
+              </b-radio-button>
+              <b-radio-button
+                v-model="radioButton"
+                native-value="Medium"
+                type="is-primary is-light is-outlined"
+              >
+                Medium
+              </b-radio-button>
+              <b-radio-button
+                v-model="radioButton"
+                native-value="Hard"
+                type="is-primary is-light is-outlined"
+              >
+                Hard
+              </b-radio-button>
+            </section>
+          </div>
+        </form>
+      </b-dropdown-item>
+    </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <Fretboard
         :tuning="tuning"
@@ -12,13 +47,15 @@
     </div>
     <h1 class="has-text-centered">Guess the Scale!</h1>
 
-    <section class="has-text-centered">
+    <section
+      class="has-text-centered"
+      style="display: flex; justify-content: space-between"
+    >
       <b-dropdown aria-role="list">
         <template #trigger="{ active }">
           <b-button
-            label="Answers!"
-            :icon-right="active ? 'menu-up' : 'menu-down'"
-            class="has-text-right"
+            label="Answers"
+            :icon-right="active ? 'caret-up' : 'caret-down'"
           />
         </template>
 
@@ -26,12 +63,7 @@
         <b-dropdown-item aria-role="listitem">Another action</b-dropdown-item>
         <b-dropdown-item aria-role="listitem">Something else</b-dropdown-item>
       </b-dropdown>
-    </section>
-    <b-button>
-
-    </b-button>
-    <section>
-
+      <b-button @click="test_method()" label="Begin" />
     </section>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
@@ -142,6 +174,9 @@ export default {
       if (x == "") {
         return;
       }
+    },
+    test_method() {
+      console.log("printing from begin");
     },
   },
 };
