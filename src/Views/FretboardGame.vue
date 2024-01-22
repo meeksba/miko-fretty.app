@@ -9,27 +9,34 @@
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
-              <b-radio-button
-                v-model="radioButton"
-                native-value="Easy"
-                type="is-primary is-light is-outlined"
-              >
-                Easy
-              </b-radio-button>
-              <b-radio-button
-                v-model="radioButton"
-                native-value="Medium"
-                type="is-primary is-light is-outlined"
-              >
-                Medium
-              </b-radio-button>
-              <b-radio-button
-                v-model="radioButton"
-                native-value="Hard"
-                type="is-primary is-light is-outlined"
-              >
-                Hard
-              </b-radio-button>
+              <b-field label="Difficulty">
+                <b-radio-button
+                  v-model="radioButton"
+                  native-value="Easy"
+                  type="is-primary is-light is-outlined"
+                >
+                  Easy
+                </b-radio-button>
+                <b-radio-button
+                  v-model="radioButton"
+                  native-value="Medium"
+                  type="is-primary is-light is-outlined"
+                >
+                  Medium
+                </b-radio-button>
+                <b-radio-button
+                  v-model="radioButton"
+                  native-value="Hard"
+                  type="is-primary is-light is-outlined"
+                >
+                  Hard
+                </b-radio-button>
+              </b-field>
+              <b-field label="Test">
+                <b-radio-button native-value="true">
+                  <span>True</span>
+                </b-radio-button>
+              </b-field>
             </section>
           </div>
         </form>
