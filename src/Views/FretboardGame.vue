@@ -9,7 +9,7 @@
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
-              <b-field label="Difficulty">
+              <b-field label="Difficulty"> 
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Easy"
@@ -70,7 +70,7 @@
         <b-dropdown-item aria-role="listitem">Another action</b-dropdown-item>
         <b-dropdown-item aria-role="listitem">Something else</b-dropdown-item>
       </b-dropdown>
-      <b-button @click="test_method()" label="Begin" />
+      <b-button v-if="showBegin" @click="start_game()" label="Begin" />
     </section>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
@@ -99,6 +99,7 @@ for (var scale of ScaleType.all()) {
   ALL_SCALES.push(...scale.aliases);
 }
 
+
 export default {
   name: "FretboardGame",
 
@@ -117,6 +118,7 @@ export default {
       scale: { tonic: "A", type: "minor" },
       ShowMusicSheet: "true",
       ShowChords: "true",
+      showBegin: "true",
     };
   },
 
@@ -182,9 +184,17 @@ export default {
         return;
       }
     },
-    test_method() {
-      console.log("printing from begin");
+    start_game() {
+      console.log("game started");
+      let temp = this.calculate_scale();
+      this.scale.tonic = temp;
     },
+    calculate_scale(){                //this function calculates a random scale for the game
+      let scales = ['A','B','C','D','E','F','G'];
+      let random = Math.floor(Math.random() * scales.length);
+      return (scales[random]);
+    }
+
   },
 };
 </script>
