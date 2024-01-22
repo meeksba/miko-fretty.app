@@ -10,6 +10,29 @@
         :scale="scale_info"
       />
     </div>
+    <h1 class="has-text-centered">Guess the Scale!</h1>
+
+    <section class="has-text-centered">
+      <b-dropdown aria-role="list">
+        <template #trigger="{ active }">
+          <b-button
+            label="Answers!"
+            :icon-right="active ? 'menu-up' : 'menu-down'"
+            class="has-text-right"
+          />
+        </template>
+
+        <b-dropdown-item aria-role="listitem">Action</b-dropdown-item>
+        <b-dropdown-item aria-role="listitem">Another action</b-dropdown-item>
+        <b-dropdown-item aria-role="listitem">Something else</b-dropdown-item>
+      </b-dropdown>
+    </section>
+    <b-button>
+
+    </b-button>
+    <section>
+
+    </section>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
@@ -76,16 +99,16 @@ export default {
     scaleChords: function () {
       return Mode.triads(this.scale_info.type, this.scale_info.tonic);
     },
-    scale_search: function () {
-      return ALL_SCALES.filter((option) => {
-        return (
-          option
-            .toString()
-            .toLowerCase()
-            .indexOf(this.scale.type.toLowerCase()) >= 0
-        );
-      });
-    },
+    // scale_search: function () {
+    //   return ALL_SCALES.filter((option) => {
+    //     return (
+    //       option
+    //         .toString()
+    //         .toLowerCase()
+    //         .indexOf(this.scale.type.toLowerCase()) >= 0
+    //     );
+    //   });
+    // },
     tuning_search() {
       const newData = [];
       Tunings.forEach((element) => {
