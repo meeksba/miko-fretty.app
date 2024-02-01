@@ -66,11 +66,11 @@
           id="playerAnswer"
         >
           <option
-            v-for="elem in options"
-            :value="elem.id"
-            :key="elem.id"
+            v-for="elem in tonicArray"
+            :value="elem"
+            :key="elem"
           >
-            {{elem.label}}
+            {{elem}}
           </option>
         </b-select>
         <b-button v-if="!showBegin" @click="test_method" label="Submit" />
@@ -134,6 +134,7 @@ export default {
       ShowChords: "true",
       showBegin: "true",
       playerAnswer: null,
+      tonicArray: tonicArray,
       options: [
         { id: 1, label: "Option 1" },
         { id: 2, label: "Option 2" },
