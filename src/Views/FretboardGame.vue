@@ -69,12 +69,17 @@
             {{ elem }}
           </option>
         </b-select>
-        <b-button v-if="!showBegin" @click="test_method" label="Submit" />
+        <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
       </b-field>
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
       <b-button @click="calculate_tonic" label="TESTBUTTON" />
     </section>
-    <b-progress type="is-info" :value="80" show-value></b-progress>
+    <b-progress
+      v-if="!showBegin"
+      v-model="userScore"
+      type="is-info"
+      show-value
+    ></b-progress>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
@@ -103,7 +108,6 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-let correctAnswer;
 let answerSet = new Set();
 
 export default {
@@ -127,6 +131,8 @@ export default {
       showBegin: "true",
       playerAnswer: null,
       tonicArray: tonicArray,
+      userScore: 0,
+      correctAnswer: null,
     };
   },
 
@@ -193,10 +199,10 @@ export default {
       }
     },
     start_game() {
-      console.log("game started");
-      this.showBegin = !this.showBegin;
-      let temp = this.calculate_tonic();
-      this.scale.tonic = temp;
+      console.log("Game Started");
+      this.showBegin = !this.showBegin; //hide begin button
+      let temp = this.calculate_tonic(); //set initial answer
+      this.scale.tonic = temp; //show initial fretboard (1st question)
     },
 
     calculate_random_element(inputArray) {
@@ -215,23 +221,36 @@ export default {
           break;
         }
       }
-      correctAnswer = tonic;
+      this.correctAnswer = tonic;
+      console.log(
+        "Correct answer in calculate tonic method " + this.correctAnswer
+      );
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-      let wrong = this.calculate_wrong_answer();
-      console.log("tonic " + tonic);
-      console.log("wrong " + wrong);
+      // let wrong = this.calculate_wrong_answer();
+      // console.log("tonic " + tonic);
+      // console.log("wrong " + wrong);
       answerSet.clear();
 
       return tonic;
     },
     calculate_wrong_answer() {
       let wrong = this.calculate_random_element(tonicArray);
-      while (wrong == correctAnswer || answerSet.has(wrong)) {
+      while (wrong == this.correctAnswer || answerSet.has(wrong)) {
         //ensures wrongAnswer is not correctAnswer and isnt a duplicate
         wrong = this.calculate_random_element(tonicArray);
       }
       answerSet.add(wrong);
       return wrong;
+    },
+    submit_answer() {
+      console.log("Player answer " + this.playerAnswer);
+      console.log("Correct answer " + this.correctAnswer);
+      if (this.playerAnswer == this.correctAnswer) {
+        this.userScore += 10;
+      }
+      this.calculate_tonic();
+      this.calculate_wrong_answer();
+      console.log("Submitted Answer");
     },
     test_method() {
       console.log("testmethod");
