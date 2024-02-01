@@ -17,6 +17,7 @@ import {
   Icon,
   Checkbox,
   Select,
+  Progress,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -62,6 +63,7 @@ Vue.use(Table);
 Vue.use(Icon);
 Vue.use(Checkbox);
 Vue.use(Select);
+Vue.use(Progress);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({

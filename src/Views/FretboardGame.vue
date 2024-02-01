@@ -74,6 +74,7 @@
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
       <b-button @click="calculate_tonic" label="TESTBUTTON" />
     </section>
+    <b-progress type="is-info" :value="80" show-value></b-progress>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
@@ -105,10 +106,6 @@ const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 let correctAnswer;
 let answerSet = new Set();
 
-// let answerArray;
-
-// let userScore = 0;
-
 export default {
   name: "FretboardGame",
 
@@ -130,11 +127,6 @@ export default {
       showBegin: "true",
       playerAnswer: null,
       tonicArray: tonicArray,
-      options: [
-        { id: 1, label: "Option 1" },
-        { id: 2, label: "Option 2" },
-        { id: 3, label: "Option 3" },
-      ],
     };
   },
 
