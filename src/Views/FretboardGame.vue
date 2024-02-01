@@ -65,12 +65,8 @@
           icon="music"
           id="playerAnswer"
         >
-          <option
-            v-for="elem in tonicArray"
-            :value="elem"
-            :key="elem"
-          >
-            {{elem}}
+          <option v-for="elem in tonicArray" :value="elem" :key="elem">
+            {{ elem }}
           </option>
         </b-select>
         <b-button v-if="!showBegin" @click="test_method" label="Submit" />
@@ -106,10 +102,8 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-// eslint-disable-next-line no-unused-vars
-const temptemp = ["A"];
 let correctAnswer;
-let wrongAnswerArray;
+let answerSet = new Set();
 
 // let answerArray;
 
@@ -139,8 +133,8 @@ export default {
       options: [
         { id: 1, label: "Option 1" },
         { id: 2, label: "Option 2" },
-        { id: 3, label: "Option 3" }
-      ]
+        { id: 3, label: "Option 3" },
+      ],
     };
   },
 
@@ -212,41 +206,39 @@ export default {
       let temp = this.calculate_tonic();
       this.scale.tonic = temp;
     },
-    calculate_random_element(inputArray){
+
+    calculate_random_element(inputArray) {
       //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
-      return elem
+      return elem;
     },
     calculate_tonic() {
-      let tonic = this.calculate_random_element(tonicArray)
+      let tonic = this.calculate_random_element(tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(tonicArray)
+        tonic = this.calculate_random_element(tonicArray);
         if (tonic != this.scale.tonic) {
           //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
           break;
         }
       }
       correctAnswer = tonic;
-      this.scale.tonic = tonic;
-      let wrong = this.calculate_wrong_answer()
+      this.scale.tonic = tonic; //update on screen fretboard with new tonic
+      let wrong = this.calculate_wrong_answer();
       console.log("tonic " + tonic);
       console.log("wrong " + wrong);
+      answerSet.clear();
 
       return tonic;
     },
     calculate_wrong_answer() {
       let wrong = this.calculate_random_element(tonicArray);
-      while (wrong == correctAnswer || wrongAnswerArray.includes(wrong)) {
+      while (wrong == correctAnswer || answerSet.has(wrong)) {
         //ensures wrongAnswer is not correctAnswer and isnt a duplicate
         wrong = this.calculate_random_element(tonicArray);
-        if (wrong != correctAnswer && !wrongAnswerArray) {
-          //break if wrong is a unique wrong answer and is not correct answer 
-          break;
-        }
       }
-      wrongAnswerArray.push(wrong)
+      answerSet.add(wrong);
       return wrong;
     },
     test_method() {
