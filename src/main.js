@@ -16,6 +16,7 @@ import {
   Table,
   Icon,
   Checkbox,
+  Select,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -60,6 +61,7 @@ Vue.use(Radio);
 Vue.use(Table);
 Vue.use(Icon);
 Vue.use(Checkbox);
+Vue.use(Select);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({

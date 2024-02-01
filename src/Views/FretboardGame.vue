@@ -7,7 +7,7 @@
 
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
-          <div class="modal-card" style="width: 300px">
+          <div class="modal-card" style="width: 500px">
             <section class="modal-card-body">
               <b-field label="Difficulty">
                 <b-radio-button
@@ -22,14 +22,14 @@
                   native-value="Medium"
                   type="is-primary is-light is-outlined"
                 >
-                  Medium
+                  NOTUNLOCKED
                 </b-radio-button>
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Hard"
                   type="is-primary is-light is-outlined"
                 >
-                  Hard
+                  NOTUNLOCKED
                 </b-radio-button>
               </b-field>
               <b-field label="Test">
@@ -58,18 +58,25 @@
       class="has-text-centered"
       style="display: flex; justify-content: space-between"
     >
-      <b-field label="Answer">
-        <b-select placeholder="Select a key">
+      <b-field v-if="!showBegin" label="Enter Your Answer">
+        <b-select
+          v-model="playerAnswer"
+          placeholder="Select a key"
+          icon="music"
+          id="playerAnswer"
+        >
           <option
-            v-for="option in majScale"
-            :value="option.id"
-            :key="option.id"
+            v-for="elem in options"
+            :value="elem.id"
+            :key="elem.id"
           >
-            {{ option.user.first_name }}
+            {{elem.label}}
           </option>
         </b-select>
+        <b-button v-if="!showBegin" @click="test_method" label="Submit" />
       </b-field>
-      <b-button v-if="showBegin" @click="start_game()" label="Begin" />
+      <b-button v-if="showBegin" @click="start_game" label="Begin" />
+      <b-button @click="test_method" label="TESTBUTTON" />
     </section>
     <!-- <Chords
         v-if="this.ShowChords == 'true'"
@@ -99,6 +106,11 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
+// eslint-disable-next-line no-unused-vars
+const temptemp = ["A"];
+let correctAnswer;
+
+// let answerArray;
 
 // let userScore = 0;
 
@@ -121,6 +133,12 @@ export default {
       ShowMusicSheet: "true",
       ShowChords: "true",
       showBegin: "true",
+      playerAnswer: null,
+      options: [
+        { id: 1, label: "Option 1" },
+        { id: 2, label: "Option 2" },
+        { id: 3, label: "Option 3" }
+      ]
     };
   },
 
@@ -188,25 +206,46 @@ export default {
     },
     start_game() {
       console.log("game started");
+      this.showBegin = !this.showBegin;
       let temp = this.calculate_tonic();
       this.scale.tonic = temp;
     },
+    calculate_random_index(){
+
+    },
     calculate_tonic() {
-      //this function calculates a tonic note for the game
-      let random = Math.floor(Math.random() * tonicArray.length);
-      let tonic = tonicArray[random];
-      // console.log(tempScale + " temp");
-      // console.log(this.scale.tonic + " tonic");
-      // console.log("equality " + (tempScale == this.scale.tonic));
+      //this function calculates a random tonic note for the game
+      let random = Math.floor(Math.random() * tonicArray.length); //find random index given array of tonicArray
+      let tonic = tonicArray[random]; //select random element of tonicArray
       while (tonic == this.scale.tonic) {
-        //this loop ensures the same key wont be chosen twice in a row
-        random = Math.floor(Math.random() * tonicArray.length);
+        //this loop ensures the same tonic wont be chosen twice in a row
+        random = Math.floor(Math.random() * tonicArray.length); //recalculates another random index
         tonic = tonicArray[random];
         if (tonic != this.scale.tonic) {
+          //if new tonic is different from displayed tonic
           break;
         }
       }
+      correctAnswer = tonic;
       return tonic;
+    },
+    calculate_wrong_answer() {
+      let random = Math.floor(Math.random() * tonicArray.length); //select random index of tonicArray
+      let wrongAnswer = tonicArray[random];
+      while (wrongAnswer == correctAnswer) {
+        //ensures wrongAnswer is not correctAnswer
+        //this loop ensures the same key wont be chosen twice in a row
+        random = Math.floor(Math.random() * tonicArray.length);
+        wrongAnswer = tonicArray[random];
+        if (wrongAnswer != correctAnswer) {
+          break;
+        }
+        return wrongAnswer;
+      }
+    },
+    test_method() {
+      console.log("testmethod");
+      // console.log(correctAnswer);
     },
   },
 };
