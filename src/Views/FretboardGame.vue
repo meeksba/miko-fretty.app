@@ -43,7 +43,7 @@
       </b-dropdown-item>
     </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <Fretboard
+      <CustomFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="notation"
@@ -72,7 +72,7 @@
         <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
       </b-field>
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
-      <b-button @click="calculate_tonic" label="TESTBUTTON" />
+      <b-button @click="test_method" label="TESTBUTTON" />
     </section>
     <b-progress
       v-if="!showBegin"
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import Fretboard from "../components/Fretboard.vue";
+import CustomFretboard from "../components/CustomFretboard.vue";
 // import Chords from "../components/Chords.vue";
 // import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
@@ -114,7 +114,7 @@ export default {
   name: "FretboardGame",
 
   components: {
-    Fretboard,
+    CustomFretboard,
     // Chords,
     // Notation,
     // NoteSelect,
@@ -253,7 +253,14 @@ export default {
       console.log("Submitted Answer");
     },
     test_method() {
+      console.log("here");
+      console.log("Fretboard Notes Map " + this.scale_info.notes.map(Note.chroma));
+      console.log("Fretboard Notes no map " + this.scale_info.notes);
+      console.log("Note.chrome " + Note.chroma);
       console.log("testmethod");
+
+
+
       // console.log(correctAnswer);
     },
   },
