@@ -13,29 +13,36 @@
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Easy"
-                  type="is-primary is-light is-outlined"
                 >
                   Easy
                 </b-radio-button>
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Medium"
-                  type="is-primary is-light is-outlined"
                 >
                   NOTUNLOCKED
                 </b-radio-button>
                 <b-radio-button
                   v-model="radioButton"
                   native-value="Hard"
-                  type="is-primary is-light is-outlined"
                 >
                   NOTUNLOCKED
                 </b-radio-button>
               </b-field>
               <b-field label="Test">
-                <b-radio-button native-value="true">
+                <b-radio-button native-value="false">
                   <span>True</span>
                 </b-radio-button>
+              </b-field>
+              <b-field label="Music Sheet">
+                <b-field>
+                  <b-radio-button v-model="ShowMusicSheet" native-value="true">
+                    <span>True</span>
+                  </b-radio-button>
+                  <b-radio-button v-model="ShowMusicSheet" native-value="false">
+                    <span>False</span>
+                  </b-radio-button>
+                </b-field>
               </b-field>
             </section>
           </div>
@@ -43,7 +50,7 @@
       </b-dropdown-item>
     </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <CustomFretboard
+      <Fretboard
         :tuning="tuning"
         :notes="notes"
         :notation="notation"
@@ -52,7 +59,7 @@
         :scale="scale_info"
       />
     </div>
-    <h1 class="has-text-centered">Guess the Scale!</h1>
+    <h1 class="has-text-centered">What Scale is This?</h1>
 
     <section
       class="has-text-centered"
@@ -85,18 +92,18 @@
         :chords="scaleChords"
         style="margin-bottom: 50px"
       /> -->
-    <!-- <Notation
-        v-if="this.ShowMusicSheet == 'true'"
-        :scale="scale_info"
-        :scale-name="scale_info.name"
-      /> -->
+    <Notation
+      v-if="this.ShowMusicSheet == 'true'"
+      :scale="scale_info"
+      :scale-name="scale_info.name"
+    />
   </div>
 </template>
 
 <script>
-import CustomFretboard from "../components/CustomFretboard.vue";
+import Fretboard from "../components/Fretboard.vue";
 // import Chords from "../components/Chords.vue";
-// import Notation from "../components/Notation.vue";
+import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
@@ -114,9 +121,9 @@ export default {
   name: "FretboardGame",
 
   components: {
-    CustomFretboard,
+    Fretboard,
     // Chords,
-    // Notation,
+    Notation,
     // NoteSelect,
   },
 
@@ -125,9 +132,9 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "minor" },
-      ShowMusicSheet: "true",
-      ShowChords: "true",
+      scale: { tonic: "A", type: "major" },
+      ShowMusicSheet: "false",
+      ShowChords: "false",
       showBegin: "true",
       playerAnswer: null,
       tonicArray: tonicArray,

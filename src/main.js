@@ -47,7 +47,7 @@ library.add(
   faCaretDown,
   faTrash,
   faMusic,
-  faGuitar
+  faGuitar,
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 

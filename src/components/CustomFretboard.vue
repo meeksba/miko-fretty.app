@@ -219,6 +219,7 @@ export default {
         // console.log("notes " + this.notes)
         let normalized_notes = this.normalize(this.notes);
         // console.log("normalized_notes " + normalized_notes)
+        // let toRender = [];
         let visible = [];
         let hidden = [];
         for (let fret = 0; fret < this.frets; fret++) {

@@ -54,7 +54,7 @@
         @clickNote="clickHandle"
       />
     </div>
-    <h1 class="has-text-centered">Guess the Scale!</h1>
+    <h1 class="has-text-centered">Build the Scale Given!</h1>
 
     <section
       class="has-text-centered"
@@ -263,8 +263,9 @@ export default {
     },
     clickHandle(note) {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
-      console.log("note clicked" + JSON.stringify(note, null, 2));
       this.clickedNotes.push(note.name);
+      console.log("note clicked " + JSON.stringify(note, null, 2));
+      console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
 
       this.clickedKeys.push(note.key);
       console.log("userkey " + JSON.stringify(this.clickedKeys));
