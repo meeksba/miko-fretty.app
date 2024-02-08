@@ -50,7 +50,7 @@
         :frets="frets"
         :root="root"
         :scale="scale_info"
-        @clickNote="clickTest"
+        @clickNote="clickHandle"
       />
     </div>
     <h1 class="has-text-centered">Guess the Scale!</h1>
@@ -123,7 +123,7 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G",
+      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "minor" },
@@ -134,6 +134,7 @@ export default {
       tonicArray: tonicArray,
       userScore: 0,
       correctAnswer: null,
+      clickedNotes: [],
     };
   },
 
@@ -146,7 +147,8 @@ export default {
       return Note.chroma(this.scale.tonic);
     },
     notes: function () {
-      return this.scale_info.notes.map(Note.chroma);
+      // return this.scale_info.notes.map(Note.chroma);
+      return this.clickedNotes.map(Note.chroma) //notes now relies on the clickedNotes array which is populated when a user clicks a note
     },
     scale_info: function () {
       let name = this.scale.tonic + " " + this.scale.type;
@@ -254,18 +256,10 @@ export default {
       console.log("Submitted Answer");
     },
     test_method() {
-      console.log("here");
-      console.log("Fretboard Notes Map " + this.scale_info.notes.map(Note.chroma));
-      console.log("Fretboard Notes no map " + this.scale_info.notes);
-      console.log("Note.chrome " + Note.chroma);
-      console.log("testmethod");
-
-
-
-      // console.log(correctAnswer);
+      console.log("notes " + this.notes)
     },
-    clickTest(note){
-      console.log("Parent Emit " + JSON.stringify(note, null, 2))
+    clickHandle(note){ //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
+      this.clickedNotes.push(note.name)
     }
   },
 };

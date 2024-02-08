@@ -345,7 +345,6 @@ export default {
       return notes.map((x) => x % 12);
     },
     clickEvent(note){
-      console.log("child emit")
       this.$emit('clickNote', note)
       
     }
