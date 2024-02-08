@@ -10,22 +10,13 @@
           <div class="modal-card" style="width: 500px">
             <section class="modal-card-body">
               <b-field label="Difficulty">
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Easy"
-                >
+                <b-radio-button v-model="radioButton" native-value="Easy">
                   Easy
                 </b-radio-button>
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Medium"
-                >
+                <b-radio-button v-model="radioButton" native-value="Medium">
                   NOTUNLOCKED
                 </b-radio-button>
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Hard"
-                >
+                <b-radio-button v-model="radioButton" native-value="Hard">
                   NOTUNLOCKED
                 </b-radio-button>
               </b-field>

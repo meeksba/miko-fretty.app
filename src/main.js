@@ -34,6 +34,7 @@ import {
   faTrash,
   faMusic,
   faGuitar,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -48,6 +49,7 @@ library.add(
   faTrash,
   faMusic,
   faGuitar,
+  faUser
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 

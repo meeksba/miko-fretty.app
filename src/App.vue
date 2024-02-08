@@ -8,6 +8,7 @@
         <b-button @click="showBuild = !showBuild">Build</b-button>
       </router-link>
     </div>
+    <b-button class="is-pulled-right" icon-left="user"> Profile </b-button>
     <div v-if="!showGame && !showBuild">
       <div class="container" v-for="editor in editors" v-bind:key="editor">
         <!--<note-select />-->
