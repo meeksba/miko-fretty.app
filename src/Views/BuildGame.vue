@@ -49,7 +49,7 @@
         :notation="notation"
         :frets="frets"
         :root="root"
-        :scale="scale_info"
+        :scale="[]"
         @clickNote="clickHandle"
       />
     </div>
@@ -148,7 +148,7 @@ export default {
     },
     notes: function () {
       // return this.scale_info.notes.map(Note.chroma);
-      return this.clickedNotes.map(Note.chroma) //notes now relies on the clickedNotes array which is populated when a user clicks a note
+      return this.clickedNotes.map(Note.chroma); //notes now relies on the clickedNotes array which is populated when a user clicks a note
     },
     scale_info: function () {
       let name = this.scale.tonic + " " + this.scale.type;
@@ -256,11 +256,13 @@ export default {
       console.log("Submitted Answer");
     },
     test_method() {
-      console.log("notes " + this.notes)
+      console.log("notes " + this.notes);
     },
-    clickHandle(note){ //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
-      this.clickedNotes.push(note.name)
-    }
+    clickHandle(note) {
+      //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
+      console.log("note clicked" + JSON.stringify(note, null, 2));
+      this.clickedNotes.push(note.name);
+    },
   },
 };
 </script>

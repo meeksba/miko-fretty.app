@@ -254,12 +254,12 @@ export default {
     },
     test_method() {
       console.log("here");
-      console.log("Fretboard Notes Map " + this.scale_info.notes.map(Note.chroma));
+      console.log(
+        "Fretboard Notes Map " + this.scale_info.notes.map(Note.chroma)
+      );
       console.log("Fretboard Notes no map " + this.scale_info.notes);
       console.log("Note.chrome " + Note.chroma);
       console.log("testmethod");
-
-
 
       // console.log(correctAnswer);
     },
