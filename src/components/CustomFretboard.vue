@@ -85,7 +85,7 @@
                 fill="black"
                 text-anchor="middle"
               >
-                {{ note.key }}
+                {{ note.name }}
               </text>
             </g>
           </transition>
@@ -154,6 +154,10 @@ export default {
       default: () => [],
     },
     notes: {
+      type: Array,
+      default: () => [],
+    },
+    clickedKeys: {
       type: Array,
       default: () => [],
     },
@@ -229,7 +233,9 @@ export default {
             key: "n" + string + "_" + fret,
           };
           if (normalized_notes.includes(num)) {
-            visible.push(note);
+            if (this.clickedKeys.includes(note.key)) {
+              visible.push(note);
+            }
           } else {
             hidden.push(note);
           }
@@ -345,11 +351,6 @@ export default {
     },
     clickEvent(note) {
       this.$emit("clickNote", note);
-    },
-    checkRender(key) {
-      //this note ensures that only the note clicked is rendered and not all C notes for example
-      //this is done by using the key attribute of each note
-      console.log(key);
     },
     // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number
     //   if(this.minFret == null || this.maxFret == null){

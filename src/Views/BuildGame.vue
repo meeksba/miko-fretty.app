@@ -50,6 +50,7 @@
         :frets="frets"
         :root="root"
         :scale="[]"
+        :clickedKeys="clickedKeys"
         @clickNote="clickHandle"
       />
     </div>
@@ -74,6 +75,7 @@
       </b-field>
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
       <b-button @click="test_method" label="TESTBUTTON" />
+      <b-button @click="clear_notes" label="CLEAR" />
     </section>
     <b-progress
       v-if="!showBegin"
@@ -126,7 +128,7 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "minor" },
+      scale: {},
       ShowMusicSheet: "true",
       ShowChords: "true",
       showBegin: "true",
@@ -135,6 +137,7 @@ export default {
       userScore: 0,
       correctAnswer: null,
       clickedNotes: [],
+      clickedKeys: [],
     };
   },
 
@@ -147,7 +150,7 @@ export default {
       return Note.chroma(this.scale.tonic);
     },
     notes: function () {
-      // return this.scale_info.notes.map(Note.chroma);
+      // return this.scale_info.notes.map(Note.chroma); --original implementation
       return this.clickedNotes.map(Note.chroma); //notes now relies on the clickedNotes array which is populated when a user clicks a note
     },
     scale_info: function () {
@@ -229,9 +232,6 @@ export default {
         "Correct answer in calculate tonic method " + this.correctAnswer
       );
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-      // let wrong = this.calculate_wrong_answer();
-      // console.log("tonic " + tonic);
-      // console.log("wrong " + wrong);
       answerSet.clear();
 
       return tonic;
@@ -258,10 +258,16 @@ export default {
     test_method() {
       console.log("notes " + this.notes);
     },
+    clear_notes() {
+      console.log("clear notes ");
+    },
     clickHandle(note) {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
       console.log("note clicked" + JSON.stringify(note, null, 2));
       this.clickedNotes.push(note.name);
+
+      this.clickedKeys.push(note.key);
+      console.log("userkey " + JSON.stringify(this.clickedKeys));
     },
   },
 };
