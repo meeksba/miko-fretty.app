@@ -92,6 +92,7 @@
           <circle
             @mouseleave="hover_note = -1"
             @mouseover="hover_note = note.num"
+            @click="clickEvent(note)"
             r="10"
             :cx="note.x"
             :cy="string.y"
@@ -128,6 +129,8 @@
             <circle
               @mouseleave="hover_note = -1"
               @mouseover="hover_note = note.num"
+              @click="clickEvent(note)"
+
               r="10"
               :cx="note.x"
               :cy="string.y"
@@ -341,6 +344,11 @@ export default {
     normalize(notes) {
       return notes.map((x) => x % 12);
     },
+    clickEvent(note){
+      console.log("child emit")
+      this.$emit('clickNote', note)
+      
+    }
     // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number 
     //   if(this.minFret == null || this.maxFret == null){
     //     return true; //if no min or max fret, return true, all frets shown 

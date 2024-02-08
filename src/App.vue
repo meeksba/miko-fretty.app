@@ -2,10 +2,13 @@
   <section class="section">
     <div class="has-text-centered">
       <router-link to="/FretboardGame">
-        <b-button @click="showGame = !showGame">Game</b-button>
+        <b-button @click="showGame = !showGame">Identify</b-button>
+      </router-link>
+      <router-link to="/BuildGame">
+        <b-button @click="showBuild = !showBuild">Build</b-button>
       </router-link>
     </div>
-    <div v-if="!showGame">
+    <div v-if="!showGame && !showBuild">
       <div class="container" v-for="editor in editors" v-bind:key="editor">
         <!--<note-select />-->
         <Editor v-on:remove-fretboard="remove(editor)" />
@@ -15,12 +18,14 @@
       <a @click="add">+ Add Fretboard</a>
     </div>
     <FretboardGame v-if="showGame" />
+    <BuildGame v-if="showBuild" />
   </section>
 </template>
 
 <script>
 import Editor from "./components/Editor.vue";
 import FretboardGame from "./Views/FretboardGame.vue";
+import BuildGame from "./Views/BuildGame.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
@@ -28,12 +33,14 @@ export default {
   components: {
     Editor,
     FretboardGame,
+    BuildGame,
     // NoteSelect
   },
   data() {
     return {
       editors: [1],
       showGame: false,
+      showBuild: false,
     };
   },
   methods: {

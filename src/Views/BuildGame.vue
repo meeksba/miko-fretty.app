@@ -2,7 +2,7 @@
   <div>
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
-        >Identify Game Settings</b-button
+        >Build Settings</b-button
       >
 
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
@@ -50,6 +50,7 @@
         :frets="frets"
         :root="root"
         :scale="scale_info"
+        @clickNote="clickTest"
       />
     </div>
     <h1 class="has-text-centered">Guess the Scale!</h1>
@@ -111,7 +112,7 @@ const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 let answerSet = new Set();
 
 export default {
-  name: "FretboardGame",
+  name: "BuildGame",
 
   components: {
     CustomFretboard,
@@ -263,6 +264,9 @@ export default {
 
       // console.log(correctAnswer);
     },
+    clickTest(note){
+      console.log("Parent Emit " + JSON.stringify(note, null, 2))
+    }
   },
 };
 </script>
