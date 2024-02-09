@@ -121,7 +121,7 @@ const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 // let answerSet = new Set(); //This variable may later be needed
 
 export default {
-  name: "FretboardGame",
+  name: "IdentifyGame",
 
   components: {
     IdentifyFretboard,

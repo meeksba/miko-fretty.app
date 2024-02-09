@@ -45,7 +45,7 @@
       </b-dropdown-item>
     </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <CustomFretboard
+      <BuildFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="notation"
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import CustomFretboard from "../components/CustomFretboard.vue";
+import BuildFretboard from "../components/BuildFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
@@ -119,7 +119,7 @@ export default {
   name: "BuildGame",
 
   components: {
-    CustomFretboard,
+    BuildFretboard,
     Chords,
     Notation,
   },

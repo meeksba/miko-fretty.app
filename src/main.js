@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from "vue-router";
-import FretboardGame from "./Views/FretboardGame.vue";
+import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
 import store from "./store.js";
 
@@ -81,9 +81,9 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/FretboardGame",
-    name: "FretboardGame",
-    component: FretboardGame,
+    path: "/IdentifyGame",
+    name: "IdentifyGame",
+    component: IdentifyGame,
   },
   {
     path: "/BuildGame",

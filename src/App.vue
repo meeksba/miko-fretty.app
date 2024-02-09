@@ -1,7 +1,7 @@
 <template>
   <section class="section">
     <div class="has-text-centered" style="margin-bottom: 20px">
-      <router-link to="/FretboardGame">
+      <router-link to="/IdentifyGame">
         <b-button @click="showGame = !showGame">Identify</b-button>
       </router-link>
       <router-link to="/BuildGame">
@@ -18,14 +18,14 @@
     <div class="has-text-centered" v-if="!showGame && !showBuild">
       <a @click="add">+ Add Fretboard</a>
     </div>
-    <FretboardGame v-if="showGame" />
+    <IdentifyGame v-if="showGame" />
     <BuildGame v-if="showBuild" />
   </section>
 </template>
 
 <script>
 import Editor from "./components/Editor.vue";
-import FretboardGame from "./Views/FretboardGame.vue";
+import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
@@ -33,7 +33,7 @@ export default {
   name: "App",
   components: {
     Editor,
-    FretboardGame,
+    IdentifyGame,
     BuildGame,
     // NoteSelect
   },
