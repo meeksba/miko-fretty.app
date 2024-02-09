@@ -19,11 +19,6 @@
                   Hard
                 </b-radio-button>
               </b-field>
-              <b-field label="Test">
-                <b-radio-button native-value="false">
-                  <span>True</span>
-                </b-radio-button>
-              </b-field>
               <b-field label="Music Sheet">
                 <b-field>
                   <b-radio-button v-model="ShowMusicSheet" native-value="true">
@@ -76,7 +71,11 @@
       "
     >
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
-      <b-button @click="test_method" label="TESTBUTTON" style="margin-top: 20px"/>
+      <b-button
+        @click="test_method"
+        label="TESTBUTTON"
+        style="margin-top: 20px"
+      />
       <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
     </section>
     <b-progress
@@ -152,26 +151,19 @@ export default {
       return Note.chroma(this.scale.tonic);
     },
     notes: function () {
-      // return this.scale_info.notes.map(Note.chroma); --original implementation
+      // return this.scale_info.notes.map(Note.chroma);
       return this.clickedNotes.map(Note.chroma); //notes now relies on the clickedNotes array which is populated when a user clicks a note
     },
     scale_info: function () {
       let name = this.scale.tonic + " " + this.scale.type;
       return Scale.get(name);
     },
+    scale_notes: function () {
+      return this.scale_info.notes;
+    },
     scaleChords: function () {
       return Mode.triads(this.scale_info.type, this.scale_info.tonic);
     },
-    // scale_search: function () {
-    //   return ALL_SCALES.filter((option) => {
-    //     return (
-    //       option
-    //         .toString()
-    //         .toLowerCase()
-    //         .indexOf(this.scale.type.toLowerCase()) >= 0
-    //     );
-    //   });
-    // },
     tuning_search() {
       const newData = [];
       Tunings.forEach((element) => {
@@ -230,47 +222,52 @@ export default {
         }
       }
       this.correctAnswer = tonic;
-      console.log(
-        "Correct answer in calculate tonic method " + this.correctAnswer
-      );
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       answerSet.clear();
 
       return tonic;
     },
-    calculate_wrong_answer() {
-      let wrong = this.calculate_random_element(tonicArray);
-      while (wrong == this.correctAnswer || answerSet.has(wrong)) {
-        //ensures wrongAnswer is not correctAnswer and isnt a duplicate
-        wrong = this.calculate_random_element(tonicArray);
-      }
-      answerSet.add(wrong);
-      return wrong;
-    },
+    // calculate_wrong_answer() {
+    //   let wrong = this.calculate_random_element(tonicArray);
+    //   while (wrong == this.correctAnswer || answerSet.has(wrong)) {
+    //     //ensures wrongAnswer is not correctAnswer and isnt a duplicate
+    //     wrong = this.calculate_random_element(tonicArray);
+    //   }
+    //   answerSet.add(wrong);
+    //   return wrong;
+    // },
     submit_answer() {
-      console.log("Player answer " + this.playerAnswer);
-      console.log("Correct answer " + this.correctAnswer);
-      if (this.playerAnswer == this.correctAnswer) {
-        this.userScore += 10;
-      }
+      // if (this.playerAnswer == this.correctAnswer) {
+      //   this.userScore += 10;
+      // }
+
       this.calculate_tonic();
-      this.calculate_wrong_answer();
-      console.log("Submitted Answer");
     },
     test_method() {
-      console.log("notes " + this.notes);
+      // let temp = this.calculate_scale_notes()
+      // console.log("notes " + JSON.stringify(temp, null, 2));
+      // console.log("scale info " + JSON.stringify(this.scale_info.notes, null, 2));
+      console.log("scale notes " + this.scale_notes);
     },
-    clear_notes() {
+    calculate_scale_notes() {
       console.log("clear notes ");
+      return this.scale_info.notes.map(Note.chroma);
     },
     clickHandle(note) {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
-      this.clickedNotes.push(note.name);
-      console.log("note clicked " + JSON.stringify(note, null, 2));
-      // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
+      console.log("scale notes " + this.scale_notes);
+      console.log("note clicked " + JSON.stringify(note.name, null, 2));
 
-      this.clickedKeys.push(note.key);
-      console.log("userkey " + JSON.stringify(this.clickedKeys));
+      if (!this.scale_info.notes.includes(note.name)) {
+        console.log("not in scale ");
+        alert("Please try again, the note you selected is not correct");
+        return;
+      }
+      this.clickedNotes.push(note.name); //passed to child fretboard component to be rendered
+      this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
+      console.log("Correct");
+      // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
+      // console.log("userkeys " + JSON.stringify(this.clickedKeys));
     },
   },
 };

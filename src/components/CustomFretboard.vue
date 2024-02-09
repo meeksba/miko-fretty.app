@@ -176,10 +176,10 @@ export default {
     },
     minFret: {
       type: Number,
-      default: null,
+      default: null,    //may be used if we want to limit render to certain frets
     },
     maxFret: {
-      type: Number,
+      type: Number,     //may be used if we want to limit render to certain frets
       default: null,
     },
     notation: {
@@ -348,7 +348,7 @@ export default {
       return this.scale.intervals[index];
     },
     normalize(notes) {
-      return notes.map((x) => x % 12);
+      return notes.map((x) => x % 12);    // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
     },
     clickEvent(note) {
       this.$emit("clickNote", note);

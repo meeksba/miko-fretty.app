@@ -20,11 +20,6 @@
                   Hard
                 </b-radio-button>
               </b-field>
-              <b-field label="Test">
-                <b-radio-button native-value="false">
-                  <span>True</span>
-                </b-radio-button>
-              </b-field>
               <b-field label="Music Sheet">
                 <b-field>
                   <b-radio-button v-model="ShowMusicSheet" native-value="true">
@@ -85,7 +80,7 @@
         </b-select>
         <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
       </b-field>
-      <b-button v-if="showBegin" @click="start_game" label="Begin"/>
+      <b-button v-if="showBegin" @click="start_game" label="Begin" />
       <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
     </section>
     <b-progress
@@ -93,6 +88,7 @@
       v-model="userScore"
       type="is-info"
       show-value
+      style="margin-top: 20px"
     ></b-progress>
     <Chords
       v-if="this.ShowChords == 'true'"
