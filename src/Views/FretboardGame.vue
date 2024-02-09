@@ -236,22 +236,22 @@ export default {
 
       return tonic;
     },
-    calculate_wrong_answer() {
-      console.log("called wrong")
-      let wrong = this.calculate_random_element(tonicArray);
-      while (wrong == this.correctAnswer || answerSet.has(wrong)) {
-        //ensures wrongAnswer is not correctAnswer and isnt a duplicate
-        wrong = this.calculate_random_element(tonicArray);
-      }
-      let scaleType = this.scale_info.type.toString();
-      let stringWrong = wrong.toString();
-      let finalString = stringWrong + " " +  scaleType ;
-      console.log("Wrong string" + finalString)
+    // calculate_wrong_answer() {
+    //   console.log("called wrong")
+    //   let wrong = this.calculate_random_element(tonicArray);
+    //   while (wrong == this.correctAnswer || answerSet.has(wrong)) {
+    //     //ensures wrongAnswer is not correctAnswer and isnt a duplicate
+    //     wrong = this.calculate_random_element(tonicArray);
+    //   }
+    //   let scaleType = this.scale_info.type.toString();
+    //   let stringWrong = wrong.toString();
+    //   let finalString = stringWrong + " " +  scaleType ;
+    //   console.log("Wrong string" + finalString)
 
 
-      answerSet.add(finalString);
-      return wrong;
-    },
+    //   answerSet.add(finalString);
+    //   return wrong;
+    // },
     submit_answer() {
       answerSet.clear();
       // console.log("Player answer " + this.playerAnswer);
@@ -260,7 +260,7 @@ export default {
         this.userScore += 10;
       }
       this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers 
-      this.calculate_wrong_answer();
+      // this.calculate_wrong_answer();
       console.log("Submitted Answer");
     },
     test_method() {
