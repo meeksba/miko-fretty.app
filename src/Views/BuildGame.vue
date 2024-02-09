@@ -7,35 +7,44 @@
 
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
-          <div class="modal-card" style="width: 500px">
+          <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
               <b-field label="Difficulty">
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Easy"
-                  type="is-primary is-light is-outlined"
-                >
+                <b-radio-button v-model="radioButton" native-value="Easy">
                   Easy
                 </b-radio-button>
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Medium"
-                  type="is-primary is-light is-outlined"
-                >
-                  NOTUNLOCKED
+                <b-radio-button v-model="radioButton" native-value="Medium">
+                  Medium
                 </b-radio-button>
-                <b-radio-button
-                  v-model="radioButton"
-                  native-value="Hard"
-                  type="is-primary is-light is-outlined"
-                >
-                  NOTUNLOCKED
+                <b-radio-button v-model="radioButton" native-value="Hard">
+                  Hard
                 </b-radio-button>
               </b-field>
               <b-field label="Test">
-                <b-radio-button native-value="true">
+                <b-radio-button native-value="false">
                   <span>True</span>
                 </b-radio-button>
+              </b-field>
+              <b-field label="Music Sheet">
+                <b-field>
+                  <b-radio-button v-model="ShowMusicSheet" native-value="true">
+                    <span>True</span>
+                  </b-radio-button>
+                  <b-radio-button v-model="ShowMusicSheet" native-value="false">
+                    <span>False</span>
+                  </b-radio-button>
+                </b-field>
+              </b-field>
+              <b-field label="Show Chords">
+                <b-field>
+                  <b-radio-button v-model="ShowChords" native-value="true">
+                    <span>True</span>
+                  </b-radio-button>
+
+                  <b-radio-button v-model="ShowChords" native-value="false">
+                    <span>False</span>
+                  </b-radio-button>
+                </b-field>
               </b-field>
             </section>
           </div>
@@ -54,52 +63,38 @@
         @clickNote="clickHandle"
       />
     </div>
-    <h1 class="has-text-centered">Build the Scale Given!</h1>
+    <h1 v-if="showBegin" class="has-text-centered">Build the Scale Given!</h1>
+    <h1 v-if="!showBegin" class="has-text-centered">Build {{  }} on the Fretboard Above</h1>
 
-    <section
-      class="has-text-centered"
-      style="display: flex; justify-content: space-between"
-    >
-      <b-field v-if="!showBegin" label="Enter Your Answer">
-        <b-select
-          v-model="playerAnswer"
-          placeholder="Select a key"
-          icon="music"
-          id="playerAnswer"
-        >
-          <option v-for="elem in tonicArray" :value="elem" :key="elem">
-            {{ elem }}
-          </option>
-        </b-select>
-        <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
-      </b-field>
+    <section class="has-text-centered" style="display: flex; flex-direction: column; align-items: center; margin-top: 1rem;">
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
-      <b-button @click="test_method" label="TESTBUTTON" />
-      <b-button @click="clear_notes" label="CLEAR" />
+      <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
+      <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
     </section>
     <b-progress
       v-if="!showBegin"
       v-model="userScore"
       type="is-info"
       show-value
+      style="margin-top: 20px;"
     ></b-progress>
-    <!-- <Chords
+    <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
         style="margin-bottom: 50px"
-      /> -->
-    <!-- <Notation
+      /> 
+    <Notation
         v-if="this.ShowMusicSheet == 'true'"
         :scale="scale_info"
         :scale-name="scale_info.name"
-      /> -->
+      />
   </div>
 </template>
 
 <script>
 import CustomFretboard from "../components/CustomFretboard.vue";
-// import Chords from "../components/Chords.vue";
-// import Notation from "../components/Notation.vue";
+import Chords from "../components/Chords.vue";
+import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
@@ -118,10 +113,9 @@ export default {
 
   components: {
     CustomFretboard,
-    // Chords,
-    // Notation,
-    // NoteSelect,
-  },
+    Chords,
+    Notation
+},
 
   data: function () {
     return {
@@ -129,8 +123,8 @@ export default {
       sharps: "sharps",
       frets: 18,
       scale: {},
-      ShowMusicSheet: "true",
-      ShowChords: "true",
+      ShowMusicSheet: "false",
+      ShowChords: "false",
       showBegin: "true",
       playerAnswer: null,
       tonicArray: tonicArray,
