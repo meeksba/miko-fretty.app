@@ -92,7 +92,7 @@
                             </b-radio-button>
                             <b-radio-button
                               v-model="notation"
-                              native-value="Intervals"
+                              native-value="intervals"
                             >
                               <span>Intervals</span>
                             </b-radio-button>

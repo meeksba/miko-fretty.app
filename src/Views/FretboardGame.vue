@@ -7,17 +7,17 @@
 
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
-          <div class="modal-card" style="width: 500px">
+          <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
               <b-field label="Difficulty">
                 <b-radio-button v-model="radioButton" native-value="Easy">
                   Easy
                 </b-radio-button>
                 <b-radio-button v-model="radioButton" native-value="Medium">
-                  NOTUNLOCKED
+                  Medium
                 </b-radio-button>
                 <b-radio-button v-model="radioButton" native-value="Hard">
-                  NOTUNLOCKED
+                  Hard
                 </b-radio-button>
               </b-field>
               <b-field label="Test">
@@ -35,6 +35,23 @@
                   </b-radio-button>
                 </b-field>
               </b-field>
+              <b-field label="Show Chords">
+                          <b-field>
+                            <b-radio-button
+                              v-model="ShowChords"
+                              native-value="true"
+                            >
+                              <span>True</span>
+                            </b-radio-button>
+
+                            <b-radio-button
+                              v-model="ShowChords"
+                              native-value="false"
+                            >
+                              <span>False</span>
+                            </b-radio-button>
+                          </b-field>
+                        </b-field>
             </section>
           </div>
         </form>
@@ -78,11 +95,11 @@
       type="is-info"
       show-value
     ></b-progress>
-    <!-- <Chords
+    <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
         style="margin-bottom: 50px"
-      /> -->
+      />
     <Notation
       v-if="this.ShowMusicSheet == 'true'"
       :scale="scale_info"
@@ -93,7 +110,7 @@
 
 <script>
 import IdentifyFretboard from "../components/IdentifyFretboard.vue";
-// import Chords from "../components/Chords.vue";
+import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
@@ -115,8 +132,8 @@ export default {
     IdentifyFretboard,
     // Chords,
     Notation,
-    // NoteSelect,
-  },
+    Chords
+},
 
   data: function () {
     return {

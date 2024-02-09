@@ -185,6 +185,7 @@ export default {
       // fretboardHeight: 0,
     };
   },
+  
   // mounted() {
   //   this.fretsShape = this.fret_lines;
   //   this.polys = this.inlay_polys;
