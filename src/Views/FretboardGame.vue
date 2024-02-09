@@ -41,7 +41,7 @@
       </b-dropdown-item>
     </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <Fretboard
+      <IdentifyFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="notation"
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import Fretboard from "../components/Fretboard.vue";
+import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 // import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
@@ -112,7 +112,7 @@ export default {
   name: "FretboardGame",
 
   components: {
-    Fretboard,
+    IdentifyFretboard,
     // Chords,
     Notation,
     // NoteSelect,
@@ -131,6 +131,7 @@ export default {
       tonicArray: tonicArray,
       userScore: 0,
       correctAnswer: null,
+      answerArray:answerSet
     };
   },
 
@@ -199,8 +200,8 @@ export default {
     start_game() {
       console.log("Game Started");
       this.showBegin = !this.showBegin; //hide begin button
-      let temp = this.calculate_tonic(); //set initial answer
-      this.scale.tonic = temp; //show initial fretboard (1st question)
+      this.calculate_tonic(); //set initial answer
+      this.calculate_wrong_answer()//set initial wrong answers
     },
 
     calculate_random_element(inputArray) {
@@ -210,6 +211,8 @@ export default {
       return elem;
     },
     calculate_tonic() {
+      console.log("called calculate")
+
       let tonic = this.calculate_random_element(tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
@@ -220,33 +223,43 @@ export default {
         }
       }
       this.correctAnswer = tonic;
-      console.log(
-        "Correct answer in calculate tonic method " + this.correctAnswer
-      );
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       // let wrong = this.calculate_wrong_answer();
       // console.log("tonic " + tonic);
       // console.log("wrong " + wrong);
-      answerSet.clear();
+      let scaleType = this.scale_info.type.toString();
+      let stringCorrect = this.correctAnswer.toString();
+      let finalString = stringCorrect + " " +  scaleType ;
+      answerSet.push(finalString)
+      console.log("pushed correct")
+
 
       return tonic;
     },
     calculate_wrong_answer() {
+      console.log("called wrong")
       let wrong = this.calculate_random_element(tonicArray);
       while (wrong == this.correctAnswer || answerSet.has(wrong)) {
         //ensures wrongAnswer is not correctAnswer and isnt a duplicate
         wrong = this.calculate_random_element(tonicArray);
       }
-      answerSet.add(wrong);
+      let scaleType = this.scale_info.type.toString();
+      let stringWrong = wrong.toString();
+      let finalString = stringWrong + " " +  scaleType ;
+      console.log("Wrong string" + finalString)
+
+
+      answerSet.add(finalString);
       return wrong;
     },
     submit_answer() {
-      console.log("Player answer " + this.playerAnswer);
-      console.log("Correct answer " + this.correctAnswer);
+      answerSet.clear();
+      // console.log("Player answer " + this.playerAnswer);
+      // console.log("Correct answer " + this.correctAnswer);
       if (this.playerAnswer == this.correctAnswer) {
         this.userScore += 10;
       }
-      this.calculate_tonic();
+      this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers 
       this.calculate_wrong_answer();
       console.log("Submitted Answer");
     },
@@ -258,6 +271,10 @@ export default {
       console.log("Fretboard Notes no map " + this.scale_info.notes);
       console.log("Note.chrome " + Note.chroma);
       console.log("testmethod");
+      console.log("scale info type" + this.scale_info.type);
+      console.log("scale info type" + this.scale_info)
+      console.log(JSON.stringify(answerSet, null, 2))
+
 
       // console.log(correctAnswer);
     },
