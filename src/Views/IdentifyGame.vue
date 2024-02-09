@@ -2,22 +2,21 @@
   <div>
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
-        >Identify Game Settings</b-button
+        >Identify Settings</b-button
       >
-
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
               <b-field label="Difficulty">
                 <b-radio-button v-model="radioButton" native-value="Easy">
-                  Easy
+                  <span>Easy</span>
                 </b-radio-button>
                 <b-radio-button v-model="radioButton" native-value="Medium">
-                  Medium
+                  <span>Medium</span>
                 </b-radio-button>
                 <b-radio-button v-model="radioButton" native-value="Hard">
-                  Hard
+                  <span>Hard</span>
                 </b-radio-button>
               </b-field>
               <b-field label="Music Sheet">
@@ -35,12 +34,14 @@
                   <b-radio-button v-model="ShowChords" native-value="true">
                     <span>True</span>
                   </b-radio-button>
-
                   <b-radio-button v-model="ShowChords" native-value="false">
                     <span>False</span>
                   </b-radio-button>
                 </b-field>
               </b-field>
+              <div @click.stop>
+                <TuningSelection />
+              </div>
             </section>
           </div>
         </form>
@@ -56,7 +57,7 @@
         :scale="scale_info"
       />
     </div>
-    <h1 v-if="!showBegin" class="has-text-centered">What Scale is This?</h1>
+    <h1 v-if="!ShowBegin" class="has-text-centered">What Scale is This?</h1>
 
     <section
       class="has-text-centered"
@@ -67,7 +68,7 @@
         margin-top: 1rem;
       "
     >
-      <b-field v-if="!showBegin" label="Enter Your Answer">
+      <b-field v-if="!ShowBegin" label="Enter Your Answer">
         <b-select
           v-model="playerAnswer"
           placeholder="Select a key"
@@ -78,13 +79,13 @@
             {{ elem + " major" }}
           </option>
         </b-select>
-        <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
+        <b-button v-if="!ShowBegin" @click="submit_answer" label="Submit" />
       </b-field>
-      <b-button v-if="showBegin" @click="start_game" label="Begin" />
+      <b-button v-if="ShowBegin" @click="start_game" label="Begin" />
       <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
     </section>
     <b-progress
-      v-if="!showBegin"
+      v-if="!ShowBegin"
       v-model="userScore"
       type="is-info"
       show-value
@@ -104,9 +105,11 @@
 </template>
 
 <script>
+/* eslint-disable */
 import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
+import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
@@ -125,6 +128,7 @@ export default {
 
   components: {
     IdentifyFretboard,
+    TuningSelection,
     // Chords,
     Notation,
     Chords,
@@ -132,17 +136,18 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G",
+      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
-      showBegin: "true",
+      ShowBegin: "true",
       playerAnswer: null,
+      correctAnswer: null,
       tonicArray: tonicArray,
       userScore: 0,
-      correctAnswer: null,
+      isComponentModalActive: false,
     };
   },
 
@@ -210,7 +215,7 @@ export default {
     },
     start_game() {
       console.log("Game Started");
-      this.showBegin = !this.showBegin; //hide begin button
+      this.ShowBegin = !this.ShowBegin; //hide begin button
       this.calculate_tonic(); //set initial answer
       this.calculate_wrong_answer(); //set initial wrong answers
     },
