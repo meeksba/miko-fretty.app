@@ -64,7 +64,7 @@
           id="playerAnswer"
         >
           <option v-for="elem in tonicArray" :value="elem" :key="elem">
-            {{ elem }}
+            {{ elem + " major" }}
           </option>
         </b-select>
         <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
@@ -106,7 +106,7 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-let answerSet = new Set();
+// let answerSet = new Set(); //This variable may later be needed
 
 export default {
   name: "FretboardGame",
@@ -131,7 +131,6 @@ export default {
       tonicArray: tonicArray,
       userScore: 0,
       correctAnswer: null,
-      answerArray:answerSet
     };
   },
 
@@ -201,7 +200,7 @@ export default {
       console.log("Game Started");
       this.showBegin = !this.showBegin; //hide begin button
       this.calculate_tonic(); //set initial answer
-      this.calculate_wrong_answer()//set initial wrong answers
+      this.calculate_wrong_answer(); //set initial wrong answers
     },
 
     calculate_random_element(inputArray) {
@@ -211,7 +210,7 @@ export default {
       return elem;
     },
     calculate_tonic() {
-      console.log("called calculate")
+      console.log("called calculate");
 
       let tonic = this.calculate_random_element(tonicArray);
       while (tonic == this.scale.tonic) {
@@ -224,15 +223,7 @@ export default {
       }
       this.correctAnswer = tonic;
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-      // let wrong = this.calculate_wrong_answer();
-      // console.log("tonic " + tonic);
-      // console.log("wrong " + wrong);
-      let scaleType = this.scale_info.type.toString();
-      let stringCorrect = this.correctAnswer.toString();
-      let finalString = stringCorrect + " " +  scaleType ;
-      answerSet.push(finalString)
-      console.log("pushed correct")
-
+      console.log("Correct Answer = " + this.correctAnswer);
 
       return tonic;
     },
@@ -248,35 +239,21 @@ export default {
     //   let finalString = stringWrong + " " +  scaleType ;
     //   console.log("Wrong string" + finalString)
 
-
     //   answerSet.add(finalString);
     //   return wrong;
     // },
     submit_answer() {
-      answerSet.clear();
       // console.log("Player answer " + this.playerAnswer);
       // console.log("Correct answer " + this.correctAnswer);
       if (this.playerAnswer == this.correctAnswer) {
         this.userScore += 10;
       }
-      this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers 
+      this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
       // this.calculate_wrong_answer();
       console.log("Submitted Answer");
     },
     test_method() {
       console.log("here");
-      console.log(
-        "Fretboard Notes Map " + this.scale_info.notes.map(Note.chroma)
-      );
-      console.log("Fretboard Notes no map " + this.scale_info.notes);
-      console.log("Note.chrome " + Note.chroma);
-      console.log("testmethod");
-      console.log("scale info type" + this.scale_info.type);
-      console.log("scale info type" + this.scale_info)
-      console.log(JSON.stringify(answerSet, null, 2))
-
-
-      // console.log(correctAnswer);
     },
   },
 };
