@@ -4,7 +4,6 @@
       <b-button class="button" slot="trigger" icon-left="cog"
         >Build Settings</b-button
       >
-
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
           <div class="modal-card" style="width: 300px">
@@ -40,7 +39,6 @@
                   <b-radio-button v-model="ShowChords" native-value="true">
                     <span>True</span>
                   </b-radio-button>
-
                   <b-radio-button v-model="ShowChords" native-value="false">
                     <span>False</span>
                   </b-radio-button>
@@ -64,9 +62,19 @@
       />
     </div>
     <h1 v-if="showBegin" class="has-text-centered">Build the Scale Given!</h1>
-    <h1 v-if="!showBegin" class="has-text-centered">Build {{  }} on the Fretboard Above</h1>
+    <h1 v-if="!showBegin" class="has-text-centered">
+      Build <b>{{ currentScale }} Major </b> on the Fretboard Above
+    </h1>
 
-    <section class="has-text-centered" style="display: flex; flex-direction: column; align-items: center; margin-top: 1rem;">
+    <section
+      class="has-text-centered"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1rem;
+      "
+    >
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
       <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
       <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
@@ -76,18 +84,18 @@
       v-model="userScore"
       type="is-info"
       show-value
-      style="margin-top: 20px;"
+      style="margin-top: 20px"
     ></b-progress>
     <Chords
-        v-if="this.ShowChords == 'true'"
-        :chords="scaleChords"
-        style="margin-bottom: 50px"
-      /> 
+      v-if="this.ShowChords == 'true'"
+      :chords="scaleChords"
+      style="margin-bottom: 50px"
+    />
     <Notation
-        v-if="this.ShowMusicSheet == 'true'"
-        :scale="scale_info"
-        :scale-name="scale_info.name"
-      />
+      v-if="this.ShowMusicSheet == 'true'"
+      :scale="scale_info"
+      :scale-name="scale_info.name"
+    />
   </div>
 </template>
 
@@ -107,6 +115,7 @@ for (var scale of ScaleType.all()) {
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 let answerSet = new Set();
+let currentScale = "A";
 
 export default {
   name: "BuildGame",
@@ -114,8 +123,8 @@ export default {
   components: {
     CustomFretboard,
     Chords,
-    Notation
-},
+    Notation,
+  },
 
   data: function () {
     return {
@@ -132,6 +141,7 @@ export default {
       correctAnswer: null,
       clickedNotes: [],
       clickedKeys: [],
+      currentScale: currentScale,
     };
   },
 

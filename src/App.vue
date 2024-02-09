@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div class="has-text-centered">
+    <div class="has-text-centered" style="margin-bottom: 20px">
       <router-link to="/FretboardGame">
         <b-button @click="showGame = !showGame">Identify</b-button>
       </router-link>
@@ -15,7 +15,7 @@
         <Editor v-on:remove-fretboard="remove(editor)" />
       </div>
     </div>
-    <div class="has-text-centered" v-if= "!showGame && !showBuild">
+    <div class="has-text-centered" v-if="!showGame && !showBuild">
       <a @click="add">+ Add Fretboard</a>
     </div>
     <FretboardGame v-if="showGame" />
