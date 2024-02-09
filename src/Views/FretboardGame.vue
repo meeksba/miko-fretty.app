@@ -61,11 +61,16 @@
         :scale="scale_info"
       />
     </div>
-    <h1 class="has-text-centered">What Scale is This?</h1>
+    <h1 v-if="!showBegin" class="has-text-centered">What Scale is This?</h1>
 
     <section
       class="has-text-centered"
-      style="display: flex; justify-content: space-between"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1rem;
+      "
     >
       <b-field v-if="!showBegin" label="Enter Your Answer">
         <b-select
@@ -80,8 +85,8 @@
         </b-select>
         <b-button v-if="!showBegin" @click="submit_answer" label="Submit" />
       </b-field>
-      <b-button v-if="showBegin" @click="start_game" label="Begin" />
-      <b-button @click="test_method" label="TESTBUTTON" />
+      <b-button v-if="showBegin" @click="start_game" label="Begin"/>
+      <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
     </section>
     <b-progress
       v-if="!showBegin"

@@ -63,7 +63,7 @@
     </div>
     <h1 v-if="showBegin" class="has-text-centered">Build the Scale Given!</h1>
     <h1 v-if="!showBegin" class="has-text-centered">
-      Build <b>{{ currentScale }} Major </b> on the Fretboard Above
+      Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard Above
     </h1>
 
     <section
@@ -76,7 +76,7 @@
       "
     >
       <b-button v-if="showBegin" @click="start_game" label="Begin" />
-      <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
+      <b-button @click="test_method" label="TESTBUTTON" style="margin-top: 20px"/>
       <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
     </section>
     <b-progress
@@ -115,7 +115,6 @@ for (var scale of ScaleType.all()) {
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 let answerSet = new Set();
-let currentScale = "A";
 
 export default {
   name: "BuildGame",
@@ -131,7 +130,7 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: {},
+      scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
       showBegin: "true",
@@ -141,7 +140,6 @@ export default {
       correctAnswer: null,
       clickedNotes: [],
       clickedKeys: [],
-      currentScale: currentScale,
     };
   },
 
@@ -269,7 +267,7 @@ export default {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
       this.clickedNotes.push(note.name);
       console.log("note clicked " + JSON.stringify(note, null, 2));
-      console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
+      // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
 
       this.clickedKeys.push(note.key);
       console.log("userkey " + JSON.stringify(this.clickedKeys));
