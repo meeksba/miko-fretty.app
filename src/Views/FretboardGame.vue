@@ -36,22 +36,16 @@
                 </b-field>
               </b-field>
               <b-field label="Show Chords">
-                          <b-field>
-                            <b-radio-button
-                              v-model="ShowChords"
-                              native-value="true"
-                            >
-                              <span>True</span>
-                            </b-radio-button>
+                <b-field>
+                  <b-radio-button v-model="ShowChords" native-value="true">
+                    <span>True</span>
+                  </b-radio-button>
 
-                            <b-radio-button
-                              v-model="ShowChords"
-                              native-value="false"
-                            >
-                              <span>False</span>
-                            </b-radio-button>
-                          </b-field>
-                        </b-field>
+                  <b-radio-button v-model="ShowChords" native-value="false">
+                    <span>False</span>
+                  </b-radio-button>
+                </b-field>
+              </b-field>
             </section>
           </div>
         </form>
@@ -96,10 +90,10 @@
       show-value
     ></b-progress>
     <Chords
-        v-if="this.ShowChords == 'true'"
-        :chords="scaleChords"
-        style="margin-bottom: 50px"
-      />
+      v-if="this.ShowChords == 'true'"
+      :chords="scaleChords"
+      style="margin-bottom: 50px"
+    />
     <Notation
       v-if="this.ShowMusicSheet == 'true'"
       :scale="scale_info"
@@ -132,8 +126,8 @@ export default {
     IdentifyFretboard,
     // Chords,
     Notation,
-    Chords
-},
+    Chords,
+  },
 
   data: function () {
     return {
@@ -227,8 +221,6 @@ export default {
       return elem;
     },
     calculate_tonic() {
-      console.log("called calculate");
-
       let tonic = this.calculate_random_element(tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
@@ -267,10 +259,9 @@ export default {
       }
       this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
       // this.calculate_wrong_answer();
-      console.log("Submitted Answer");
     },
     test_method() {
-      console.log("here");
+      console.log("test method called ");
     },
   },
 };
