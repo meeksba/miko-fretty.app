@@ -54,48 +54,63 @@
         margin-top: 1rem;
       "
     >
-      <b-field v-if="StartGame" label="Enter Your Answer">
-        <b-select
-          v-model="playerAnswer"
-          placeholder="Select a key"
-          icon="music"
-          id="playerAnswer"
-        >
-          <option v-for="elem in tonicArray" :value="elem" :key="elem">
-            {{ elem + " major" }}
-          </option>
-        </b-select>
+      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
+
+      <div v-if="ShowSettings">
+        <b-field label="Enter Your Settings">
+          <b-field label="Difficulty">
+            <b-radio-button v-model="gameDifficulty" native-value="Easy">
+              <span>Easy</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameDifficulty" native-value="Medium">
+              <span>Medium</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameDifficulty" native-value="Hard">
+              <span>Hard</span>
+            </b-radio-button>
+          </b-field>
+        </b-field>
+        <b-field>
+          <TuningSelection />
+        </b-field>
+        <b-button @click="submit_settings()" label="Submit Settings" />
+      </div>
+      <div v-if="StartGame">
+        <b-field label="Enter Your Answer">
+          <div
+            class="columns is-multiline is-centered"
+            style="margin-top: 10px"
+          >
+            <b-field class="Tonic" label="Tonic:">
+              <b-input
+                v-model="playerTonic"
+                icon="music"
+                style="max-width: 100px"
+              ></b-input>
+            </b-field>
+            <b-field class="Scale" label="Scale ">
+              <b-autocomplete
+                v-model="playerScale"
+                :data="scale_search"
+                open-on-focus
+                clearable
+                append-to-body
+              ></b-autocomplete>
+            </b-field>
+          </div>
+        </b-field>
         <b-button
-          v-if="StartGame"
           @click="submit_answer"
           label="Submit"
           style="margin-top: 10px"
         />
-      </b-field>
-      <b-field v-if="ShowSettings" label="Enter Your Settings">
-        <b-field label="Difficulty">
-          <b-radio-button v-model="radioButton" native-value="Easy">
-            <span>Easy</span>
-          </b-radio-button>
-          <b-radio-button v-model="radioButton" native-value="Medium">
-            <span>Medium</span>
-          </b-radio-button>
-          <b-radio-button v-model="radioButton" native-value="Hard">
-            <span>Hard</span>
-          </b-radio-button>
-        </b-field>
-      </b-field>
-      <b-field v-if="ShowSettings">
-        <TuningSelection />
-      </b-field>
+      </div>
+
       <b-button
-        v-if="ShowSettings"
-        @click="submit_settings()"
-        label="Submit Settings"
+        @click="test_method"
+        label="TESTBUTTON"
+        style="margin-top: 40px"
       />
-      <!-- <b-button v-if="ShowSettings" @click="submit_answer" label="test" /> -->
-      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
-      <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
     </section>
     <b-progress
       v-if="StartGame"
@@ -155,14 +170,15 @@ export default {
       scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
+      gameDifficulty: "Easy",
       ShowSettings: false,
       StartGame:false,
       ShowBegin: true,
-      playerAnswer: null,
+      playerTonic: null,
+      playerScale: null,
       correctAnswer: null,
       tonicArray: tonicArray,
       userScore: 0,
-      isComponentModalActive: false,
     };
   },
 
@@ -184,16 +200,15 @@ export default {
     scaleChords: function () {
       return Mode.triads(this.scale_info.type, this.scale_info.tonic);
     },
-    // scale_search: function () {
-    //   return ALL_SCALES.filter((option) => {
-    //     return (
-    //       option
-    //         .toString()
-    //         .toLowerCase()
-    //         .indexOf(this.scale.type.toLowerCase()) >= 0
-    //     );
-    //   });
-    // },
+    scale_search: function () {
+      return ALL_SCALES.filter((option) => {
+        return (
+          option
+            .toString()
+            .toLowerCase()
+        );
+      });
+    },
     tuning_search() {
       const newData = [];
       Tunings.forEach((element) => {
@@ -231,7 +246,8 @@ export default {
     start_game() {
       console.log("Game Started");
       this.calculate_tonic(); //set initial answer
-      this.calculate_wrong_answer(); //set initial wrong answers
+      this.calculate_scale_type(); //create scale based on difficulty 
+      console.log("there")
     },
 
     calculate_random_element(inputArray) {
@@ -256,27 +272,41 @@ export default {
 
       return tonic;
     },
-    // calculate_wrong_answer() {
-    //   console.log("called wrong")
-    //   let wrong = this.calculate_random_element(tonicArray);
-    //   while (wrong == this.correctAnswer || answerSet.has(wrong)) {
-    //     //ensures wrongAnswer is not correctAnswer and isnt a duplicate
-    //     wrong = this.calculate_random_element(tonicArray);
-    //   }
-    //   let scaleType = this.scale_info.type.toString();
-    //   let stringWrong = wrong.toString();
-    //   let finalString = stringWrong + " " +  scaleType ;
-    //   console.log("Wrong string" + finalString)
+    calculate_scale_type(){
+      console.log("here")
+      let randInt = Math.random()
+      console.log("randint " + randInt)
+      switch(this.gameDifficulty){
+        case "Easy":
+          if(randInt < .5){
+            this.scale.type = "minor pentatonic"
+            return
+          }
+          this.scale.type = "major pentatonic"
+          return
+        case "Medium":
+          if(randInt < .5){
+            this.scale.type = "minor"
+            return
+          }
+          this.scale.type = "major"
+          return
+        case "Hard":
+          this.scale.type = "harmonic minor"
 
-    //   answerSet.add(finalString);
-    //   return wrong;
-    // },
+      }
+    },
     submit_answer() {
       // console.log("Player answer " + this.playerAnswer);
       // console.log("Correct answer " + this.correctAnswer);
+      // console.log(this.playerTonic + this.playerScale + "hello")
+      let tonic = this.playerTonic.toString()
+      let scale = this.playerScale.toString()
+      console.log(tonic + scale + "hello")
       if (this.playerAnswer == this.correctAnswer) {
         this.userScore += 10;
       }
+      this.calculate_scale_type();
       this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
       // this.calculate_wrong_answer();
     },
@@ -293,6 +323,8 @@ export default {
     },
     test_method() {
       console.log("test method called ");
+      console.log("scale type" + this.scale.type);
+      // this.scale.type = "minor"
     },
   },
 };
