@@ -247,7 +247,7 @@ export default {
       console.log("Game Started");
       this.calculate_tonic(); //set initial answer
       this.calculate_scale_type(); //create scale based on difficulty 
-      console.log("there")
+      // console.log("there")
     },
 
     calculate_random_element(inputArray) {
@@ -268,14 +268,11 @@ export default {
       }
       this.correctAnswer = tonic;
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-      console.log("Correct Answer = " + this.correctAnswer);
 
       return tonic;
     },
     calculate_scale_type(){
-      console.log("here")
       let randInt = Math.random()
-      console.log("randint " + randInt)
       switch(this.gameDifficulty){
         case "Easy":
           if(randInt < .5){
@@ -297,33 +294,28 @@ export default {
       }
     },
     submit_answer() {
-      // console.log("Player answer " + this.playerAnswer);
-      // console.log("Correct answer " + this.correctAnswer);
-      // console.log(this.playerTonic + this.playerScale + "hello")
-      let tonic = this.playerTonic.toString()
-      let scale = this.playerScale.toString()
-      console.log(tonic + scale + "hello")
-      if (this.playerAnswer == this.correctAnswer) {
+    this.playerTonic = this.playerTonic.toUpperCase();
+      if ((this.playerTonic + this.playerScale) == (this.scale.tonic + this.scale.type)) {
         this.userScore += 10;
       }
       this.calculate_scale_type();
       this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
-      // this.calculate_wrong_answer();
+      this.playerTonic = null;
+      this.playerScale = null;  //reset autofill
     },
     show_settings(){
       this.ShowSettings = true;  //show settings like tuning and difficulty 
       this.ShowBegin = false; //hide Begin button 
-      console.log("show settings ")
     },
     submit_settings(){
       this.StartGame = true;    //start game once users have set settings 
       this.ShowSettings = false;
-      console.log("submit settings ")
       this.start_game()
     },
     test_method() {
       console.log("test method called ");
-      console.log("scale type" + this.scale.type);
+      console.log(this.scale.tonic + " " + this.scale.type);
+    
       // this.scale.type = "minor"
     },
   },
