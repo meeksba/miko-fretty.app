@@ -8,17 +8,6 @@
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
-              <b-field label="Difficulty">
-                <b-radio-button v-model="radioButton" native-value="Easy">
-                  <span>Easy</span>
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Medium">
-                  <span>Medium</span>
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Hard">
-                  <span>Hard</span>
-                </b-radio-button>
-              </b-field>
               <b-field label="Music Sheet">
                 <b-field>
                   <b-radio-button v-model="ShowMusicSheet" native-value="true">
@@ -39,14 +28,12 @@
                   </b-radio-button>
                 </b-field>
               </b-field>
-              <div @click.stop>
-                <TuningSelection />
-              </div>
             </section>
           </div>
         </form>
       </b-dropdown-item>
     </b-dropdown>
+    <h1 v-if="StartGame" class="has-text-centered">What Scale is This?</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <IdentifyFretboard
         :tuning="tuning"
@@ -57,7 +44,6 @@
         :scale="scale_info"
       />
     </div>
-    <h1 v-if="!ShowBegin" class="has-text-centered">What Scale is This?</h1>
 
     <section
       class="has-text-centered"
@@ -68,7 +54,7 @@
         margin-top: 1rem;
       "
     >
-      <b-field v-if="!ShowBegin" label="Enter Your Answer">
+      <b-field v-if="StartGame" label="Enter Your Answer">
         <b-select
           v-model="playerAnswer"
           placeholder="Select a key"
@@ -79,13 +65,40 @@
             {{ elem + " major" }}
           </option>
         </b-select>
-        <b-button v-if="!ShowBegin" @click="submit_answer" label="Submit" />
+        <b-button
+          v-if="StartGame"
+          @click="submit_answer"
+          label="Submit"
+          style="margin-top: 10px"
+        />
       </b-field>
-      <b-button v-if="ShowBegin" @click="start_game" label="Begin" />
+      <b-field v-if="ShowSettings" label="Enter Your Settings">
+        <b-field label="Difficulty">
+          <b-radio-button v-model="radioButton" native-value="Easy">
+            <span>Easy</span>
+          </b-radio-button>
+          <b-radio-button v-model="radioButton" native-value="Medium">
+            <span>Medium</span>
+          </b-radio-button>
+          <b-radio-button v-model="radioButton" native-value="Hard">
+            <span>Hard</span>
+          </b-radio-button>
+        </b-field>
+      </b-field>
+      <b-field v-if="ShowSettings">
+        <TuningSelection />
+      </b-field>
+      <b-button
+        v-if="ShowSettings"
+        @click="submit_settings()"
+        label="Submit Settings"
+      />
+      <!-- <b-button v-if="ShowSettings" @click="submit_answer" label="test" /> -->
+      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
       <!-- <b-button @click="test_method" label="TESTBUTTON" /> -->
     </section>
     <b-progress
-      v-if="!ShowBegin"
+      v-if="StartGame"
       v-model="userScore"
       type="is-info"
       show-value
@@ -142,7 +155,9 @@ export default {
       scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
-      ShowBegin: "true",
+      ShowSettings: false,
+      StartGame:false,
+      ShowBegin: true,
       playerAnswer: null,
       correctAnswer: null,
       tonicArray: tonicArray,
@@ -215,7 +230,6 @@ export default {
     },
     start_game() {
       console.log("Game Started");
-      this.ShowBegin = !this.ShowBegin; //hide begin button
       this.calculate_tonic(); //set initial answer
       this.calculate_wrong_answer(); //set initial wrong answers
     },
@@ -266,6 +280,17 @@ export default {
       this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
       // this.calculate_wrong_answer();
     },
+    show_settings(){
+      this.ShowSettings = true;  //show settings like tuning and difficulty 
+      this.ShowBegin = false; //hide Begin button 
+      console.log("show settings ")
+    },
+    submit_settings(){
+      this.StartGame = true;    //start game once users have set settings 
+      this.ShowSettings = false;
+      console.log("submit settings ")
+      this.start_game()
+    },
     test_method() {
       console.log("test method called ");
     },
@@ -274,4 +299,9 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+h1{
+  font-size: 20px;
+  font-weight: bold;
+}
+</style>
