@@ -18,7 +18,7 @@
                   </b-radio-button>
                 </b-field>
               </b-field>
-              <b-field label="Show Chords">
+              <b-field label="Show hello">
                 <b-field>
                   <b-radio-button v-model="ShowChords" native-value="true">
                     <span>True</span>
@@ -27,6 +27,23 @@
                     <span>False</span>
                   </b-radio-button>
                 </b-field>
+              </b-field>
+              <b-field label="Notation">
+                <b-radio-button
+                  v-model="fretboardNotation"
+                  native-value="Intervals"
+                >
+                  <span>Interval</span>
+                </b-radio-button>
+                <b-radio-button
+                  v-model="fretboardNotation"
+                  native-value="sharp"
+                >
+                  <span>Notes</span>
+                </b-radio-button>
+                <b-radio-button v-model="fretboardNotation" native-value="test">
+                  <span>Test</span>
+                </b-radio-button>
               </b-field>
             </section>
           </div>
@@ -38,7 +55,7 @@
       <IdentifyFretboard
         :tuning="tuning"
         :notes="notes"
-        :notation="notation"
+        :notation="fretboardNotation"
         :frets="frets"
         :root="root"
         :scale="scale_info"
@@ -170,6 +187,7 @@ export default {
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Easy",
+      fretboardNotation: "Intervals",
       ShowSettings: false,
       StartGame:false,
       ShowBegin: true,
