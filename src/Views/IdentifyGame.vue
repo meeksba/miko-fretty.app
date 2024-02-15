@@ -73,7 +73,7 @@
         <b-field>
           <TuningSelection />
         </b-field>
-        <b-button @click="submit_settings()" label="Submit Settings" />
+        <b-button @click="submit_settings()" label="Begin Game" />
       </div>
       <div v-if="StartGame">
         <b-field label="Enter Your Answer">
@@ -157,7 +157,6 @@ export default {
   components: {
     IdentifyFretboard,
     TuningSelection,
-    // Chords,
     Notation,
     Chords,
   },
@@ -295,22 +294,24 @@ export default {
     },
     submit_answer() {
     this.playerTonic = this.playerTonic.toUpperCase();
+
       if ((this.playerTonic + this.playerScale) == (this.scale.tonic + this.scale.type)) {
-        this.userScore += 10;
+        //if user ans == displayed scale
+        this.userScore += 10; //update userscore/progress bar
       }
-      this.calculate_scale_type();
-      this.calculate_tonic(); //resets fretboards and refills answer set with wrong answers
-      this.playerTonic = null;
-      this.playerScale = null;  //reset autofill
+      this.calculate_scale_type(); //calculate if next question is major/minor etc 
+      this.calculate_tonic(); //resets fretboard with tonic of new scale
+      this.playerTonic = null;  //reset tonic input
+      this.playerScale = null;  //reset scale type input 
     },
     show_settings(){
       this.ShowSettings = true;  //show settings like tuning and difficulty 
       this.ShowBegin = false; //hide Begin button 
     },
     submit_settings(){
-      this.StartGame = true;    //start game once users have set settings 
-      this.ShowSettings = false;
-      this.start_game()
+      this.StartGame = true;    //start game once users have submit settings 
+      this.ShowSettings = false; //hide settings menu 
+      this.start_game() //start game
     },
     test_method() {
       console.log("test method called ");
