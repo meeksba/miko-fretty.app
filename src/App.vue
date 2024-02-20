@@ -20,6 +20,7 @@
     </div>
     <IdentifyGame v-if="showGame" />
     <BuildGame v-if="showBuild" />
+    <b-button class="is-pulled-right" icon-left="user" @click="playSound()"> SOUND </b-button>
   </section>
 </template>
 
@@ -27,7 +28,16 @@
 import Editor from "./components/Editor.vue";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
+// import guitarSounds from "./guitarsounds";
+import * as Tone from 'tone';
 // import NoteSelect from "./components/NoteSelect.vue";
+
+const guitarSounds = new Tone.Sampler({
+	urls: {
+        'G4': 'G4.[mp3|ogg]',
+	},
+	baseUrl: "/samples/guitar-acoustic/",
+}).toDestination();
 
 export default {
   name: "App",
@@ -53,6 +63,15 @@ export default {
       if (index > -1) {
         this.editors.splice(index, 1);
       }
+    },
+    playSound() {
+        // Ensure that Tone library is started
+        Tone.start().then(() => {
+            console.log("sound ");
+            guitarSounds.triggerAttackRelease(["G4"], 0.5);
+        }).catch((error) => {
+            console.error("Error starting Tone:", error);
+        });
     },
   },
 };
