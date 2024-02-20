@@ -320,12 +320,28 @@ export default {
         sharps: sharp,
         pitchClass: true,
       });
-      if (this.notation != "Intervals") return name;
 
       var index = this.scale.notes.indexOf(name);
-      if (index == -1) return name;
+      if (index == -1) {
+        //if name not found in notes (eg C# in F minor rather than Db)
+        let temp = this.findCorrectNote(x);
+        if (this.notation == "sharp") {
+          return this.scale.notes[temp];
+        }
+        return this.scale.intervals[temp];
+      }
 
+      if (this.notation != "Intervals") return name;
       return this.scale.intervals[index];
+    },
+    findCorrectNote(x) {
+      //Converts sharp notes to flat notes in instances like F minor where you want Ab instead of G#
+      let name = Midi.midiToNoteName(x, {
+        sharps: false,
+        pitchClass: true,
+      });
+      var index = this.scale.notes.indexOf(name);
+      return index;
     },
     normalize(notes) {
       return notes.map((x) => x % 12);

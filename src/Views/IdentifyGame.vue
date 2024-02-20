@@ -183,10 +183,10 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "major" },
+      scale: { tonic: "F", type: "minor" },
       ShowMusicSheet: "false",
       ShowChords: "false",
-      gameDifficulty: "Easy",
+      gameDifficulty: "Medium",
       fretboardNotation: "Intervals",
       ShowSettings: false,
       StartGame:false,
@@ -332,8 +332,13 @@ export default {
       this.start_game() //start game
     },
     test_method() {
-      console.log("test method called ");
+
+      // console.log("test method called ");
+      this.calculate_scale_type(); //calculate if next question is major/minor etc 
+      this.calculate_tonic(); //resets fretboard with tonic of new scale
       console.log(this.scale.tonic + " " + this.scale.type);
+
+      // this.calculate_tonic();
     
       // this.scale.type = "minor"
     },

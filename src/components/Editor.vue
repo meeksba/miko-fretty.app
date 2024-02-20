@@ -79,20 +79,20 @@
                           <b-field>
                             <b-radio-button
                               v-model="notation"
-                              native-value="sharps"
+                              native-value="sharp"
                             >
                               <span>#</span>
                             </b-radio-button>
 
-                            <b-radio-button
+                            <!-- <b-radio-button
                               v-model="notation"
                               native-value="flats"
                             >
                               <span>b</span>
-                            </b-radio-button>
+                            </b-radio-button> -->
                             <b-radio-button
                               v-model="notation"
-                              native-value="intervals"
+                              native-value="Intervals"
                             >
                               <span>Intervals</span>
                             </b-radio-button>
@@ -206,6 +206,7 @@ export default {
       scale: { tonic: "A", type: "minor" },
       ShowMusicSheet: "true",
       ShowChords: "true",
+      notation: "sharp",
     };
   },
 
