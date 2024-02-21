@@ -105,6 +105,8 @@ import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
+// import { guitarSounds } from "../guitarsounds";
+import * as Tone from "tone";
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -113,7 +115,7 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-let answerSet = new Set();
+let answerSet = [];
 
 export default {
   name: "BuildGame",
@@ -152,6 +154,8 @@ export default {
     },
     notes: function () {
       // return this.scale_info.notes.map(Note.chroma);
+
+      // console.log("here " + JSON.stringify(this.clickedNotes.map(Note.chroma), null, 2));
       return this.clickedNotes.map(Note.chroma); //notes now relies on the clickedNotes array which is populated when a user clicks a note
     },
     scale_info: function () {
@@ -265,7 +269,12 @@ export default {
       }
       this.clickedNotes.push(note.name); //passed to child fretboard component to be rendered
       this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
+      console.log("ClickedKeys:", this.clickedKeys);
+
       console.log("Correct");
+      console.log("note num " + note.num);
+      Tone.start();
+      // guitarSounds.triggerAttackRelease(["G4"], 0.5);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
       // console.log("userkeys " + JSON.stringify(this.clickedKeys));
     },

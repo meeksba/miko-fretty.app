@@ -218,7 +218,7 @@ export default {
         // find notes
         // console.log("notes " + this.notes)
         let normalized_notes = this.normalize(this.notes);
-        // console.log("normalized_notes " + normalized_notes)
+        console.log("normalized_notes " + normalized_notes)
         // let toRender = [];
         let visible = [];
         let hidden = [];
@@ -235,6 +235,7 @@ export default {
           };
           if (normalized_notes.includes(num)) {
             if (this.clickedKeys.includes(note.key)) {
+              console.log("Note:", note, "Key:", note.key);
               visible.push(note);
             }
           } else {
@@ -351,6 +352,8 @@ export default {
       return notes.map((x) => x % 12); // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
     },
     clickEvent(note) {
+      console.log("emit midi note " + note.num)
+      console.log("note " + JSON.stringify(note));
       this.$emit("clickNote", note);
     },
     // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number
