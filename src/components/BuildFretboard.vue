@@ -215,17 +215,10 @@ export default {
     strings: function () {
       let result = [];
       this.tuning.forEach((tuning, string) => {
-        // find notes
-        // console.log("notes " + this.notes)
-        let normalized_notes = this.normalize(this.notes);
-        console.log("normalized_notes " + normalized_notes)
-        // let toRender = [];
         let visible = [];
         let hidden = [];
         for (let fret = 0; fret < this.frets; fret++) {
-          // console.log("fret " + fret)
           let num = (tuning + fret) % 12;
-          // console.log("num " + num)
           let note = {
             num: num,
             fret: fret,
@@ -233,11 +226,8 @@ export default {
             x: (this.fretpos(fret - 1) + this.fretpos(fret)) / 2,
             key: "n" + string + "_" + fret,
           };
-          if (normalized_notes.includes(num)) {
-            if (this.clickedKeys.includes(note.key)) {
-              console.log("Note:", note, "Key:", note.key);
-              visible.push(note);
-            }
+          if (this.clickedKeys.includes(note.key)) {
+            visible.push(note);
           } else {
             hidden.push(note);
           }
@@ -352,8 +342,8 @@ export default {
       return notes.map((x) => x % 12); // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
     },
     clickEvent(note) {
-      console.log("emit midi note " + note.num)
-      console.log("note " + JSON.stringify(note));
+      // console.log("emit midi note " + note.num);
+      // console.log("note " + JSON.stringify(note));
       this.$emit("clickNote", note);
     },
     // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number

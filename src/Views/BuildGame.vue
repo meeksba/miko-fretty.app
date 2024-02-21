@@ -115,7 +115,6 @@ for (var scale of ScaleType.all()) {
 }
 
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-let answerSet = [];
 
 export default {
   name: "BuildGame",
@@ -138,9 +137,9 @@ export default {
       playerAnswer: null,
       tonicArray: tonicArray,
       userScore: 0,
-      correctAnswer: null,
-      clickedNotes: [],
+      tonicCount: 0,
       clickedKeys: [],
+      clickedNotes: [],
     };
   },
 
@@ -152,12 +151,10 @@ export default {
     root: function () {
       return Note.chroma(this.scale.tonic);
     },
-    notes: function () {
-      // return this.scale_info.notes.map(Note.chroma);
-
-      // console.log("here " + JSON.stringify(this.clickedNotes.map(Note.chroma), null, 2));
-      return this.clickedNotes.map(Note.chroma); //notes now relies on the clickedNotes array which is populated when a user clicks a note
-    },
+    // notes: function () {
+    //   // return this.scale_info.notes.map(Note.chroma);
+    //   return null; //notes now relies on the clickedNotes array which is populated when a user clicks a note
+    // },
     scale_info: function () {
       let name = this.scale.tonic + " " + this.scale.type;
       return Scale.get(name);
@@ -188,9 +185,9 @@ export default {
     saveSettings() {
       localStorage.setItem("tuning", this.usr_tuning);
     },
-    normalize(notes) {
-      return notes.map((x) => x % 12);
-    },
+    // normalize(notes) {
+    //   return notes.map((x) => x % 12);
+    // },
     toname(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.notation != "flat",
@@ -203,6 +200,7 @@ export default {
       }
     },
     start_game() {
+      this.clickedKeys = [];
       console.log("Game Started");
       this.showBegin = !this.showBegin; //hide begin button
       let temp = this.calculate_tonic(); //set initial answer
@@ -225,21 +223,10 @@ export default {
           break;
         }
       }
-      this.correctAnswer = tonic;
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-      answerSet.clear();
 
       return tonic;
     },
-    // calculate_wrong_answer() {
-    //   let wrong = this.calculate_random_element(tonicArray);
-    //   while (wrong == this.correctAnswer || answerSet.has(wrong)) {
-    //     //ensures wrongAnswer is not correctAnswer and isnt a duplicate
-    //     wrong = this.calculate_random_element(tonicArray);
-    //   }
-    //   answerSet.add(wrong);
-    //   return wrong;
-    // },
     submit_answer() {
       // if (this.playerAnswer == this.correctAnswer) {
       //   this.userScore += 10;
@@ -252,6 +239,7 @@ export default {
       // console.log("notes " + JSON.stringify(temp, null, 2));
       // console.log("scale info " + JSON.stringify(this.scale_info.notes, null, 2));
       console.log("scale notes " + this.scale_notes);
+      this.tonicCount = 0;
     },
     calculate_scale_notes() {
       console.log("clear notes ");
@@ -259,20 +247,31 @@ export default {
     },
     clickHandle(note) {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
-      console.log("scale notes " + this.scale_notes);
-      console.log("note clicked " + JSON.stringify(note.name, null, 2));
+      if (
+        this.clickedNotes.includes(note.name) &&
+        note.name != this.scale.tonic
+      ) {
+        alert(
+          "You cannot select more than 1 of a non root note, please try again"
+        );
+        return;
+      }
 
+      if (note.name == this.scale.tonic) {
+        this.tonicCount++; //counter only allows tonic note and its octave
+        if (this.tonicCount >= 3) {
+          alert("Cannot select more than 2 of the root note ");
+          return;
+        }
+      }
       if (!this.scale_info.notes.includes(note.name)) {
-        console.log("not in scale ");
         alert("Please try again, the note you selected is not correct");
         return;
       }
-      this.clickedNotes.push(note.name); //passed to child fretboard component to be rendered
-      this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
-      console.log("ClickedKeys:", this.clickedKeys);
 
-      console.log("Correct");
-      console.log("note num " + note.num);
+      this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
+      this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
+
       Tone.start();
       // guitarSounds.triggerAttackRelease(["G4"], 0.5);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
