@@ -105,9 +105,8 @@ import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
-// import { guitarSounds } from "../guitarsounds";
-import * as Tone from "tone";
-
+import { playNote } from "../guitarsounds";
+// import * as Tone from "tone";
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);
@@ -268,12 +267,12 @@ export default {
         alert("Please try again, the note you selected is not correct");
         return;
       }
-
+      // console.log("key " + note.key);
       this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
       this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
 
-      Tone.start();
-      // guitarSounds.triggerAttackRelease(["G4"], 0.5);
+      
+      playNote(note.key)
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
       // console.log("userkeys " + JSON.stringify(this.clickedKeys));
     },

@@ -20,9 +20,6 @@
     </div>
     <IdentifyGame v-if="showGame" />
     <BuildGame v-if="showBuild" />
-    <b-button class="is-pulled-right" icon-left="user" @click="playSound()">
-      SOUND
-    </b-button>
   </section>
 </template>
 
@@ -30,8 +27,6 @@
 import Editor from "./components/Editor.vue";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
-import { guitarSounds } from "./guitarsounds";
-import * as Tone from "tone";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
@@ -58,11 +53,6 @@ export default {
       if (index > -1) {
         this.editors.splice(index, 1);
       }
-    },
-    playSound() {
-      //need tone.start to initiate library
-      Tone.start();
-      guitarSounds.triggerAttackRelease(["G4"], 0.5);
     },
   },
 };
