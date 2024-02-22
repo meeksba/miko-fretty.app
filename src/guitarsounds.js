@@ -69,9 +69,10 @@ const fretNote = {
 }
 
 export function playNote(key){
-    console.log("playnote key " + key)
+    // console.log("playnote key " + key)
     let note = fretNote[key]
-    console.log("fretnote  " + note)
+    // console.log("fretnote  " + note)
     Tone.start();
-      guitarSounds.triggerAttackRelease([note] , 0.75);
+    console.log("sound played ");
+    guitarSounds.triggerAttackRelease([note] , 0.75);
 }

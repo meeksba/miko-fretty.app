@@ -2,7 +2,7 @@
   <div>
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
-        >Build Settings</b-button
+        >Interval Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
@@ -10,7 +10,7 @@
             <section class="modal-card-body">
               <b-field label="Difficulty">
                 <b-radio-button v-model="radioButton" native-value="Easy">
-                  Easy
+                  Test
                 </b-radio-button>
                 <b-radio-button v-model="radioButton" native-value="Medium">
                   Medium
@@ -45,7 +45,7 @@
       </b-dropdown-item>
     </b-dropdown>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <BuildFretboard
+      <IntervalFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="notation"
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import BuildFretboard from "../components/BuildFretboard.vue";
+import IntervalFretboard from "../components/IntervalFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
@@ -116,10 +116,10 @@ for (var scale of ScaleType.all()) {
 const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 
 export default {
-  name: "BuildGame",
+  name: "IntervalGame",
 
   components: {
-    BuildFretboard,
+    IntervalFretboard,
     Chords,
     Notation,
   },
@@ -246,27 +246,27 @@ export default {
     },
     clickHandle(note) {
       //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
-      if (
-        this.clickedNotes.includes(note.name) &&
-        note.name != this.scale.tonic
-      ) {
-        alert(
-          "You cannot select more than 1 of a non root note, please try again"
-        );
-        return;
-      }
+      // if (
+      //   this.clickedNotes.includes(note.name) &&
+      //   note.name != this.scale.tonic
+      // ) {
+      //   alert(
+      //     "You cannot select more than 1 of a non root note, please try again"
+      //   );
+      //   return;
+      // }
 
-      if (note.name == this.scale.tonic) {
-        this.tonicCount++; //counter only allows tonic note and its octave
-        if (this.tonicCount >= 3) {
-          alert("Cannot select more than 2 of the root note ");
-          return;
-        }
-      }
-      if (!this.scale_info.notes.includes(note.name)) {
-        alert("Please try again, the note you selected is not correct");
-        return;
-      }
+      // if (note.name == this.scale.tonic) {
+      //   this.tonicCount++; //counter only allows tonic note and its octave
+      //   if (this.tonicCount >= 3) {
+      //     alert("Cannot select more than 2 of the root note ");
+      //     return;
+      //   }
+      // }
+      // if (!this.scale_info.notes.includes(note.name)) {
+      //   alert("Please try again, the note you selected is not correct");
+      //   return;
+      // }
       // console.log("key " + note.key);
       this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
       this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates

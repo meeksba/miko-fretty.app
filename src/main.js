@@ -3,6 +3,7 @@ import App from "./App.vue";
 import VueRouter from "vue-router";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
+import IntervalGame from "./Views/IntervalGame.vue";
 import store from "./store.js";
 
 import {
@@ -89,6 +90,11 @@ const routes = [
     path: "/BuildGame",
     name: "BuildGame",
     component: BuildGame,
+  },
+  {
+    path: "/IntervalGame",
+    name: "IntervalGame",
+    component: IntervalGame,
   },
 ];
 

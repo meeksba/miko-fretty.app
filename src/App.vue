@@ -7,9 +7,12 @@
       <router-link to="/BuildGame">
         <b-button @click="showBuild = !showBuild">Build</b-button>
       </router-link>
+      <router-link to="/IntervalGame">
+        <b-button @click="showInterval = !showInterval">Interval</b-button>
+      </router-link>
     </div>
     <b-button class="is-pulled-right" icon-left="user"> Profile </b-button>
-    <div v-if="!showGame && !showBuild">
+    <div v-if="!showGame && !showBuild && !showInterval">
       <div class="container" v-for="editor in editors" v-bind:key="editor">
         <!--<note-select />-->
         <Editor v-on:remove-fretboard="remove(editor)" />
@@ -20,6 +23,7 @@
     </div>
     <IdentifyGame v-if="showGame" />
     <BuildGame v-if="showBuild" />
+    <IntervalGame v-if="showInterval" />
   </section>
 </template>
 
@@ -27,6 +31,7 @@
 import Editor from "./components/Editor.vue";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
+import IntervalGame from "./Views/IntervalGame.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
@@ -35,6 +40,7 @@ export default {
     Editor,
     IdentifyGame,
     BuildGame,
+    IntervalGame,
     // NoteSelect
   },
   data() {
@@ -42,6 +48,7 @@ export default {
       editors: [1],
       showGame: false,
       showBuild: false,
+      showInterval: false,
     };
   },
   methods: {
