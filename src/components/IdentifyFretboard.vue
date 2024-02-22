@@ -144,7 +144,7 @@
 import { Midi } from "@tonaljs/tonal";
 
 export default {
-  name: "Fretboard",
+  name: "IdentifyFretboard",
 
   props: {
     tuning: {

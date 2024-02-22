@@ -342,8 +342,6 @@ export default {
       return notes.map((x) => x % 12); // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
     },
     clickEvent(note) {
-      // console.log("emit midi note " + note.num);
-      // console.log("note " + JSON.stringify(note));
       this.$emit("clickNote", note);
     },
     // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number

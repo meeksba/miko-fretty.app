@@ -106,7 +106,6 @@ import Notation from "../components/Notation.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
-// import * as Tone from "tone";
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);

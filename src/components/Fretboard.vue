@@ -92,6 +92,7 @@
           <circle
             @mouseleave="hover_note = -1"
             @mouseover="hover_note = note.num"
+            @click="clickEvent(note)"
             r="10"
             :cx="note.x"
             :cy="string.y"
@@ -128,6 +129,7 @@
             <circle
               @mouseleave="hover_note = -1"
               @mouseover="hover_note = note.num"
+              @click="clickEvent(note)"
               r="10"
               :cx="note.x"
               :cy="string.y"
@@ -314,9 +316,9 @@ export default {
         return p20 + (p20 - p19) * (n - 20);
       }
     },
-    toname(x) {
+    toname(num) {
       let sharp = this.notation != "flat";
-      let name = Midi.midiToNoteName(x, {
+      let name = Midi.midiToNoteName(num, {
         sharps: sharp,
         pitchClass: true,
       });
@@ -324,7 +326,7 @@ export default {
       var index = this.scale.notes.indexOf(name);
       if (index == -1) {
         //if name not found in notes (eg C# in F minor rather than Db)
-        let temp = this.findCorrectNote(x);
+        let temp = this.findCorrectNote(num);
         if (this.notation == "sharp") {
           return this.scale.notes[temp];
         }
@@ -334,9 +336,9 @@ export default {
       if (this.notation != "Intervals") return name;
       return this.scale.intervals[index];
     },
-    findCorrectNote(x) {
+    findCorrectNote(num) {
       //Converts sharp notes to flat notes in instances like F minor where you want Ab instead of G#
-      let name = Midi.midiToNoteName(x, {
+      let name = Midi.midiToNoteName(num, {
         sharps: false,
         pitchClass: true,
       });
@@ -345,6 +347,10 @@ export default {
     },
     normalize(notes) {
       return notes.map((x) => x % 12);
+    },
+    clickEvent(note) {
+      console.log("note clicked " + JSON.stringify(note));
+      this.$emit("clickNote", note);
     },
   },
 };

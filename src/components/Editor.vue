@@ -151,6 +151,7 @@
           :frets="frets"
           :root="root"
           :scale="scale_info"
+          @clickNote="clickHandle"
         />
       </div>
       <Chords
@@ -181,6 +182,7 @@ import Notation from "./Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
+import { playNote } from "../guitarsounds";
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -271,6 +273,9 @@ export default {
       if (x == "") {
         return;
       }
+    },
+    clickHandle(note) {
+      playNote(note.key);
     },
   },
 };
