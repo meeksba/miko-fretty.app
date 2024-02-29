@@ -31,18 +31,15 @@
               <b-field label="Notation">
                 <b-radio-button
                   v-model="fretboardNotation"
-                  native-value="Intervals"
-                >
-                  <span>Interval</span>
-                </b-radio-button>
-                <b-radio-button
-                  v-model="fretboardNotation"
                   native-value="sharp"
                 >
                   <span>Notes</span>
                 </b-radio-button>
-                <b-radio-button v-model="fretboardNotation" native-value="test">
-                  <span>Test</span>
+                <b-radio-button
+                  v-model="fretboardNotation"
+                  native-value="Intervals"
+                >
+                  <span>Interval</span>
                 </b-radio-button>
               </b-field>
             </section>
@@ -187,7 +184,7 @@ export default {
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
-      fretboardNotation: "Intervals",
+      fretboardNotation: "sharp",
       ShowSettings: false,
       StartGame:false,
       ShowBegin: true,
@@ -317,7 +314,7 @@ export default {
         //if user ans == displayed scale
         this.userScore += 10; //update userscore/progress bar
       }
-      this.calculate_scale_type(); //calculate if next question is major/minor etc 
+      this.calculate_scale_type(); //calculate scale according to difficulty
       this.calculate_tonic(); //resets fretboard with tonic of new scale
       this.playerTonic = null;  //reset tonic input
       this.playerScale = null;  //reset scale type input 
@@ -333,14 +330,12 @@ export default {
     },
     test_method() {
 
-      // console.log("test method called ");
-      this.calculate_scale_type(); //calculate if next question is major/minor etc 
+      this.calculate_scale_type(); //calculate scale according to difficulty
       this.calculate_tonic(); //resets fretboard with tonic of new scale
-      console.log(this.scale.tonic + " " + this.scale.type);
-
-      // this.calculate_tonic();
-    
-      // this.scale.type = "minor"
+      // console.log(this.scale.tonic + " " + this.scale.type);
+      console.log("scale before" + this.scale.type)
+      this.scale.type = "chromatic"
+      console.log("scale after" + this.scale.type)
     },
   },
 };

@@ -76,27 +76,18 @@
                           ></b-numberinput>
                         </b-field>
                         <b-field label="Notation">
-                          <b-field>
-                            <b-radio-button
-                              v-model="notation"
-                              native-value="sharp"
-                            >
-                              <span>#</span>
-                            </b-radio-button>
-
-                            <!-- <b-radio-button
-                              v-model="notation"
-                              native-value="flats"
-                            >
-                              <span>b</span>
-                            </b-radio-button> -->
-                            <b-radio-button
-                              v-model="notation"
-                              native-value="Intervals"
-                            >
-                              <span>Intervals</span>
-                            </b-radio-button>
-                          </b-field>
+                          <b-radio-button
+                            v-model="notation"
+                            native-value="sharp"
+                          >
+                            <span>Notes</span>
+                          </b-radio-button>
+                          <b-radio-button
+                            v-model="notation"
+                            native-value="Intervals"
+                          >
+                            <span>Intervals</span>
+                          </b-radio-button>
                         </b-field>
                         <b-field label="Show Chords">
                           <b-field>
@@ -205,7 +196,7 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "minor" },
+      scale: { tonic: "F", type: "diminished" },
       ShowMusicSheet: "true",
       ShowChords: "true",
       notation: "sharp",
