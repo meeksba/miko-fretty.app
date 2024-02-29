@@ -1,8 +1,6 @@
 <template>
   <div>
-    <b-field grouped group-multiline position="is-centered">
-      <b-field label="Notation"></b-field>
-    </b-field>
+    <b-field grouped group-multiline position="is-centered"> </b-field>
     <hr />
     <div ref="musicNotation"></div>
     <div ref="guitarTab"></div>
@@ -42,7 +40,7 @@ export default {
       );
       const width =
         this.$refs.musicNotation.parentNode.parentElement.clientWidth;
-      renderer.resize(width, 200);
+      renderer.resize(width, 100);
       const context = renderer.getContext();
       // Create a VexFlow stave
       const stave = new Stave(0, -10, width);

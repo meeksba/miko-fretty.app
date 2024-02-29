@@ -1,52 +1,6 @@
 <template>
   <div>
-    <b-dropdown append-to-body aria-role="menu" trap-focus>
-      <b-button class="button" slot="trigger" icon-left="cog"
-        >Identify Settings</b-button
-      >
-      <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
-        <form action>
-          <div class="modal-card" style="width: 300px">
-            <section class="modal-card-body">
-              <b-field label="Music Sheet">
-                <b-field>
-                  <b-radio-button v-model="ShowMusicSheet" native-value="true">
-                    <span>True</span>
-                  </b-radio-button>
-                  <b-radio-button v-model="ShowMusicSheet" native-value="false">
-                    <span>False</span>
-                  </b-radio-button>
-                </b-field>
-              </b-field>
-              <b-field label="Show Scale Chords">
-                <b-field>
-                  <b-radio-button v-model="ShowChords" native-value="true">
-                    <span>True</span>
-                  </b-radio-button>
-                  <b-radio-button v-model="ShowChords" native-value="false">
-                    <span>False</span>
-                  </b-radio-button>
-                </b-field>
-              </b-field>
-              <b-field label="Notation">
-                <b-radio-button
-                  v-model="fretboardNotation"
-                  native-value="sharp"
-                >
-                  <span>Notes</span>
-                </b-radio-button>
-                <b-radio-button
-                  v-model="fretboardNotation"
-                  native-value="Intervals"
-                >
-                  <span>Interval</span>
-                </b-radio-button>
-              </b-field>
-            </section>
-          </div>
-        </form>
-      </b-dropdown-item>
-    </b-dropdown>
+    <!-- <h1> Identify Scale Game </h1> -->
     <h1 v-if="StartGame" class="has-text-centered">What Scale is This?</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <IdentifyFretboard
@@ -98,11 +52,6 @@
         </b-field>
         <b-button @click="submit_settings()" label="Begin Game" />
       </div>
-      <Notation
-        v-if="this.ShowMusicSheet == 'true'"
-        :scale="scale_info"
-        :scale-name="scale_info.name"
-      />
       <div v-if="StartGame">
         <b-field label="Enter Your Answer">
           <div
@@ -125,14 +74,19 @@
                 append-to-body
               ></b-autocomplete>
             </b-field>
+            <b-button
+              @click="submit_answer"
+              label="Submit"
+              style="margin-top: 32px"
+            />
           </div>
         </b-field>
-        <b-button
-          @click="submit_answer"
-          label="Submit"
-          style="margin-top: 10px"
-        />
       </div>
+      <Notation
+        v-if="this.ShowMusicSheet == 'true'"
+        :scale="scale_info"
+        :scale-name="scale_info.name"
+      />
 
       <b-button
         @click="test_method"
@@ -193,7 +147,7 @@ export default {
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
-      gameMode:"Notes",
+      gameMode:"Note",
       fretboardNotation: "sharp",
       ShowSettings: false,
       StartGame:false,
@@ -278,7 +232,13 @@ export default {
     },
     submit_settings(){
       this.StartGame = true;    //start game once users have submit settings 
-      this.ShowSettings = false; //hide settings menu 
+      this.ShowSettings = false; //hide settings menu
+      if(this.gameMode == "Interval"){
+        this.fretboardNotation = "Intervals"
+        this.start_game() //start game
+        return
+      } 
+      this.ShowMusicSheet = 'true';
       this.start_game() //start game
     },
     start_game() {
@@ -367,6 +327,7 @@ export default {
 h1{
   font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 h2{
   font-size:25px;

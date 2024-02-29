@@ -74,7 +74,7 @@
                 r="10"
                 stroke-width="1"
                 fill="white"
-                stroke="white"
+                stroke="grey"
               />
               <!-- name -->
               <text
@@ -82,7 +82,7 @@
                 :x="note.x"
                 :y="string.y"
                 dominant-baseline="central"
-                fill="black"
+                fill="grey"
                 text-anchor="middle"
               >
                 {{ note.name }}

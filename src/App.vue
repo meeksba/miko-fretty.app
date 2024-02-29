@@ -11,7 +11,7 @@
         <b-button @click="showInterval = !showInterval">Interval</b-button>
       </router-link>
     </div>
-    <b-button class="is-pulled-right" icon-left="user"> Profile </b-button>
+    <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
     <div v-if="!showGame && !showBuild && !showInterval">
       <div class="container" v-for="editor in editors" v-bind:key="editor">
         <!--<note-select />-->
