@@ -45,7 +45,7 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
+      usr_tuning: localStorage.getItem("identifyTuning") || "E A D G B E",
     };
   },
 
@@ -71,8 +71,11 @@ export default {
   },
 
   methods: {
+    // saveSettings() {
+    //   localStorage.setItem("identifyTuning", this.usr_tuning);
+    // },
     saveSettings() {
-      localStorage.setItem("tuning", this.usr_tuning);
+      this.$emit("tuningChange", this.usr_tuning);
     },
     scale_input(x) {
       if (x == "") {

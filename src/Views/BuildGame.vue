@@ -8,17 +8,6 @@
         <form action>
           <div class="modal-card" style="width: 300px">
             <section class="modal-card-body">
-              <b-field label="Difficulty">
-                <b-radio-button v-model="radioButton" native-value="Easy">
-                  Easy
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Medium">
-                  Medium
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Hard">
-                  Hard
-                </b-radio-button>
-              </b-field>
               <b-field label="Music Sheet">
                 <b-field>
                   <b-radio-button v-model="ShowMusicSheet" native-value="true">
@@ -56,11 +45,10 @@
         @clickNote="clickHandle"
       />
     </div>
-    <h1 v-if="showBegin" class="has-text-centered">Build the Scale Given!</h1>
-    <h1 v-if="!showBegin" class="has-text-centered">
-      Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard Above
-    </h1>
 
+    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-bottom: 30px">
+      Build the Scale Given!
+    </h1>
     <section
       class="has-text-centered"
       style="
@@ -70,13 +58,36 @@
         margin-top: 1rem;
       "
     >
-      <b-button v-if="showBegin" @click="start_game" label="Begin" />
+      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
+
+      <div v-if="ShowSettings">
+        <b-field label="Enter Your Settings">
+          <b-field label="Difficulty">
+            <b-radio-button v-model="gameDifficulty" native-value="Easy">
+              <span>Easy</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameDifficulty" native-value="Medium">
+              <span>Medium</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameDifficulty" native-value="Hard">
+              <span>Hard</span>
+            </b-radio-button>
+          </b-field>
+        </b-field>
+        <b-field>
+          <TuningSelection />
+        </b-field>
+        <b-button @click="submit_settings()" label="Begin Game" />
+      </div>
+
+      <h1 v-if="StartGame" class="has-text-centered">
+        Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard Above
+      </h1>
       <b-button
         @click="test_method"
         label="TESTBUTTON"
         style="margin-top: 20px"
       />
-      <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
     </section>
     <b-progress
       v-if="!showBegin"
@@ -131,7 +142,9 @@ export default {
       scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
-      showBegin: "true",
+      ShowSettings: false,
+      StartGame: false,
+      ShowBegin: true,
       playerAnswer: null,
       tonicArray: tonicArray,
       userScore: 0,
@@ -197,12 +210,43 @@ export default {
         return;
       }
     },
+    show_settings() {
+      this.ShowSettings = true; //show settings like tuning and difficulty
+      this.ShowBegin = false; //hide Begin button
+    },
+    submit_settings() {
+      this.StartGame = true; //start game once users have submit settings
+      this.ShowSettings = false; //hide settings menu
+      this.start_game(); //start game
+    },
     start_game() {
       this.clickedKeys = [];
       console.log("Game Started");
-      this.showBegin = !this.showBegin; //hide begin button
       let temp = this.calculate_tonic(); //set initial answer
+
       this.scale.tonic = temp; //show initial fretboard (1st question)
+    },
+
+    calculate_scale_type() {
+      let randInt = Math.random();
+      switch (this.gameDifficulty) {
+        case "Easy":
+          if (randInt < 0.5) {
+            this.scale.type = "minor pentatonic";
+            return;
+          }
+          this.scale.type = "major pentatonic";
+          return;
+        case "Medium":
+          if (randInt < 0.5) {
+            this.scale.type = "minor";
+            return;
+          }
+          this.scale.type = "major";
+          return;
+        case "Hard":
+          this.scale.type = "harmonic minor";
+      }
     },
 
     calculate_random_element(inputArray) {

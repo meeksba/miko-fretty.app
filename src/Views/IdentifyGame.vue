@@ -18,7 +18,7 @@
                   </b-radio-button>
                 </b-field>
               </b-field>
-              <b-field label="Show hello">
+              <b-field label="Show Scale Chords">
                 <b-field>
                   <b-radio-button v-model="ShowChords" native-value="true">
                     <span>True</span>
@@ -71,7 +71,8 @@
       <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
 
       <div v-if="ShowSettings">
-        <b-field label="Enter Your Settings">
+        <h2>Choose Your Settings</h2>
+        <b-field>
           <b-field label="Difficulty">
             <b-radio-button v-model="gameDifficulty" native-value="Easy">
               <span>Easy</span>
@@ -83,12 +84,25 @@
               <span>Hard</span>
             </b-radio-button>
           </b-field>
+          <b-field label="Notation" style="margin-left: 20px">
+            <b-radio-button v-model="gameMode" native-value="Note">
+              <span>Note</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameMode" native-value="Interval">
+              <span>Interval</span>
+            </b-radio-button>
+          </b-field>
         </b-field>
         <b-field>
-          <TuningSelection />
+          <TuningSelection @tuningChange="handleTuning" />
         </b-field>
         <b-button @click="submit_settings()" label="Begin Game" />
       </div>
+      <Notation
+        v-if="this.ShowMusicSheet == 'true'"
+        :scale="scale_info"
+        :scale-name="scale_info.name"
+      />
       <div v-if="StartGame">
         <b-field label="Enter Your Answer">
           <div
@@ -138,11 +152,6 @@
       :chords="scaleChords"
       style="margin-bottom: 50px"
     />
-    <Notation
-      v-if="this.ShowMusicSheet == 'true'"
-      :scale="scale_info"
-      :scale-name="scale_info.name"
-    />
   </div>
 </template>
 
@@ -177,13 +186,14 @@ export default {
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
+      usr_tuning: localStorage.getItem("identifyTuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "F", type: "minor" },
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
+      gameMode:"Notes",
       fretboardNotation: "sharp",
       ShowSettings: false,
       StartGame:false,
@@ -241,7 +251,7 @@ export default {
 
   methods: {
     saveSettings() {
-      localStorage.setItem("tuning", this.usr_tuning);
+      localStorage.setItem("identifyTuning", this.usr_tuning);
     },
     normalize(notes) {
       return notes.map((x) => x % 12);
@@ -257,11 +267,41 @@ export default {
         return;
       }
     },
+    handleTuning(tuning){
+      this.usr_tuning = tuning;
+      this.saveSettings()
+    },
+
+    show_settings(){
+      this.ShowSettings = true;  //show settings like tuning and difficulty 
+      this.ShowBegin = false; //hide Begin button 
+    },
+    submit_settings(){
+      this.StartGame = true;    //start game once users have submit settings 
+      this.ShowSettings = false; //hide settings menu 
+      this.start_game() //start game
+    },
     start_game() {
       console.log("Game Started");
       this.calculate_tonic(); //set initial answer
       this.calculate_scale_type(); //create scale based on difficulty 
+      console.log("tonic " + this.scale.tonic)
+      console.log("type " + this.scale.type)
       // console.log("there")
+    },
+
+    submit_answer() {
+    this.playerTonic = this.playerTonic.toUpperCase();
+      if ((this.playerTonic + this.playerScale) == (this.scale.tonic + this.scale.type)) {
+        //if user ans == displayed scale
+        this.userScore += 10; //update userscore/progress bar
+      }
+      this.calculate_scale_type(); //calculate scale according to difficulty
+      this.calculate_tonic(); //resets fretboard with tonic of new scale
+      this.playerTonic = null;  //reset tonic input
+      this.playerScale = null;  //reset scale type input 
+      console.log("tonic " + this.scale.tonic)
+      console.log("type " + this.scale.type)
     },
 
     calculate_random_element(inputArray) {
@@ -270,6 +310,7 @@ export default {
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
     },
+
     calculate_tonic() {
       let tonic = this.calculate_random_element(tonicArray);
       while (tonic == this.scale.tonic) {
@@ -285,6 +326,7 @@ export default {
 
       return tonic;
     },
+    //this function calculates the type of scale (maj,min) given the chosen difficulty
     calculate_scale_type(){
       let randInt = Math.random()
       switch(this.gameDifficulty){
@@ -307,27 +349,6 @@ export default {
 
       }
     },
-    submit_answer() {
-    this.playerTonic = this.playerTonic.toUpperCase();
-
-      if ((this.playerTonic + this.playerScale) == (this.scale.tonic + this.scale.type)) {
-        //if user ans == displayed scale
-        this.userScore += 10; //update userscore/progress bar
-      }
-      this.calculate_scale_type(); //calculate scale according to difficulty
-      this.calculate_tonic(); //resets fretboard with tonic of new scale
-      this.playerTonic = null;  //reset tonic input
-      this.playerScale = null;  //reset scale type input 
-    },
-    show_settings(){
-      this.ShowSettings = true;  //show settings like tuning and difficulty 
-      this.ShowBegin = false; //hide Begin button 
-    },
-    submit_settings(){
-      this.StartGame = true;    //start game once users have submit settings 
-      this.ShowSettings = false; //hide settings menu 
-      this.start_game() //start game
-    },
     test_method() {
 
       this.calculate_scale_type(); //calculate scale according to difficulty
@@ -346,5 +367,10 @@ export default {
 h1{
   font-size: 20px;
   font-weight: bold;
+}
+h2{
+  font-size:25px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 </style>

@@ -196,7 +196,7 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "F", type: "diminished" },
+      scale: { tonic: "E", type: "major" },
       ShowMusicSheet: "true",
       ShowChords: "true",
       notation: "sharp",
