@@ -92,6 +92,7 @@
             />
           </div>
         </b-field>
+        <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
       </div>
       <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
@@ -129,7 +130,6 @@ import TuningSelection from "../components/TuningSelection.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
-
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -303,46 +303,50 @@ export default {
       ) {
         //if user ans == displayed scale
         this.userScore += 20; //update userscore/progress bar
-        this.correct_popup();
+        this.alert_messages("correct");
       } else {
-        this.incorrect_popup();
+        this.alert_messages("wrong");
       }
       this.questionCount--;
       if (this.questionCount == 0) {
-        this.end_game();
+        this.alert_messages("end");
       }
       this.calculate_scale_type(); //calculate scale according to difficulty
       this.calculate_tonic(); //resets fretboard with tonic of new scale
       this.playerTonic = null; //reset tonic input
       this.playerScale = null; //reset scale type input
     },
-    correct_popup() {
-      this.$buefy.toast.open({
-        duration: 3000,
-        message: "Correct!",
-        position: "is-bottom",
-        type: "is-success",
-      });
-    },
-    incorrect_popup() {
-      this.$buefy.toast.open({
-        duration: 3000,
-        message: "Incorrect",
-        position: "is-bottom",
-        type: "is-danger",
-      });
+
+    alert_messages(message) {
+      switch (message) {
+        case "correct":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Correct!",
+            position: "is-bottom",
+            type: "is-success",
+          });
+          return;
+        case "wrong":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Incorrect",
+            position: "is-bottom",
+            type: "is-danger",
+          });
+          return;
+        case "end":
+          this.$buefy.dialog.alert({
+            message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
+          });
+          this.StartGame = false;
+          this.ShowBegin = true;
+          this.questionCount = 5;
+          this.userScore = 0;
+          this.ShowMusicSheet = false;
+      }
     },
 
-    end_game() {
-      this.$buefy.dialog.alert({
-        message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
-      });
-      this.StartGame = false;
-      this.ShowBegin = true;
-      this.questionCount = 5;
-      this.userScore = 0;
-      this.ShowMusicSheet = false;
-    },
     clickHandle(note) {
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));

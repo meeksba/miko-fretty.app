@@ -37,7 +37,7 @@
       <BuildFretboard
         :tuning="tuning"
         :notes="notes"
-        :notation="notation"
+        :notation="fretboardNotation"
         :frets="frets"
         :root="root"
         :scale="[]"
@@ -58,11 +58,13 @@
         margin-top: 1rem;
       "
     >
+      <!-- Begin Button -->
       <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
-
       <div v-if="ShowSettings">
+        <!-- Settings Before Game -->
         <h2>Choose Your Settings</h2>
         <b-field>
+          <!-- Difficulty Setting -->
           <b-field label="Difficulty">
             <b-radio-button v-model="gameDifficulty" native-value="Easy">
               <span>Easy</span>
@@ -74,6 +76,7 @@
               <span>Hard</span>
             </b-radio-button>
           </b-field>
+          <!-- Notation Setting -->
           <b-field label="Notation" style="margin-left: 20px">
             <b-radio-button v-model="gameMode" native-value="Note">
               <span>Note</span>
@@ -84,27 +87,28 @@
           </b-field>
         </b-field>
         <b-field>
-          <TuningSelection @tuningChange="handleTuning" />
+          <!-- Tuning -->
+          <TuningSelection
+            @tuningChange="handleTuning"
+            style="margin-top: 20px"
+          />
         </b-field>
         <b-button @click="submit_settings()" label="Begin Game" />
       </div>
-
-      <h1 v-if="StartGame" class="has-text-centered">
-        Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard Above
-      </h1>
+      <div v-if="StartGame" class="has-text-centered">
+        <h1>
+          Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard
+          Above
+        </h1>
+        <!-- Question Count -->
+        <h4>Questions Remaining: {{ questionCount }}</h4>
+      </div>
       <b-button
         @click="test_method"
         label="TESTBUTTON"
         style="margin-top: 20px"
       />
     </section>
-    <b-progress
-      v-if="!showBegin"
-      v-model="userScore"
-      type="is-info"
-      show-value
-      style="margin-top: 20px"
-    ></b-progress>
     <Chords
       v-if="this.ShowChords == 'true'"
       :chords="scaleChords"
@@ -122,6 +126,8 @@
 import BuildFretboard from "../components/BuildFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
+import TuningSelection from "../components/TuningSelection.vue";
+
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
@@ -132,8 +138,6 @@ for (var scale of ScaleType.all()) {
   ALL_SCALES.push(...scale.aliases);
 }
 
-const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-
 export default {
   name: "BuildGame",
 
@@ -141,6 +145,7 @@ export default {
     BuildFretboard,
     Chords,
     Notation,
+    TuningSelection,
   },
 
   data: function () {
@@ -151,13 +156,17 @@ export default {
       scale: { tonic: "A", type: "major" },
       ShowMusicSheet: "false",
       ShowChords: "false",
+      gameDifficulty: "Medium",
+      gameMode: "Note",
+      fretboardNotation: "sharp",
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
       playerAnswer: null,
-      tonicArray: tonicArray,
+      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
       userScore: 0,
       tonicCount: 0,
+      questionCount: 3,
       clickedKeys: [],
       clickedNotes: [],
     };
@@ -219,6 +228,10 @@ export default {
         return;
       }
     },
+    handleTuning(tuning) {
+      this.usr_tuning = tuning;
+      this.saveSettings();
+    },
     show_settings() {
       this.ShowSettings = true; //show settings like tuning and difficulty
       this.ShowBegin = false; //hide Begin button
@@ -265,10 +278,10 @@ export default {
       return elem;
     },
     calculate_tonic() {
-      let tonic = this.calculate_random_element(tonicArray);
+      let tonic = this.calculate_random_element(this.tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(tonicArray);
+        tonic = this.calculate_random_element(this.tonicArray);
         if (tonic != this.scale.tonic) {
           //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
           break;
@@ -295,32 +308,60 @@ export default {
     },
     //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
-      if (
-        this.clickedNotes.includes(note.name) &&
-        note.name != this.scale.tonic
-      ) {
-        alert(
-          "You cannot select more than 1 of a non root note, please try again"
-        );
-        return;
-      }
-
-      if (note.name == this.scale.tonic) {
-        this.tonicCount++; //counter only allows tonic note and its octave
-        if (this.tonicCount >= 3) {
-          alert("Cannot select more than 2 of the root note ");
+      if (this.StartGame) {
+        if (
+          this.clickedNotes.includes(note.name) &&
+          note.name != this.scale.tonic
+        ) {
+          this.alert_messages(">1nonroot");
           return;
         }
+
+        if (note.name == this.scale.tonic) {
+          this.tonicCount++; //counter only allows tonic note and its octave
+          if (this.tonicCount >= 3) {
+            return;
+          }
+        }
+        if (!this.scale_info.notes.includes(note.name)) {
+          this.alert_messages("wrong");
+          return;
+        }
+        this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
+        this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
       }
-      if (!this.scale_info.notes.includes(note.name)) {
-        alert("Please try again, the note you selected is not correct");
-        return;
-      }
-      this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
-      this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
 
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
+    },
+    alert_messages(message) {
+      switch (message) {
+        case ">1nonroot":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message:
+              "You cannot select more than 1 of a non root note, please try again",
+            position: "is-bottom",
+            type: "is-danger",
+          });
+          return;
+        case ">2root":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Cannot select more than 2 of the root note ",
+            position: "is-bottom",
+            type: "is-danger",
+          });
+          return;
+        case "wrong":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Please try again, the note you selected is not correct",
+            position: "is-bottom",
+            type: "is-danger",
+          });
+          return;
+      }
     },
   },
 };
@@ -332,5 +373,11 @@ h2 {
   font-size: 25px;
   font-weight: bold;
   margin-bottom: 20px;
+}
+h4 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 30px;
+  color: gray;
 }
 </style>
