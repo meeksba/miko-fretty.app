@@ -92,6 +92,7 @@
           <circle
             @mouseleave="hover_note = -1"
             @mouseover="hover_note = note.num"
+            @click="clickEvent(note)"
             r="10"
             :cx="note.x"
             :cy="string.y"
@@ -390,6 +391,9 @@ export default {
     },
     normalize(notes) {
       return notes.map((x) => x % 12);
+    },
+    clickEvent(note) {
+      this.$emit("clickNote", note);
     },
   },
 };

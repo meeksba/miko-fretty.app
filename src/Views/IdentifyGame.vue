@@ -1,6 +1,12 @@
 <template>
   <div>
-    <!-- <h1> Identify Scale Game </h1> -->
+    <b-button
+      @click="test_method"
+      label="TESTBUTTON"
+      style="margin-top: 40px"
+      class="has-text-centered"
+    />
+    <h1 v-if="ShowBegin" class="has-text-centered">Identify the Scale Shown</h1>
     <h1 v-if="StartGame" class="has-text-centered">What Scale is This?</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <IdentifyFretboard
@@ -15,18 +21,15 @@
 
     <section
       class="has-text-centered"
-      style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 1rem;
-      "
+      style="display: flex; flex-direction: column; align-items: center"
     >
+      <!-- Begin Button -->
       <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
-
       <div v-if="ShowSettings">
+        <!-- Settings Before Game -->
         <h2>Choose Your Settings</h2>
         <b-field>
+          <!-- Difficulty Setting -->
           <b-field label="Difficulty">
             <b-radio-button v-model="gameDifficulty" native-value="Easy">
               <span>Easy</span>
@@ -38,6 +41,7 @@
               <span>Hard</span>
             </b-radio-button>
           </b-field>
+          <!-- Notation Setting -->
           <b-field label="Notation" style="margin-left: 20px">
             <b-radio-button v-model="gameMode" native-value="Note">
               <span>Note</span>
@@ -48,10 +52,15 @@
           </b-field>
         </b-field>
         <b-field>
-          <TuningSelection @tuningChange="handleTuning" />
+          <!-- Tuning -->
+          <TuningSelection
+            @tuningChange="handleTuning"
+            style="margin-top: 20px"
+          />
         </b-field>
         <b-button @click="submit_settings()" label="Begin Game" />
       </div>
+      <!-- Input Fields -->
       <div v-if="StartGame">
         <b-field label="Enter Your Answer">
           <div
@@ -74,6 +83,7 @@
                 append-to-body
               ></b-autocomplete>
             </b-field>
+            <!-- Submit Answer Button -->
             <b-button
               @click="submit_answer"
               label="Submit"
@@ -81,28 +91,28 @@
             />
           </div>
         </b-field>
+        <h4>Questions Remaining: {{ questionCount }}</h4>
       </div>
-      <Notation
-        v-if="this.ShowMusicSheet == 'true'"
-        :scale="scale_info"
-        :scale-name="scale_info.name"
-      />
-
-      <b-button
-        @click="test_method"
-        label="TESTBUTTON"
-        style="margin-top: 40px"
-      />
+      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
+        Score
+      </h3>
     </section>
+    <!-- Progress Bar -->
     <b-progress
       v-if="StartGame"
       v-model="userScore"
+      style="margin-top: 10px"
       type="is-info"
       show-value
-      style="margin-top: 20px"
     ></b-progress>
+    <Notation
+      v-if="this.ShowMusicSheet"
+      :scale="scale_info"
+      :scale-name="scale_info.name"
+    />
+
     <Chords
-      v-if="this.ShowChords == 'true'"
+      v-if="this.ShowChords"
       :chords="scaleChords"
       style="margin-bottom: 50px"
     />
@@ -110,7 +120,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
@@ -125,8 +134,7 @@ for (var scale of ScaleType.all()) {
   ALL_SCALES.push(...scale.aliases);
 }
 
-const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-// let answerSet = new Set(); //This variable may later be needed
+// const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 
 export default {
   name: "IdentifyGame",
@@ -144,18 +152,19 @@ export default {
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "F", type: "minor" },
-      ShowMusicSheet: "false",
-      ShowChords: "false",
+      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
       gameDifficulty: "Medium",
-      gameMode:"Note",
+      gameMode: "Note",
       fretboardNotation: "sharp",
+      ShowMusicSheet: false,
+      ShowChords: false,
       ShowSettings: false,
-      StartGame:false,
+      StartGame: false,
       ShowBegin: true,
       playerTonic: null,
       playerScale: null,
       correctAnswer: null,
-      tonicArray: tonicArray,
+      questionCount: 5,
       userScore: 0,
     };
   },
@@ -180,11 +189,7 @@ export default {
     },
     scale_search: function () {
       return ALL_SCALES.filter((option) => {
-        return (
-          option
-            .toString()
-            .toLowerCase()
-        );
+        return option.toString().toLowerCase();
       });
     },
     tuning_search() {
@@ -221,49 +226,10 @@ export default {
         return;
       }
     },
-    handleTuning(tuning){
+    handleTuning(tuning) {
       this.usr_tuning = tuning;
-      this.saveSettings()
+      this.saveSettings();
     },
-
-    show_settings(){
-      this.ShowSettings = true;  //show settings like tuning and difficulty 
-      this.ShowBegin = false; //hide Begin button 
-    },
-    submit_settings(){
-      this.StartGame = true;    //start game once users have submit settings 
-      this.ShowSettings = false; //hide settings menu
-      if(this.gameMode == "Interval"){
-        this.fretboardNotation = "Intervals"
-        this.start_game() //start game
-        return
-      } 
-      this.ShowMusicSheet = 'true';
-      this.start_game() //start game
-    },
-    start_game() {
-      console.log("Game Started");
-      this.calculate_tonic(); //set initial answer
-      this.calculate_scale_type(); //create scale based on difficulty 
-      console.log("tonic " + this.scale.tonic)
-      console.log("type " + this.scale.type)
-      // console.log("there")
-    },
-
-    submit_answer() {
-    this.playerTonic = this.playerTonic.toUpperCase();
-      if ((this.playerTonic + this.playerScale) == (this.scale.tonic + this.scale.type)) {
-        //if user ans == displayed scale
-        this.userScore += 10; //update userscore/progress bar
-      }
-      this.calculate_scale_type(); //calculate scale according to difficulty
-      this.calculate_tonic(); //resets fretboard with tonic of new scale
-      this.playerTonic = null;  //reset tonic input
-      this.playerScale = null;  //reset scale type input 
-      console.log("tonic " + this.scale.tonic)
-      console.log("type " + this.scale.type)
-    },
-
     calculate_random_element(inputArray) {
       //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
@@ -272,10 +238,10 @@ export default {
     },
 
     calculate_tonic() {
-      let tonic = this.calculate_random_element(tonicArray);
+      let tonic = this.calculate_random_element(this.tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(tonicArray);
+        tonic = this.calculate_random_element(this.tonicArray);
         if (tonic != this.scale.tonic) {
           //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
           break;
@@ -287,36 +253,98 @@ export default {
       return tonic;
     },
     //this function calculates the type of scale (maj,min) given the chosen difficulty
-    calculate_scale_type(){
-      let randInt = Math.random()
-      switch(this.gameDifficulty){
+    calculate_scale_type() {
+      let randInt = Math.random();
+      switch (this.gameDifficulty) {
         case "Easy":
-          if(randInt < .5){
-            this.scale.type = "minor pentatonic"
-            return
+          if (randInt < 0.5) {
+            this.scale.type = "minor pentatonic";
+            return;
           }
-          this.scale.type = "major pentatonic"
-          return
+          this.scale.type = "major pentatonic";
+          return;
         case "Medium":
-          if(randInt < .5){
-            this.scale.type = "minor"
-            return
+          if (randInt < 0.5) {
+            this.scale.type = "minor";
+            return;
           }
-          this.scale.type = "major"
-          return
+          this.scale.type = "major";
+          return;
         case "Hard":
-          this.scale.type = "harmonic minor"
-
+          this.scale.type = "harmonic minor";
       }
     },
-    test_method() {
+    show_settings() {
+      this.ShowSettings = true; //show settings like tuning and difficulty
+      this.ShowBegin = false; //hide Begin button
+    },
+    submit_settings() {
+      this.StartGame = true; //start game once users have submit settings
+      this.ShowSettings = false; //hide settings menu
+      if (this.gameMode == "Interval") {
+        this.fretboardNotation = "Intervals";
+        this.start_game(); //start game
+        return;
+      }
+      this.ShowMusicSheet = true;
+      this.start_game(); //start game
+    },
+    start_game() {
+      this.calculate_tonic(); //set initial answer
+      this.calculate_scale_type(); //create scale based on difficulty
+    },
 
+    submit_answer() {
+      this.playerTonic = this.playerTonic.toUpperCase();
+      if (
+        this.playerTonic + this.playerScale ==
+        this.scale.tonic + this.scale.type
+      ) {
+        //if user ans == displayed scale
+        this.userScore += 20; //update userscore/progress bar
+        this.correct_popup();
+      } else {
+        this.incorrect_popup();
+      }
+      this.questionCount--;
+      if (this.questionCount == 0) {
+        this.end_game();
+      }
       this.calculate_scale_type(); //calculate scale according to difficulty
       this.calculate_tonic(); //resets fretboard with tonic of new scale
-      // console.log(this.scale.tonic + " " + this.scale.type);
-      console.log("scale before" + this.scale.type)
-      this.scale.type = "chromatic"
-      console.log("scale after" + this.scale.type)
+      this.playerTonic = null; //reset tonic input
+      this.playerScale = null; //reset scale type input
+    },
+    correct_popup() {
+      this.$buefy.toast.open({
+        duration: 3000,
+        message: "Correct!",
+        position: "is-bottom",
+        type: "is-success",
+      });
+    },
+    incorrect_popup() {
+      this.$buefy.toast.open({
+        duration: 3000,
+        message: "Incorrect",
+        position: "is-bottom",
+        type: "is-danger",
+      });
+    },
+
+    end_game() {
+      this.$buefy.dialog.alert({
+        message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
+      });
+      this.StartGame = false;
+      this.ShowBegin = true;
+      this.questionCount = 5;
+      this.userScore = 0;
+      this.ShowMusicSheet = false;
+    },
+
+    test_method() {
+      console.log("Answer: " + this.scale.tonic + " " + this.scale.type);
     },
   },
 };
@@ -324,14 +352,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1{
+h1 {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
 }
-h2{
-  font-size:25px;
+h2 {
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
+}
+h3 {
+  font-size: 25px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 30px;
+  color: gray;
 }
 </style>

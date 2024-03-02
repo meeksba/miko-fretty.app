@@ -61,7 +61,8 @@
       <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
 
       <div v-if="ShowSettings">
-        <b-field label="Enter Your Settings">
+        <h2>Choose Your Settings</h2>
+        <b-field>
           <b-field label="Difficulty">
             <b-radio-button v-model="gameDifficulty" native-value="Easy">
               <span>Easy</span>
@@ -73,9 +74,17 @@
               <span>Hard</span>
             </b-radio-button>
           </b-field>
+          <b-field label="Notation" style="margin-left: 20px">
+            <b-radio-button v-model="gameMode" native-value="Note">
+              <span>Note</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameMode" native-value="Interval">
+              <span>Interval</span>
+            </b-radio-button>
+          </b-field>
         </b-field>
         <b-field>
-          <TuningSelection />
+          <TuningSelection @tuningChange="handleTuning" />
         </b-field>
         <b-button @click="submit_settings()" label="Begin Game" />
       </div>
@@ -277,9 +286,6 @@ export default {
       this.calculate_tonic();
     },
     test_method() {
-      // let temp = this.calculate_scale_notes()
-      // console.log("notes " + JSON.stringify(temp, null, 2));
-      // console.log("scale info " + JSON.stringify(this.scale_info.notes, null, 2));
       console.log("scale notes " + this.scale_notes);
       this.tonicCount = 0;
     },
@@ -287,8 +293,8 @@ export default {
       console.log("clear notes ");
       return this.scale_info.notes.map(Note.chroma);
     },
+    //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
-      //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
       if (
         this.clickedNotes.includes(note.name) &&
         note.name != this.scale.tonic
@@ -310,17 +316,21 @@ export default {
         alert("Please try again, the note you selected is not correct");
         return;
       }
-      // console.log("key " + note.key);
       this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
       this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
 
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
-      // console.log("userkeys " + JSON.stringify(this.clickedKeys));
     },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+</style>
