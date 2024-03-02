@@ -108,9 +108,6 @@
               :cx="note.x"
               :cy="string.y"
               r="10"
-              :stroke-dasharray="
-                hover_note == note.num && note.num != root ? '4,4' : '0'
-              "
               fill="white"
               stroke="black"
             />
@@ -129,6 +126,7 @@
             <circle
               @mouseleave="hover_note = -1"
               @mouseover="hover_note = note.num"
+              @click="clickEvent(note)"
               r="10"
               :cx="note.x"
               :cy="string.y"

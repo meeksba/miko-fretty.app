@@ -16,6 +16,7 @@
         :frets="frets"
         :root="root"
         :scale="scale_info"
+        @clickNote="clickHandle"
       />
     </div>
 
@@ -127,14 +128,14 @@ import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
+import { playNote } from "../guitarsounds";
+
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);
   ALL_SCALES.push(...scale.aliases);
 }
-
-// const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
 
 export default {
   name: "IdentifyGame",
@@ -341,6 +342,10 @@ export default {
       this.questionCount = 5;
       this.userScore = 0;
       this.ShowMusicSheet = false;
+    },
+    clickHandle(note) {
+      playNote(note.key);
+      // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
 
     test_method() {
