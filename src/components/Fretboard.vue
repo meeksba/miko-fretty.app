@@ -316,6 +316,9 @@ export default {
         return p20 + (p20 - p19) * (n - 20);
       }
     },
+    removeDouble(scale) {
+      console.log("hello" + scale);
+    },
     toname(num) {
       let sharp = this.notation != "flat";
       let name = Midi.midiToNoteName(num, {
@@ -374,8 +377,7 @@ export default {
       ];
       let n = chromaticNotes.length; //also length of chromaticIntervals
       let cur = 0;
-      for (let i = chromaticNotes.indexOf(this.scale.tonic); i < 25; i++) {
-        console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
+      for (let i = chromaticNotes.indexOf(this.scale.tonic); cur < n; i++) {
         if (chromaticNotes[((i % n) + n) % n] == name) {
           return chromaticIntervals[cur];
         }

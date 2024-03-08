@@ -40,7 +40,7 @@
         :notation="fretboardNotation"
         :frets="frets"
         :root="root"
-        :scale="[]"
+        :scale="scale_info"
         :clickedKeys="clickedKeys"
         @clickNote="clickHandle"
       />
@@ -129,7 +129,8 @@ import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
+// import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
+import { Note, Scale, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
 var ALL_SCALES = [];
@@ -217,17 +218,17 @@ export default {
     // normalize(notes) {
     //   return notes.map((x) => x % 12);
     // },
-    toname(x) {
-      return Midi.midiToNoteName(x, {
-        sharps: this.notation != "flat",
-        pitchClass: true,
-      });
-    },
-    scale_input(x) {
-      if (x == "") {
-        return;
-      }
-    },
+    // toname(x) {
+    //   return Midi.midiToNoteName(x, {
+    //     sharps: this.notation != "flat",
+    //     pitchClass: true,
+    //   });
+    // },
+    // scale_input(x) {
+    //   if (x == "") {
+    //     return;
+    //   }
+    // },
     handleTuning(tuning) {
       this.usr_tuning = tuning;
       this.saveSettings();
@@ -239,13 +240,17 @@ export default {
     submit_settings() {
       this.StartGame = true; //start game once users have submit settings
       this.ShowSettings = false; //hide settings menu
+      if (this.gameMode == "Interval") {
+        this.fretboardNotation = "Intervals";
+        this.start_game(); //start game
+        return;
+      }
       this.start_game(); //start game
     },
     start_game() {
       this.clickedKeys = [];
       console.log("Game Started");
       let temp = this.calculate_tonic(); //set initial answer
-
       this.scale.tonic = temp; //show initial fretboard (1st question)
     },
 
@@ -291,51 +296,95 @@ export default {
 
       return tonic;
     },
-    submit_answer() {
-      // if (this.playerAnswer == this.correctAnswer) {
-      //   this.userScore += 10;
-      // }
-
-      this.calculate_tonic();
-    },
-    test_method() {
-      console.log("scale notes " + this.scale_notes);
-      this.tonicCount = 0;
-    },
     calculate_scale_notes() {
-      console.log("clear notes ");
       return this.scale_info.notes.map(Note.chroma);
+    },
+    //this function finds the correct interval of the note given its name and knowing the tonic of the scale
+    intervalToNote(name) {
+      console.log("name " + name);
+      let chromaticIntervals = [
+        "1P",
+        "2m",
+        "2M",
+        "3m",
+        "3M",
+        "4P",
+        "5d",
+        "5P",
+        "6m",
+        "6M",
+        "7m",
+        "7M",
+      ];
+      let chromaticNotes = [
+        "A",
+        "A#",
+        "B",
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+      ];
+      let n = chromaticNotes.length; //also length of chromaticIntervals
+      let tonicIndex = chromaticNotes.indexOf(this.scale.tonic);
+      let cur = 0;
+      for (let i = tonicIndex; i < 25; i++) {
+        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
+        // console.log("chromaticNotes " + chromaticNotes[cur])
+        if (chromaticIntervals[cur] == name) {
+          console.log("note found " + chromaticNotes[((i % n) + n) % n]);
+          return chromaticNotes[((i % n) + n) % n];
+        }
+        cur++;
+      }
     },
     //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
+      playNote(note.key);
+      let name = note.name;
+      if (this.fretboardNotation == "Intervals") {
+        name = this.intervalToNote(note.name);
+      }
       if (this.StartGame) {
-        if (
-          this.clickedNotes.includes(note.name) &&
-          note.name != this.scale.tonic
-        ) {
+        console.log("note " + JSON.stringify(note, null, 2));
+        if (this.clickedNotes.includes(name) && name != this.scale.tonic) {
           this.alert_messages(">1nonroot");
           return;
         }
 
-        if (note.name == this.scale.tonic) {
+        if (name == this.scale.tonic) {
           this.tonicCount++; //counter only allows tonic note and its octave
           if (this.tonicCount >= 3) {
+            this.alert_messages(">2root");
             return;
           }
         }
-        if (!this.scale_info.notes.includes(note.name)) {
+        if (!this.scale_info.notes.includes(name)) {
           this.alert_messages("wrong");
           return;
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
-        this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
+        this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
+        this.alert_messages("correct");
       }
 
-      playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
     alert_messages(message) {
       switch (message) {
+        case "correct":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Correct!",
+            position: "is-bottom",
+            type: "is-success",
+          });
+          return;
         case ">1nonroot":
           this.$buefy.toast.open({
             duration: 3000,
@@ -362,6 +411,10 @@ export default {
           });
           return;
       }
+    },
+    test_method() {
+      console.log("scale info notes " + this.scale_info.notes);
+      console.log("calc notes " + this.calculate_scale_notes());
     },
   },
 };

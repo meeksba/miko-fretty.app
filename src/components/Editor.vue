@@ -3,6 +3,7 @@
     <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
+          <b-button @click="testMethod">Test</b-button>
           <b-field grouped group-multiline position="is-centered">
             <!-- Tuning -->
             <b-field label="Tuning">
@@ -267,6 +268,10 @@ export default {
     },
     clickHandle(note) {
       playNote(note.key);
+    },
+    testMethod() {
+      console.log("test " + this.scale_info.notes);
+      console.log("test 1: " + this.notes);
     },
   },
 };

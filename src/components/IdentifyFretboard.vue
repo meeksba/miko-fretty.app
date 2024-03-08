@@ -108,6 +108,9 @@
               :cx="note.x"
               :cy="string.y"
               r="10"
+              :stroke-dasharray="
+                hover_note == note.num && note.num != root ? '4,4' : '0'
+              "
               fill="white"
               stroke="black"
             />
@@ -370,7 +373,7 @@ export default {
       ];
       let n = chromaticNotes.length; //also length of chromaticIntervals
       let cur = 0;
-      for (let i = chromaticNotes.indexOf(this.scale.tonic); i < 25; i++) {
+      for (let i = chromaticNotes.indexOf(this.scale.tonic); cur < n; i++) {
         console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
         if (chromaticNotes[((i % n) + n) % n] == name) {
           return chromaticIntervals[cur];
