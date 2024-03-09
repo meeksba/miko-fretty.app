@@ -154,7 +154,9 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "major" },
+      scale: { tonic: "F", type: "major" },
+      // tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
+      tonicArray: ["F", "F"],
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
@@ -164,7 +166,6 @@ export default {
       StartGame: false,
       ShowBegin: true,
       playerAnswer: null,
-      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
       userScore: 0,
       tonicCount: 0,
       questionCount: 3,
@@ -249,9 +250,13 @@ export default {
     },
     start_game() {
       this.clickedKeys = [];
+      this.calculate_tonic(); //set initial answer
       console.log("Game Started");
-      let temp = this.calculate_tonic(); //set initial answer
-      this.scale.tonic = temp; //show initial fretboard (1st question)
+      if(this.scale_notes.some(f=>f.includes('b'))){
+        console.log("here here")
+        this.fretboardNotation = "flat"
+      }
+      // this.scale_info.some(f=> f.includes('b'));
     },
 
     calculate_scale_type() {
@@ -284,14 +289,14 @@ export default {
     },
     calculate_tonic() {
       let tonic = this.calculate_random_element(this.tonicArray);
-      while (tonic == this.scale.tonic) {
-        //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(this.tonicArray);
-        if (tonic != this.scale.tonic) {
-          //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
-          break;
-        }
-      }
+      // while (tonic == this.scale.tonic) {
+      //   //this loop ensures the same tonic wont be chosen twice in a row
+      //   tonic = this.calculate_random_element(this.tonicArray);
+      //   if (tonic != this.scale.tonic) {
+      //     //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
+      //     break;
+      //   }
+      // }
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
 
       return tonic;
@@ -351,7 +356,11 @@ export default {
         name = this.intervalToNote(note.name);
       }
       if (this.StartGame) {
-        console.log("note " + JSON.stringify(note, null, 2));
+        // console.log("note " + JSON.stringify(note, null, 2));
+        if(this.clickedKeys.includes(note.key)){
+          this.alert_messages("Duplicate")
+          return;
+        }
         if (this.clickedNotes.includes(name) && name != this.scale.tonic) {
           this.alert_messages(">1nonroot");
           return;
@@ -370,6 +379,12 @@ export default {
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
+        if((this.gameDifficulty == "Easy" && this.clickedKeys.length == 6) ||
+            (this.gameDifficulty == "Medium" && this.clickedKeys.length == 8) ||
+            (this.gameDifficulty == "Hard" && this.clickedKeys.length == 8)
+            ) {
+              this.alert_messages("end");
+            }
         this.alert_messages("correct");
       }
 
@@ -383,6 +398,15 @@ export default {
             message: "Correct!",
             position: "is-bottom",
             type: "is-success",
+          });
+          return;
+          case "Duplicate":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message:
+              "You click the same note twice, please try again",
+            position: "is-bottom",
+            type: "is-danger",
           });
           return;
         case ">1nonroot":
@@ -409,12 +433,29 @@ export default {
             position: "is-bottom",
             type: "is-danger",
           });
+          return
+          case "end":
+          this.$buefy.dialog.alert({
+            message: `Thank you for playing the Identify Scale Game!`,
+          });
+          this.fretboardNotation = "sharp"
+          this.StartGame = false;
+          this.ShowBegin = true;
+          this.clickedKeys = [];
+          this.clickedNotes = [];
+          this.tonicCount = 0;
           return;
       }
     },
     test_method() {
-      console.log("scale info notes " + this.scale_info.notes);
-      console.log("calc notes " + this.calculate_scale_notes());
+      // this.scale_info.tonic = "F"
+      // this.scale_info.type = "major"
+      console.log("scale info notes " + this.scale.notes);
+      this.fretboardNotation = "flats"
+      // console.log("checking " + this.scale_info.some(f=> f.includes('b')));
+      // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
+      // console.log(typeof(this.scale_notes)
+      // console.log("calc notes " + this.calculate_scale_notes());
     },
   },
 };
