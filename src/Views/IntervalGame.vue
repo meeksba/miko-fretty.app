@@ -1,144 +1,186 @@
 <template>
   <div>
-    <b-dropdown append-to-body aria-role="menu" trap-focus>
-      <b-button class="button" slot="trigger" icon-left="cog"
-        >Interval Settings</b-button
-      >
-      <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
-        <form action>
-          <div class="modal-card" style="width: 300px">
-            <section class="modal-card-body">
-              <b-field label="Difficulty">
-                <b-radio-button v-model="radioButton" native-value="Easy">
-                  Test
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Medium">
-                  Medium
-                </b-radio-button>
-                <b-radio-button v-model="radioButton" native-value="Hard">
-                  Hard
-                </b-radio-button>
-              </b-field>
-              <b-field label="Music Sheet">
-                <b-field>
-                  <b-radio-button v-model="ShowMusicSheet" native-value="true">
-                    <span>True</span>
-                  </b-radio-button>
-                  <b-radio-button v-model="ShowMusicSheet" native-value="false">
-                    <span>False</span>
-                  </b-radio-button>
-                </b-field>
-              </b-field>
-              <b-field label="Show Chords">
-                <b-field>
-                  <b-radio-button v-model="ShowChords" native-value="true">
-                    <span>True</span>
-                  </b-radio-button>
-                  <b-radio-button v-model="ShowChords" native-value="false">
-                    <span>False</span>
-                  </b-radio-button>
-                </b-field>
-              </b-field>
-            </section>
-          </div>
-        </form>
-      </b-dropdown-item>
-    </b-dropdown>
+    <b-button
+      @click="test_method"
+      label="test button"
+      style="margin-top: 40px"
+      class="has-text-centered"
+    />
+    <h1 v-if="ShowBegin" class="has-text-centered">Ear Training Games</h1>
+    <h1 v-if="StartGame && gameMode == 'ChordMode'" class="has-text-centered">
+      What Chord Has Played?
+    </h1>
+    <!-- <b-button @click="playChord()" label="Play Sound"/> -->
+    <h1
+      v-if="StartGame && gameMode == 'IntervalMode'"
+      class="has-text-centered"
+    >
+      What Interval Has Played?
+    </h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <IntervalFretboard
+      <IdentifyFretboard
         :tuning="tuning"
         :notes="notes"
-        :notation="notation"
+        :notation="fretboardNotation"
         :frets="frets"
         :root="root"
-        :scale="[]"
-        :clickedKeys="clickedKeys"
+        :scale="scale_info"
         @clickNote="clickHandle"
       />
     </div>
-    <h1 v-if="showBegin" class="has-text-centered">Build the Scale Given!</h1>
-    <h1 v-if="!showBegin" class="has-text-centered">
-      Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard Above
-    </h1>
 
     <section
       class="has-text-centered"
-      style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 1rem;
-      "
+      style="display: flex; flex-direction: column; align-items: center"
     >
-      <b-button v-if="showBegin" @click="start_game" label="Begin" />
+      <!-- Begin Button -->
       <b-button
-        @click="test_method"
-        label="TESTBUTTON"
-        style="margin-top: 20px"
+        v-if="ShowBegin"
+        @click="show_settings()"
+        label="Begin"
+        type="is-link"
       />
-      <!-- <b-button @click="clear_notes" label="CLEAR" /> -->
+      <!-- <b-button v-if="ShowBegin" @click="show_settings()" label="Begin"/> -->
+      <div v-if="ShowSettings">
+        <!-- Settings Before Game -->
+        <h2>Choose Your Game Mode</h2>
+        <b-field>
+          <!-- Game Mode Setting -->
+          <div>
+            <b-radio-button v-model="gameMode" native-value="ChordMode">
+              <span>Chord Training</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameMode" native-value="IntervalMode">
+              <span>Interval Training</span>
+            </b-radio-button>
+          </div>
+          <!-- </b-field> -->
+        </b-field>
+        <b-field>
+          <!-- Tuning -->
+          <TuningSelection
+            @tuningChange="handleTuning"
+            style="margin-top: 20px"
+          />
+        </b-field>
+        <b-button @click="submit_settings()" label="Begin Game" />
+      </div>
+      <!-- Input Fields -->
+      <div v-if="StartGame && gameMode == 'ChordMode'">
+        <b-button
+          @click="playChord()"
+          label="Play Chord"
+          type="is-info "
+          outlined
+          style="margin-bottom: 20px"
+        />
+        <b-field label="Choose Your Answer">
+          <div
+            class="columns is-multiline is-centered"
+            style="margin-top: 10px"
+          >
+            <b-field>
+              <b-radio-button v-model="chordAns" native-value="maj">
+                <span>Major</span>
+              </b-radio-button>
+              <b-radio-button v-model="chordAns" native-value="min">
+                <span>Minor</span>
+              </b-radio-button>
+              <b-radio-button v-model="chordAns" native-value="maj7">
+                <span>Maj7</span>
+              </b-radio-button>
+              <b-radio-button v-model="chordAns" native-value="min7">
+                <span>Min7</span>
+              </b-radio-button>
+              <b-radio-button v-model="chordAns" native-value="dom7">
+                <span>7th</span>
+              </b-radio-button>
+            </b-field>
+            <!-- Submit Answer Button -->
+            <b-button
+              @click="submit_answer"
+              label="Submit"
+              style="margin-left: 20px"
+              type="is-link"
+            />
+          </div>
+        </b-field>
+        <!-- Question Count -->
+        <h4>Questions Remaining: {{ questionCount }}</h4>
+      </div>
+      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
+        Score
+      </h3>
     </section>
+    <!-- Progress Bar -->
     <b-progress
-      v-if="!showBegin"
+      v-if="StartGame"
       v-model="userScore"
+      style="margin-top: 10px"
       type="is-info"
       show-value
-      style="margin-top: 20px"
     ></b-progress>
-    <Chords
-      v-if="this.ShowChords == 'true'"
-      :chords="scaleChords"
-      style="margin-bottom: 50px"
-    />
     <Notation
-      v-if="this.ShowMusicSheet == 'true'"
+      v-if="this.ShowMusicSheet"
       :scale="scale_info"
       :scale-name="scale_info.name"
+    />
+
+    <Chords
+      v-if="this.ShowChords"
+      :chords="scaleChords"
+      style="margin-bottom: 50px"
     />
   </div>
 </template>
 
 <script>
-import IntervalFretboard from "../components/IntervalFretboard.vue";
+import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
+import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
+import { Note, Scale, Midi, ScaleType, Mode, Chord } from "@tonaljs/tonal";
+// import { Chord } from "tonal";
 import { Tunings } from "../tunings.js";
-import { playNote } from "../guitarsounds";
-// import * as Tone from "tone";
+import { playNote, playChord } from "../guitarsounds";
+
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);
   ALL_SCALES.push(...scale.aliases);
 }
 
-const tonicArray = ["A", "B", "C", "D", "E", "F", "G"];
-
 export default {
-  name: "IntervalGame",
+  name: "IdentifyGame",
 
   components: {
-    IntervalFretboard,
-    Chords,
+    IdentifyFretboard,
+    TuningSelection,
     Notation,
+    Chords,
   },
 
   data: function () {
     return {
-      usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
+      usr_tuning: localStorage.getItem("identifyTuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "major" },
-      ShowMusicSheet: "false",
-      ShowChords: "false",
-      showBegin: "true",
-      playerAnswer: null,
-      tonicArray: tonicArray,
+      scale: { tonic: "F", type: "" },
+      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
+      gameDifficulty: "Medium",
+      gameMode: "ChordMode",
+      fretboardNotation: "sharp",
+      ShowMusicSheet: false,
+      ShowChords: false,
+      ShowSettings: false,
+      StartGame: false,
+      ShowBegin: true,
+      playerTonic: null,
+      playerScale: null,
+      chordAns: null,
+      questionCount: 5,
       userScore: 0,
-      tonicCount: 0,
-      clickedKeys: [],
-      clickedNotes: [],
     };
   },
 
@@ -150,19 +192,20 @@ export default {
     root: function () {
       return Note.chroma(this.scale.tonic);
     },
-    // notes: function () {
-    //   // return this.scale_info.notes.map(Note.chroma);
-    //   return null; //notes now relies on the clickedNotes array which is populated when a user clicks a note
-    // },
+    notes: function () {
+      return this.scale_info.notes.map(Note.chroma);
+    },
     scale_info: function () {
       let name = this.scale.tonic + " " + this.scale.type;
       return Scale.get(name);
     },
-    scale_notes: function () {
-      return this.scale_info.notes;
-    },
     scaleChords: function () {
       return Mode.triads(this.scale_info.type, this.scale_info.tonic);
+    },
+    scale_search: function () {
+      return ALL_SCALES.filter((option) => {
+        return option.toString().toLowerCase();
+      });
     },
     tuning_search() {
       const newData = [];
@@ -182,11 +225,11 @@ export default {
 
   methods: {
     saveSettings() {
-      localStorage.setItem("tuning", this.usr_tuning);
+      localStorage.setItem("identifyTuning", this.usr_tuning);
     },
-    // normalize(notes) {
-    //   return notes.map((x) => x % 12);
-    // },
+    normalize(notes) {
+      return notes.map((x) => x % 12);
+    },
     toname(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.notation != "flat",
@@ -198,27 +241,24 @@ export default {
         return;
       }
     },
-    start_game() {
-      this.clickedKeys = [];
-      console.log("Game Started");
-      this.showBegin = !this.showBegin; //hide begin button
-      let temp = this.calculate_tonic(); //set initial answer
-      this.scale.tonic = temp; //show initial fretboard (1st question)
+    handleTuning(tuning) {
+      this.usr_tuning = tuning;
+      this.saveSettings();
     },
-
     calculate_random_element(inputArray) {
       //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
     },
+
     calculate_tonic() {
-      let tonic = this.calculate_random_element(tonicArray);
+      let tonic = this.calculate_random_element(this.tonicArray);
+      //this loop ensures the same tonic wont be chosen twice in a row
       while (tonic == this.scale.tonic) {
-        //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(tonicArray);
+        tonic = this.calculate_random_element(this.tonicArray);
+        //if new tonic is different from current tonic (this.scale.tonic) break the loop
         if (tonic != this.scale.tonic) {
-          //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
           break;
         }
       }
@@ -226,58 +266,138 @@ export default {
 
       return tonic;
     },
+    //This function calculates answers and interval for chordGame
+    calculateChordAns() {
+      let randInt = Math.floor(Math.random() * 5);
+      switch (randInt) {
+        case 0:
+          return { name: "maj", pattern: [0, 4, 7] };
+        case 1:
+          return { name: "min", pattern: [0, 3, 7] };
+        case 2:
+          return { name: "maj7", pattern: [0, 4, 7, 11] };
+        case 3:
+          return { name: "min7", pattern: [0, 3, 7, 10] };
+        case 4:
+          return { name: "dom7", pattern: [0, 4, 7, 10] };
+      }
+    },
+    playChord() {
+      this.scale.type = "chromatic";
+      let scaleNotes = JSON.parse(JSON.stringify(this.scale_info.notes));
+      this.scale.type = "";
+      // let pattern = this.chordAns.pattern;
+      // let chord = []
+      // for(let i = 0; i < pattern.length; i++){
+      //   chor
+      // }
+      playChord(scaleNotes);
+    },
+    show_settings() {
+      this.ShowSettings = true; //Show Game Settings Menu
+      this.ShowBegin = false; //Hide Begin button
+    },
+    submit_settings() {
+      this.StartGame = true; //Start Game flag when users submit settings
+      this.ShowSettings = false; //Hide Settings Menu
+      // if (this.gameMode == "Interval") {
+      //   this.fretboardNotation = "Intervals";
+      //   this.start_game(); //start game
+      //   return;
+      // }
+      this.ShowMusicSheet = true;
+      this.start_game(); //Start Game
+    },
+    start_game() {
+      this.calculate_tonic(); //Set Initial Tonic
+      this.chordAns = this.calculateChordAns(); //Calculate Initial Answer
+    },
+
     submit_answer() {
-      // if (this.playerAnswer == this.correctAnswer) {
-      //   this.userScore += 10;
-      // }
-
-      this.calculate_tonic();
-    },
-    test_method() {
-      // let temp = this.calculate_scale_notes()
-      // console.log("notes " + JSON.stringify(temp, null, 2));
-      // console.log("scale info " + JSON.stringify(this.scale_info.notes, null, 2));
-      console.log("scale notes " + this.scale_notes);
-      this.tonicCount = 0;
-    },
-    calculate_scale_notes() {
-      console.log("clear notes ");
-      return this.scale_info.notes.map(Note.chroma);
-    },
-    clickHandle(note) {
-      //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
       // if (
-      //   this.clickedNotes.includes(note.name) &&
-      //   note.name != this.scale.tonic
       // ) {
-      //   alert(
-      //     "You cannot select more than 1 of a non root note, please try again"
-      //   );
-      //   return;
+      //   //if user ans == displayed scale
+      //   this.userScore += 20; //update userscore/progress bar
+      //   this.alert_messages("correct");
+      // } else {
+      //   this.alert_messages("wrong");
       // }
+      // this.questionCount--;
+      // if (this.questionCount == 0) {
+      //   this.alert_messages("end");
+      // }
+    },
 
-      // if (note.name == this.scale.tonic) {
-      //   this.tonicCount++; //counter only allows tonic note and its octave
-      //   if (this.tonicCount >= 3) {
-      //     alert("Cannot select more than 2 of the root note ");
-      //     return;
-      //   }
-      // }
-      // if (!this.scale_info.notes.includes(note.name)) {
-      //   alert("Please try again, the note you selected is not correct");
-      //   return;
-      // }
-      // console.log("key " + note.key);
-      this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
-      this.clickedNotes.push(note.name); //records notes pressed to prevent non root duplicates
+    alert_messages(message) {
+      switch (message) {
+        case "correct":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Correct!",
+            position: "is-bottom",
+            type: "is-success",
+          });
+          return;
+        case "wrong":
+          this.$buefy.toast.open({
+            duration: 3000,
+            message: "Incorrect",
+            position: "is-bottom",
+            type: "is-danger",
+          });
+          return;
+        case "end":
+          this.$buefy.dialog.alert({
+            message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
+          });
+          this.StartGame = false;
+          this.ShowBegin = true;
+          this.questionCount = 5;
+          this.userScore = 0;
+          this.ShowMusicSheet = false;
+      }
+    },
 
+    clickHandle(note) {
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
-      // console.log("userkeys " + JSON.stringify(this.clickedKeys));
+    },
+
+    test_method() {
+      // console.log("Answer: " + this.scale.tonic + " " + this.scale.type);
+      // this.scale.type = "chromatic";
+      // let temp = JSON.parse(JSON.stringify(this.scale_info.notes));
+      // this.scale.type = "";
+      // console.log("hello ", temp);
+      // console.log(this.scale_info)
+      let Cee = Chord.notes("maj4", "C4");
+      console.log("Cee", Cee);
+      console.log("testing ", this.chordAns);
     },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+h1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+h3 {
+  font-size: 25px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 30px;
+  color: gray;
+}
+</style>

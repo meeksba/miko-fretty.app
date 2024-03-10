@@ -171,6 +171,54 @@ const fretNote = {
     'n5_18': 'A#3',
 }
 
+//Converts Scale to all sharp notation for further use (sound)
+export function flatToSharp(scale) {
+    let equivalent = {
+        Ab: "G#",
+        Bb: "A#",
+        Cb: "B#",
+        Db: "C#",
+        Eb: "D#",
+        Fb: "E#",
+        Gb: "F#",
+    };
+    for (let i = 0; i < scale.length; i++) {
+        if (scale[i] in equivalent) {
+        scale[i] = equivalent[scale[i]];
+        }
+    }
+    return scale;
+}
+
+export function convertToScientific(inputScale) {
+    let root = inputScale[0];
+    let output = [];
+    let octave = 3;
+    //flag set to true if octave iterated, prevents another octave from being incremented
+    let encountered = false;
+    //adds scientific notation, changes octave after passing C/C#/D to create ascending sound
+    for (let i = 0; i < inputScale.length; i++) {
+        if (
+        (inputScale[i] == "C" ||
+            inputScale[i] == "C#" ||
+            inputScale[i] == "D") &&
+        i != 0 &&
+        !encountered
+        ) {
+        octave++;
+        encountered = true;
+        }
+        if (root == "C") {
+        encountered = true;
+        }
+        output[i] = inputScale[i] + octave.toString();
+    }
+    //Add additional root note at end to make octave
+    //if root not incremented, manually add octave to 2nd root added
+    output.push(octave == 3 ? root + "4" : root + octave.toString());
+    return output;
+}
+
 export function playNote(key){
     let note = fretNote[key]
     Tone.start();
@@ -183,7 +231,19 @@ export function playNoteByName(name){
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
 
+export function playChord(chord){
+    // let array = ["C4","E4","G4"]
+    // console.log("there ",chord)
+    chord = flatToSharp(chord)
+    console.log("after flat to sharp  ",chord)
+    Tone.start();
+    guitarSounds.triggerAttackRelease(array,.75)
+}
+
 export function playSetOfNotes(scale){
+    // let converted = flatToSharp(scale)
+    scale = flatToSharp(scale)
+    scale = convertToScientific(scale)
     Tone.start()
     let index = 0
     const seq = new Tone.Sequence((time, note) => {

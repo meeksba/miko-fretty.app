@@ -25,7 +25,13 @@
       style="display: flex; flex-direction: column; align-items: center"
     >
       <!-- Begin Button -->
-      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
+      <b-button
+        v-if="ShowBegin"
+        @click="show_settings()"
+        label="Begin"
+        type="is-link"
+        outlined
+      />
       <div v-if="ShowSettings">
         <!-- Settings Before Game -->
         <h2>Choose Your Settings</h2>
@@ -59,7 +65,12 @@
             style="margin-top: 20px"
           />
         </b-field>
-        <b-button @click="submit_settings()" label="Begin Game" />
+        <b-button
+          @click="submit_settings()"
+          label="Begin Game"
+          type="is-link"
+          outlined
+        />
       </div>
       <!-- Input Fields -->
       <div v-if="StartGame">
@@ -75,7 +86,7 @@
                 style="max-width: 100px"
               ></b-input>
             </b-field>
-            <b-field class="Scale" label="Scale ">
+            <b-field class="Scale" label="Scale">
               <b-autocomplete
                 v-model="playerScale"
                 :data="scale_search"
@@ -89,6 +100,8 @@
               @click="submit_answer"
               label="Submit"
               style="margin-top: 32px"
+              type="is-link"
+              outlined
             />
           </div>
         </b-field>

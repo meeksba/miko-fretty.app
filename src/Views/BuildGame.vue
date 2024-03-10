@@ -59,7 +59,13 @@
       "
     >
       <!-- Begin Button -->
-      <b-button v-if="ShowBegin" @click="show_settings()" label="Begin" />
+      <b-button
+        v-if="ShowBegin"
+        @click="show_settings()"
+        label="Begin"
+        type="is-link"
+        outlined
+      />
       <div v-if="ShowSettings">
         <!-- Settings Before Game -->
         <h2>Choose Your Settings</h2>
@@ -93,7 +99,12 @@
             style="margin-top: 20px"
           />
         </b-field>
-        <b-button @click="submit_settings()" label="Begin Game" />
+        <b-button
+          @click="submit_settings()"
+          label="Begin Game"
+          type="is-link"
+          outlined
+        />
       </div>
       <div v-if="StartGame" class="has-text-centered">
         <h1>
@@ -106,6 +117,8 @@
           @click="play_scale"
           label="Play Scale"
           style="margin-top: 20px"
+          type="is-link"
+          outlined
         />
       </div>
       <b-button
@@ -137,7 +150,7 @@ import TuningSelection from "../components/TuningSelection.vue";
 // import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Note, Scale, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
-import { playNote, playSetOfNotes } from "../guitarsounds";
+import * as guitarSounds from "../guitarsounds";
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);
@@ -254,7 +267,7 @@ export default {
     start_game() {
       this.clickedKeys = [];
       this.calculate_tonic(); //set initial answer
-      this.calculate_scale_type()
+      this.calculate_scale_type();
       console.log("Game Started");
       if (
         this.scale_info.notes.some((f) => f.includes("b")) &&
@@ -263,7 +276,6 @@ export default {
         console.log("Converted to Flat Notation");
         this.fretboardNotation = "flat";
       }
-      // this.scale_info.some(f=> f.includes('b'));
     },
 
     calculate_scale_type() {
@@ -353,9 +365,9 @@ export default {
         cur++;
       }
     },
-    //this method is called from the click handler and pushes the clicked note onto the clickedNotes array
+    //This method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
-      playNote(note.key);
+      guitarSounds.playNote(note.key);
       let name = note.name;
       if (this.fretboardNotation == "Intervals") {
         name = this.intervalToNote(note.name);
@@ -370,7 +382,6 @@ export default {
           this.alert_messages(">1nonroot");
           return;
         }
-
         if (name == this.scale.tonic) {
           this.tonicCount++; //counter only allows tonic note and its octave
           if (this.tonicCount >= 3) {
@@ -384,11 +395,7 @@ export default {
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
-        if (
-          (this.gameDifficulty == "Easy" && this.clickedKeys.length == 6) ||
-          (this.gameDifficulty == "Medium" && this.clickedKeys.length == 8) ||
-          (this.gameDifficulty == "Hard" && this.clickedKeys.length == 8)
-        ) {
+        if (this.clickedKeys.length == this.scale_info.notes.length + 1) {
           this.alert_messages("end");
         }
         this.alert_messages("correct");
@@ -441,7 +448,7 @@ export default {
           return;
         case "end":
           this.$buefy.dialog.alert({
-            message: `Thank you for playing the Identify Scale Game!`,
+            message: `Thank you for playing the Build Scale Game!`,
           });
           this.fretboardNotation = "sharp";
           this.StartGame = false;
@@ -456,61 +463,13 @@ export default {
       }
     },
     play_scale() {
-      let converted = this.flatToSharp(this.scale_info.notes);
-      let toPlay = this.convertToScientific(converted);
-      playSetOfNotes(toPlay);
+      guitarSounds.playSetOfNotes(this.scale_info.notes);
     },
-    convertToScientific(inputScale) {
-      let root = inputScale[0];
-      let output = [];
-      let octave = 3;
-      //flag set to true if octave iterated, prevents another octave from being incremented
-      let encountered = false;
-      //adds scientific notation, changes octave after passing C/C#/D to create ascending sound
-      for (let i = 0; i < inputScale.length; i++) {
-        if (
-          (inputScale[i] == "C" ||
-            inputScale[i] == "C#" ||
-            inputScale[i] == "D") &&
-          i != 0 &&
-          !encountered
-        ) {
-          octave++;
-          encountered = true;
-        }
-        if (root == "C") {
-          encountered = true;
-        }
-        output[i] = inputScale[i] + octave.toString();
-      }
 
-      //Add additional root note at end to make octave
-      //if root not incremented, manually add octave to 2nd root added
-      output.push(octave == 3 ? root + "4" : root + octave.toString());
-      return output;
-    },
-    //Converts Scale to all sharp notation for further use (sound)
-    flatToSharp(scale) {
-      let equivalent = {
-        Ab: "G#",
-        Bb: "A#",
-        Cb: "B#",
-        Db: "C#",
-        Eb: "D#",
-        Fb: "E#",
-        Gb: "F#",
-      };
-      for (let i = 0; i < scale.length; i++) {
-        if (scale[i] in equivalent) {
-          scale[i] = equivalent[scale[i]];
-        }
-      }
-      return scale;
-    },
     test_method() {
       // this.scale_info.tonic = "F"
       // this.scale_info.type = "major"
-      console.log("scale info notes before: " + this.scale_info.notes);
+      console.log("scale info notes " + this.scale_info.notes);
       // this.scale.type = "major pentatonic"
       // let temp = this.flatToSharp(this.scale_info.notes)
       // console.log("temp " + temp)
