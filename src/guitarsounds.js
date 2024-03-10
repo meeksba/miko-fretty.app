@@ -178,18 +178,16 @@ export function playNote(key){
 }
 
 export function playNoteByName(name){
-    console.log("hello")
+    // console.log("name " + name)
     Tone.start();
-    console.log("goodbye")
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
 
 export function playSetOfNotes(scale){
     Tone.start()
     let index = 0
-    const synth = new Tone.Synth().toDestination();
     const seq = new Tone.Sequence((time, note) => {
-	    guitarSounds.triggerAttackRelease(note, .50, time);
+	    playNoteByName(note);
         index++
         if(index == scale.length){
             seq.stop();
