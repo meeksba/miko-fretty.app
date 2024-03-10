@@ -102,6 +102,11 @@
         </h1>
         <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
+        <b-button
+          @click="play_scale"
+          label="Play Scale"
+          style="margin-top: 20px"
+        />
       </div>
       <b-button
         @click="test_method"
@@ -132,7 +137,7 @@ import TuningSelection from "../components/TuningSelection.vue";
 // import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
 import { Note, Scale, ScaleType, Mode } from "@tonaljs/tonal";
 import { Tunings } from "../tunings.js";
-import { playNote } from "../guitarsounds";
+import { playNote, playSetOfNotes } from "../guitarsounds";
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
   ALL_SCALES.push(scale.name);
@@ -154,7 +159,7 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "F", type: "major" },
+      scale: { tonic: "A", type: "major pentatonic" },
       // tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
       tonicArray: ["F", "F"],
       ShowMusicSheet: "false",
@@ -252,9 +257,12 @@ export default {
       this.clickedKeys = [];
       this.calculate_tonic(); //set initial answer
       console.log("Game Started");
-      if(this.scale_notes.some(f=>f.includes('b'))){
-        console.log("here here")
-        this.fretboardNotation = "flat"
+      if (
+        this.scale_notes.some((f) => f.includes("b")) &&
+        this.fretboardNotation == "sharps"
+      ) {
+        console.log("here here");
+        this.fretboardNotation = "flat";
       }
       // this.scale_info.some(f=> f.includes('b'));
     },
@@ -357,8 +365,8 @@ export default {
       }
       if (this.StartGame) {
         // console.log("note " + JSON.stringify(note, null, 2));
-        if(this.clickedKeys.includes(note.key)){
-          this.alert_messages("Duplicate")
+        if (this.clickedKeys.includes(note.key)) {
+          this.alert_messages("Duplicate");
           return;
         }
         if (this.clickedNotes.includes(name) && name != this.scale.tonic) {
@@ -379,12 +387,13 @@ export default {
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
-        if((this.gameDifficulty == "Easy" && this.clickedKeys.length == 6) ||
-            (this.gameDifficulty == "Medium" && this.clickedKeys.length == 8) ||
-            (this.gameDifficulty == "Hard" && this.clickedKeys.length == 8)
-            ) {
-              this.alert_messages("end");
-            }
+        if (
+          (this.gameDifficulty == "Easy" && this.clickedKeys.length == 6) ||
+          (this.gameDifficulty == "Medium" && this.clickedKeys.length == 8) ||
+          (this.gameDifficulty == "Hard" && this.clickedKeys.length == 8)
+        ) {
+          this.alert_messages("end");
+        }
         this.alert_messages("correct");
       }
 
@@ -400,11 +409,10 @@ export default {
             type: "is-success",
           });
           return;
-          case "Duplicate":
+        case "Duplicate":
           this.$buefy.toast.open({
             duration: 3000,
-            message:
-              "You click the same note twice, please try again",
+            message: "You click the same note twice, please try again",
             position: "is-bottom",
             type: "is-danger",
           });
@@ -433,12 +441,12 @@ export default {
             position: "is-bottom",
             type: "is-danger",
           });
-          return
-          case "end":
+          return;
+        case "end":
           this.$buefy.dialog.alert({
             message: `Thank you for playing the Identify Scale Game!`,
           });
-          this.fretboardNotation = "sharp"
+          this.fretboardNotation = "sharp";
           this.StartGame = false;
           this.ShowBegin = true;
           this.clickedKeys = [];
@@ -447,11 +455,69 @@ export default {
           return;
       }
     },
+    play_scale() {
+      let converted = this.flatToSharp(this.scale_info.notes);
+      console.log("converted " + converted)
+      let toPlay = this.convertToScientific(converted)
+      console.log("toPlay " + toPlay)
+      playSetOfNotes(toPlay);
+    },
+    convertToScientific(inputScale){
+      // this.scale.tonic = "C"
+      // this.scale.type = "minor pentatonic"
+
+      let root = inputScale[0]
+      let output = [];
+      let octave = 3;
+      //flag set to true if octave iterated, prevents another octave from being incremented
+      let encountered = false;
+      //adds scientific notation, changes octave after passing C/C#/D to create ascending sound
+      //savepos
+      for (let i = 0; i < inputScale.length; i++) {
+        if((inputScale[i] == "C" || inputScale[i] == "C#"|| inputScale[i] == "D") && i != 0 && !encountered){
+          octave++
+          encountered = true;
+        }
+        if(root == "C"){
+          encountered = true;
+        }
+          output[i] = inputScale[i] + octave.toString();
+        }
+        
+      //Add additional root note at end to make octave
+      //if root not incremented, manually add octave to 2nd root added 
+      output.push(octave == 3 ? root + "4": root + octave.toString());
+      // output.push(root + octave.toString());
+
+      
+      return output;
+    
+    },
+    flatToSharp(scale) {
+      let equivalent = {
+        Ab: "G#",
+        Bb: "A#",
+        Cb: "B#",
+        Db: "C#",
+        Eb: "D#",
+        Fb: "E#",
+        Gb: "F#",
+      };
+      for (let i = 0; i < scale.length; i++) {
+        if (scale[i] in equivalent) {
+          scale[i] = equivalent[scale[i]];
+        }
+      }
+      return scale;
+    },
     test_method() {
       // this.scale_info.tonic = "F"
       // this.scale_info.type = "major"
-      console.log("scale info notes " + this.scale.notes);
-      this.fretboardNotation = "flats"
+      console.log("scale info notes before: " + this.scale_info.notes);
+      this.scale.tonic = "F"
+      // this.scale.type = "major pentatonic"
+      // let temp = this.flatToSharp(this.scale_info.notes)
+      // console.log("temp " + temp)
       // console.log("checking " + this.scale_info.some(f=> f.includes('b')));
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
       // console.log(typeof(this.scale_notes)

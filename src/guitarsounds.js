@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { faJedi } from '@fortawesome/free-solid-svg-icons';
 import * as Tone from 'tone';
 
 
@@ -172,10 +173,29 @@ const fretNote = {
 }
 
 export function playNote(key){
-    // console.log("playnote key " + key)
     let note = fretNote[key]
-    // console.log("fretnote  " + note)
     Tone.start();
-    console.log("sound played ");
     guitarSounds.triggerAttackRelease([note] , 0.75);
+}
+
+export function playNoteByName(name){
+    console.log("hello")
+    Tone.start();
+    console.log("goodbye")
+    guitarSounds.triggerAttackRelease(name , 0.75);
+}
+
+export function playSetOfNotes(scale){
+    Tone.start()
+    let index = 0
+    const synth = new Tone.Synth().toDestination();
+    const seq = new Tone.Sequence((time, note) => {
+	    guitarSounds.triggerAttackRelease(note, .50, time);
+        index++
+        if(index == scale.length){
+            seq.stop();
+            Tone.Transport.stop();
+        }
+        }, scale,'4n').start(0);
+        Tone.Transport.start();
 }
