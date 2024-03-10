@@ -140,7 +140,7 @@ import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
+import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
 

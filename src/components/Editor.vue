@@ -172,7 +172,7 @@ import Fretboard from "./Fretboard.vue";
 import Chords from "./Chords.vue";
 import Notation from "./Notation.vue";
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode } from "@tonaljs/tonal";
+import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
 

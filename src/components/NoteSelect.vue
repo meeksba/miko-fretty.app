@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { Midi, Note } from "@tonaljs/tonal";
+import { Midi, Note } from "tonal";
 import Icon from "buefy/src/components/icon/Icon";
 import Input from "buefy/src/components/input/Input";
 import FormElementMixin from "buefy/src/utils/FormElementMixin";

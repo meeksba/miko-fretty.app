@@ -232,12 +232,11 @@ export function playNoteByName(name){
 }
 
 export function playChord(chord){
-    // let array = ["C4","E4","G4"]
-    // console.log("there ",chord)
     chord = flatToSharp(chord)
-    console.log("after flat to sharp  ",chord)
+    chord = convertToScientific(chord)
+    console.log("guitarSound playChord ", chord)
     Tone.start();
-    guitarSounds.triggerAttackRelease(array,.75)
+    guitarSounds.triggerAttackRelease(chord,.75)
 }
 
 export function playSetOfNotes(scale){

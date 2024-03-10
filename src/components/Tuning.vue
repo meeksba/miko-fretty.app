@@ -108,7 +108,7 @@
 
 <script>
 import Fretboard from "./Fretboard.vue";
-import { Note, Scale, Midi } from "@tonaljs/tonal";
+import { Note, Scale, Midi } from "tonal";
 
 export default {
   name: "Editor",

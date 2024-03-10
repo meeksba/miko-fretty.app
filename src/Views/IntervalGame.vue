@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-button
-      @click="test_method"
+      @click="testMethod"
       label="test button"
       style="margin-top: 40px"
       class="has-text-centered"
@@ -36,11 +36,11 @@
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
-        @click="show_settings()"
+        @click="showSettings()"
         label="Begin"
         type="is-link"
       />
-      <!-- <b-button v-if="ShowBegin" @click="show_settings()" label="Begin"/> -->
+      <!-- <b-button v-if="ShowBegin" @click="showSettings()" label="Begin"/> -->
       <div v-if="ShowSettings">
         <!-- Settings Before Game -->
         <h2>Choose Your Game Mode</h2>
@@ -63,7 +63,7 @@
             style="margin-top: 20px"
           />
         </b-field>
-        <b-button @click="submit_settings()" label="Begin Game" />
+        <b-button @click="submitSettings()" label="Begin Game" />
       </div>
       <!-- Input Fields -->
       <div v-if="StartGame && gameMode == 'ChordMode'">
@@ -80,25 +80,25 @@
             style="margin-top: 10px"
           >
             <b-field>
-              <b-radio-button v-model="chordAns" native-value="maj">
+              <b-radio-button v-model="playerAns" native-value="maj">
                 <span>Major</span>
               </b-radio-button>
-              <b-radio-button v-model="chordAns" native-value="min">
+              <b-radio-button v-model="playerAns" native-value="min">
                 <span>Minor</span>
               </b-radio-button>
-              <b-radio-button v-model="chordAns" native-value="maj7">
+              <b-radio-button v-model="playerAns" native-value="maj7">
                 <span>Maj7</span>
               </b-radio-button>
-              <b-radio-button v-model="chordAns" native-value="min7">
+              <b-radio-button v-model="playerAns" native-value="min7">
                 <span>Min7</span>
               </b-radio-button>
-              <b-radio-button v-model="chordAns" native-value="dom7">
+              <b-radio-button v-model="playerAns" native-value="dom7">
                 <span>7th</span>
               </b-radio-button>
             </b-field>
             <!-- Submit Answer Button -->
             <b-button
-              @click="submit_answer"
+              @click="submitAnswer"
               label="Submit"
               style="margin-left: 20px"
               type="is-link"
@@ -125,7 +125,6 @@
       :scale="scale_info"
       :scale-name="scale_info.name"
     />
-
     <Chords
       v-if="this.ShowChords"
       :chords="scaleChords"
@@ -140,7 +139,7 @@ import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode, Chord } from "@tonaljs/tonal";
+import { Note, Scale, Midi, ScaleType, Mode, Chord } from "tonal";
 // import { Chord } from "tonal";
 import { Tunings } from "../tunings.js";
 import { playNote, playChord } from "../guitarsounds";
@@ -176,9 +175,8 @@ export default {
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
-      playerTonic: null,
-      playerScale: null,
       chordAns: null,
+      playerAns: null,
       questionCount: 5,
       userScore: 0,
     };
@@ -252,7 +250,7 @@ export default {
       return elem;
     },
 
-    calculate_tonic() {
+    calculateTonic() {
       let tonic = this.calculate_random_element(this.tonicArray);
       //this loop ensures the same tonic wont be chosen twice in a row
       while (tonic == this.scale.tonic) {
@@ -263,72 +261,67 @@ export default {
         }
       }
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-
       return tonic;
     },
-    //This function calculates answers and interval for chordGame
+
+    //This function calculates a random chord type for the chord game
     calculateChordAns() {
       let randInt = Math.floor(Math.random() * 5);
       switch (randInt) {
         case 0:
-          return { name: "maj", pattern: [0, 4, 7] };
+          return "maj";
         case 1:
-          return { name: "min", pattern: [0, 3, 7] };
+          return "min";
         case 2:
-          return { name: "maj7", pattern: [0, 4, 7, 11] };
+          return "maj7";
         case 3:
-          return { name: "min7", pattern: [0, 3, 7, 10] };
+          return "min7";
         case 4:
-          return { name: "dom7", pattern: [0, 4, 7, 10] };
-      }
-    },
+          return "dom7";
+  }
+},
     playChord() {
-      this.scale.type = "chromatic";
-      let scaleNotes = JSON.parse(JSON.stringify(this.scale_info.notes));
-      this.scale.type = "";
-      // let pattern = this.chordAns.pattern;
-      // let chord = []
-      // for(let i = 0; i < pattern.length; i++){
-      //   chor
-      // }
-      playChord(scaleNotes);
+      let chord = Chord.getChord(this.chordAns,this.scale.tonic)
+      console.log("play chord ", chord)
+      playChord(chord.notes);
     },
-    show_settings() {
+    showSettings() {
       this.ShowSettings = true; //Show Game Settings Menu
       this.ShowBegin = false; //Hide Begin button
     },
-    submit_settings() {
+    submitSettings() {
       this.StartGame = true; //Start Game flag when users submit settings
       this.ShowSettings = false; //Hide Settings Menu
-      // if (this.gameMode == "Interval") {
-      //   this.fretboardNotation = "Intervals";
-      //   this.start_game(); //start game
-      //   return;
-      // }
       this.ShowMusicSheet = true;
-      this.start_game(); //Start Game
+      this.startGame(); //Start Game
     },
-    start_game() {
-      this.calculate_tonic(); //Set Initial Tonic
+    startGame() {
+      this.calculateTonic(); //Set Initial Tonic
       this.chordAns = this.calculateChordAns(); //Calculate Initial Answer
+      console.log("Made chord ans ")
     },
 
-    submit_answer() {
-      // if (
-      // ) {
-      //   //if user ans == displayed scale
-      //   this.userScore += 20; //update userscore/progress bar
-      //   this.alert_messages("correct");
-      // } else {
-      //   this.alert_messages("wrong");
-      // }
-      // this.questionCount--;
-      // if (this.questionCount == 0) {
-      //   this.alert_messages("end");
-      // }
+    submitAnswer() {
+      console.log("Submitted")
+      if(this.playerAns == this.chordAns){
+        this.userScore += 20;
+        this.playerAns = null;
+        this.alertMessages("correct")
+      }
+      else {
+        this.playerAns = null;
+        this.alertMessages("wrong");
+
+      }
+      this.questionCount--;
+      if (this.questionCount == 0 && this.gameMode == "ChordMode") {
+        this.alertMessages("endChord");
+      }
+      this.calculateTonic(); //Change Tonic For Next Question
+      this.calculateChordAns(); //Change Answer for Next Question
     },
 
-    alert_messages(message) {
+    alertMessages(message) {
       switch (message) {
         case "correct":
           this.$buefy.toast.open({
@@ -345,6 +338,16 @@ export default {
             position: "is-bottom",
             type: "is-danger",
           });
+          return;
+        case "endChord":
+          this.$buefy.dialog.alert({
+            message: `Thank you for playing the Chord Ear Training Game! You scored ${this.userScore}% `,
+          });
+          this.StartGame = false;
+          this.ShowBegin = true;
+          this.questionCount = 5;
+          this.userScore = 0;
+          this.ShowMusicSheet = false;
           return;
         case "end":
           this.$buefy.dialog.alert({
@@ -363,16 +366,9 @@ export default {
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
 
-    test_method() {
-      // console.log("Answer: " + this.scale.tonic + " " + this.scale.type);
-      // this.scale.type = "chromatic";
-      // let temp = JSON.parse(JSON.stringify(this.scale_info.notes));
-      // this.scale.type = "";
-      // console.log("hello ", temp);
-      // console.log(this.scale_info)
-      let Cee = Chord.notes("maj4", "C4");
-      console.log("Cee", Cee);
-      console.log("testing ", this.chordAns);
+    testMethod() {
+      console.log("Tonic ", this.scale.tonic)
+
     },
   },
 };

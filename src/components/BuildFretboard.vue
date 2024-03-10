@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { Midi } from "@tonaljs/tonal";
+import { Midi } from "tonal";
 
 export default {
   name: "Fretboard",

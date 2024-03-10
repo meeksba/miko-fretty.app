@@ -28,7 +28,7 @@
 
 <script>
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, ScaleType } from "@tonaljs/tonal";
+import { Note, ScaleType } from "tonal";
 import { Tunings } from "../tunings.js";
 
 var ALL_SCALES = [];
