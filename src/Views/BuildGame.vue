@@ -159,9 +159,8 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "major pentatonic" },
-      // tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
-      tonicArray: ["F", "F"],
+      scale: { tonic: "A", type: "major" },
+      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
@@ -170,7 +169,6 @@ export default {
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
-      playerAnswer: null,
       userScore: 0,
       tonicCount: 0,
       questionCount: 3,
@@ -256,12 +254,13 @@ export default {
     start_game() {
       this.clickedKeys = [];
       this.calculate_tonic(); //set initial answer
+      this.calculate_scale_type()
       console.log("Game Started");
       if (
-        this.scale_notes.some((f) => f.includes("b")) &&
-        this.fretboardNotation == "sharps"
+        this.scale_info.notes.some((f) => f.includes("b")) &&
+        this.fretboardNotation == "sharp"
       ) {
-        console.log("here here");
+        console.log("Converted to Flat Notation");
         this.fretboardNotation = "flat";
       }
       // this.scale_info.some(f=> f.includes('b'));
@@ -289,8 +288,8 @@ export default {
       }
     },
 
+    //this function returns a random element of an array
     calculate_random_element(inputArray) {
-      //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
@@ -446,18 +445,19 @@ export default {
           });
           this.fretboardNotation = "sharp";
           this.StartGame = false;
+          this.ShowSettings = false;
           this.ShowBegin = true;
           this.clickedKeys = [];
           this.clickedNotes = [];
           this.tonicCount = 0;
+          // location.reload();
+
           return;
       }
     },
     play_scale() {
       let converted = this.flatToSharp(this.scale_info.notes);
-      console.log("converted " + converted);
       let toPlay = this.convertToScientific(converted);
-      console.log("toPlay " + toPlay);
       playSetOfNotes(toPlay);
     },
     convertToScientific(inputScale) {
@@ -511,7 +511,6 @@ export default {
       // this.scale_info.tonic = "F"
       // this.scale_info.type = "major"
       console.log("scale info notes before: " + this.scale_info.notes);
-      this.scale.tonic = "F";
       // this.scale.type = "major pentatonic"
       // let temp = this.flatToSharp(this.scale_info.notes)
       // console.log("temp " + temp)

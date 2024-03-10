@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { faJedi } from '@fortawesome/free-solid-svg-icons';
 import * as Tone from 'tone';
 
 
