@@ -297,14 +297,14 @@ export default {
     },
     calculate_tonic() {
       let tonic = this.calculate_random_element(this.tonicArray);
-      // while (tonic == this.scale.tonic) {
-      //   //this loop ensures the same tonic wont be chosen twice in a row
-      //   tonic = this.calculate_random_element(this.tonicArray);
-      //   if (tonic != this.scale.tonic) {
-      //     //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
-      //     break;
-      //   }
-      // }
+      while (tonic == this.scale.tonic) {
+        //this loop ensures the same tonic wont be chosen twice in a row
+        tonic = this.calculate_random_element(this.tonicArray);
+        if (tonic != this.scale.tonic) {
+          //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
+          break;
+        }
+      }
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
 
       return tonic;
@@ -347,8 +347,6 @@ export default {
       let tonicIndex = chromaticNotes.indexOf(this.scale.tonic);
       let cur = 0;
       for (let i = tonicIndex; i < 25; i++) {
-        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
-        // console.log("chromaticNotes " + chromaticNotes[cur])
         if (chromaticIntervals[cur] == name) {
           console.log("note found " + chromaticNotes[((i % n) + n) % n]);
           return chromaticNotes[((i % n) + n) % n];
@@ -457,42 +455,41 @@ export default {
     },
     play_scale() {
       let converted = this.flatToSharp(this.scale_info.notes);
-      console.log("converted " + converted)
-      let toPlay = this.convertToScientific(converted)
-      console.log("toPlay " + toPlay)
+      console.log("converted " + converted);
+      let toPlay = this.convertToScientific(converted);
+      console.log("toPlay " + toPlay);
       playSetOfNotes(toPlay);
     },
-    convertToScientific(inputScale){
-      // this.scale.tonic = "C"
-      // this.scale.type = "minor pentatonic"
-
-      let root = inputScale[0]
+    convertToScientific(inputScale) {
+      let root = inputScale[0];
       let output = [];
       let octave = 3;
       //flag set to true if octave iterated, prevents another octave from being incremented
       let encountered = false;
       //adds scientific notation, changes octave after passing C/C#/D to create ascending sound
-      //savepos
       for (let i = 0; i < inputScale.length; i++) {
-        if((inputScale[i] == "C" || inputScale[i] == "C#"|| inputScale[i] == "D") && i != 0 && !encountered){
-          octave++
+        if (
+          (inputScale[i] == "C" ||
+            inputScale[i] == "C#" ||
+            inputScale[i] == "D") &&
+          i != 0 &&
+          !encountered
+        ) {
+          octave++;
           encountered = true;
         }
-        if(root == "C"){
+        if (root == "C") {
           encountered = true;
         }
-          output[i] = inputScale[i] + octave.toString();
-        }
-        
-      //Add additional root note at end to make octave
-      //if root not incremented, manually add octave to 2nd root added 
-      output.push(octave == 3 ? root + "4": root + octave.toString());
-      // output.push(root + octave.toString());
+        output[i] = inputScale[i] + octave.toString();
+      }
 
-      
+      //Add additional root note at end to make octave
+      //if root not incremented, manually add octave to 2nd root added
+      output.push(octave == 3 ? root + "4" : root + octave.toString());
       return output;
-    
     },
+    //Converts Scale to all sharp notation for further use (sound)
     flatToSharp(scale) {
       let equivalent = {
         Ab: "G#",
@@ -514,7 +511,7 @@ export default {
       // this.scale_info.tonic = "F"
       // this.scale_info.type = "major"
       console.log("scale info notes before: " + this.scale_info.notes);
-      this.scale.tonic = "F"
+      this.scale.tonic = "F";
       // this.scale.type = "major pentatonic"
       // let temp = this.flatToSharp(this.scale_info.notes)
       // console.log("temp " + temp)
