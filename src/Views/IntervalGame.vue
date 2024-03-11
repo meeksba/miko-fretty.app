@@ -18,7 +18,7 @@
       What Interval Has Played?
     </h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <IdentifyFretboard
+      <IntervalFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="fretboardNotation"
@@ -68,49 +68,52 @@
       <!-- Input Fields -->
       <div v-if="StartGame && gameMode == 'ChordMode'">
         <b-button
-          @click="playChord()"
-          label="Play Chord"
-          type="is-info "
-          outlined
-          style="margin-bottom: 20px"
+        @click="playChord()"
+        label="Play Chord"
+        type="is-info "
+        outlined
+        style="margin-bottom: 20px"
         />
         <b-field label="Choose Your Answer">
           <div
-            class="columns is-multiline is-centered"
-            style="margin-top: 10px"
+          class="columns is-multiline is-centered"
+          style="margin-top: 10px"
           >
-            <b-field>
-              <b-radio-button v-model="playerAns" native-value="maj">
-                <span>Major</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="min">
-                <span>Minor</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="maj7">
-                <span>Maj7</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="min7">
-                <span>Min7</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="dom7">
-                <span>7th</span>
-              </b-radio-button>
-            </b-field>
-            <!-- Submit Answer Button -->
-            <b-button
-              @click="submitAnswer"
-              label="Submit"
-              style="margin-left: 20px"
-              type="is-link"
-            />
-          </div>
-        </b-field>
-        <!-- Question Count -->
+          <b-field>
+            <b-radio-button v-model="playerAns" native-value="maj">
+              <span>Major</span>
+            </b-radio-button>
+            <b-radio-button v-model="playerAns" native-value="min">
+              <span>Minor</span>
+            </b-radio-button>
+            <b-radio-button v-model="playerAns" native-value="maj7">
+              <span>Maj7</span>
+            </b-radio-button>
+            <b-radio-button v-model="playerAns" native-value="min7">
+              <span>Min7</span>
+            </b-radio-button>
+            <b-radio-button v-model="playerAns" native-value="7">
+              <span>7th</span>
+            </b-radio-button>
+          </b-field>
+          <!-- Submit Answer Button -->
+          <b-button
+          @click="submitAnswer"
+          label="Submit"
+          style="margin-left: 20px"
+          type="is-link"
+          />
+        </div>
         <h4>Questions Remaining: {{ questionCount }}</h4>
-      </div>
-      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
-        Score
-      </h3>
+      </b-field>
+    </div>
+      <!-- Question Count -->
+    <div v-if="StartGame && gameMode == 'IntervalMode'">
+      <h4>Questions Remaining: {{ questionCount }}</h4>
+    </div>
+    <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
+      Score
+    </h3>
     </section>
     <!-- Progress Bar -->
     <b-progress
@@ -134,7 +137,7 @@
 </template>
 
 <script>
-import IdentifyFretboard from "../components/IdentifyFretboard.vue";
+import IntervalFretboard from "../components/IntervalFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
@@ -142,7 +145,8 @@ import TuningSelection from "../components/TuningSelection.vue";
 import { Note, Scale, Midi, ScaleType, Mode, Chord } from "tonal";
 // import { Chord } from "tonal";
 import { Tunings } from "../tunings.js";
-import { playNote, playChord } from "../guitarsounds";
+import * as guitarSounds from "../guitarsounds";
+
 
 var ALL_SCALES = [];
 for (var scale of ScaleType.all()) {
@@ -154,7 +158,7 @@ export default {
   name: "IdentifyGame",
 
   components: {
-    IdentifyFretboard,
+    IntervalFretboard,
     TuningSelection,
     Notation,
     Chords,
@@ -243,7 +247,7 @@ export default {
       this.usr_tuning = tuning;
       this.saveSettings();
     },
-    calculate_random_element(inputArray) {
+    calculateRandomElement(inputArray) {
       //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
@@ -251,10 +255,10 @@ export default {
     },
 
     calculateTonic() {
-      let tonic = this.calculate_random_element(this.tonicArray);
+      let tonic = this.calculateRandomElement(this.tonicArray);
       //this loop ensures the same tonic wont be chosen twice in a row
       while (tonic == this.scale.tonic) {
-        tonic = this.calculate_random_element(this.tonicArray);
+        tonic = this.calculateRandomElement(this.tonicArray);
         //if new tonic is different from current tonic (this.scale.tonic) break the loop
         if (tonic != this.scale.tonic) {
           break;
@@ -269,21 +273,25 @@ export default {
       let randInt = Math.floor(Math.random() * 5);
       switch (randInt) {
         case 0:
-          return "maj";
+          this.chordAns = "maj";
+          break
         case 1:
-          return "min";
+          this.chordAns = "min";
+          break
         case 2:
-          return "maj7";
+          this.chordAns = "maj7";
+          break
         case 3:
-          return "min7";
+          this.chordAns = "min7";
+          break
         case 4:
-          return "dom7";
+          this.chordAns = "7";
+          break
   }
 },
     playChord() {
       let chord = Chord.getChord(this.chordAns,this.scale.tonic)
-      console.log("play chord ", chord)
-      playChord(chord.notes);
+      guitarSounds.playChord(chord.notes);
     },
     showSettings() {
       this.ShowSettings = true; //Show Game Settings Menu
@@ -292,17 +300,25 @@ export default {
     submitSettings() {
       this.StartGame = true; //Start Game flag when users submit settings
       this.ShowSettings = false; //Hide Settings Menu
-      this.ShowMusicSheet = true;
+      // this.ShowMusicSheet = true;
       this.startGame(); //Start Game
     },
     startGame() {
+      if(this.gameMode == "InteralMode"){
+        this.scale.tonic = "C"
+        this.scale.type = "chromatic"
+        return;
+      }
       this.calculateTonic(); //Set Initial Tonic
-      this.chordAns = this.calculateChordAns(); //Calculate Initial Answer
-      console.log("Made chord ans ")
+      this.calculateChordAns(); //Calculate Initial Answer
+      this.scale.type = "major"
+
     },
 
     submitAnswer() {
-      console.log("Submitted")
+      // console.log("Submitted")
+      console.log("playerans: ", this.playerAns)
+      console.log("chordans: ", this.chordAns)
       if(this.playerAns == this.chordAns){
         this.userScore += 20;
         this.playerAns = null;
@@ -347,7 +363,7 @@ export default {
           this.ShowBegin = true;
           this.questionCount = 5;
           this.userScore = 0;
-          this.ShowMusicSheet = false;
+          // this.ShowMusicSheet = false;
           return;
         case "end":
           this.$buefy.dialog.alert({
@@ -357,17 +373,21 @@ export default {
           this.ShowBegin = true;
           this.questionCount = 5;
           this.userScore = 0;
-          this.ShowMusicSheet = false;
+          // this.ShowMusicSheet = false;
       }
     },
 
     clickHandle(note) {
-      playNote(note.key);
+      guitarSounds.playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
 
     testMethod() {
-      console.log("Tonic ", this.scale.tonic)
+      // let chord = Chord.getChord("7",this.scale.tonic)
+      console.log("chordAns: ", this.chordAns)
+      // this.scale.type = "chromatic"
+      // console.log("test chord ", chord)
+      // guitarSounds.playChord(chord.notes);
 
     },
   },

@@ -111,7 +111,7 @@
               :stroke-dasharray="
                 hover_note == note.num && note.num != root ? '4,4' : '0'
               "
-              :fill="root == note.num ? 'black' : 'white'"
+              :fill="root == note.num ? 'lightslategrey' : 'white'"
               stroke="black"
             />
             <!-- name -->

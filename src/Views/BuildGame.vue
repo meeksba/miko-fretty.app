@@ -366,6 +366,7 @@ export default {
     },
     //This method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
+      console.log("this tuning ", this.tuning)
       guitarSounds.playNote(note.key);
       let name = note.name;
       if (this.fretboardNotation == "Intervals") {
@@ -415,7 +416,7 @@ export default {
         case "Duplicate":
           this.$buefy.toast.open({
             duration: 3000,
-            message: "You click the same note twice, please try again",
+            message: "Cannot click the same note twice, please try again",
             position: "is-bottom",
             type: "is-danger",
           });
@@ -424,7 +425,7 @@ export default {
           this.$buefy.toast.open({
             duration: 3000,
             message:
-              "You cannot select more than 1 of a non root note, please try again",
+              "Cannot select more than 1 of a non root, please try again",
             position: "is-bottom",
             type: "is-danger",
           });

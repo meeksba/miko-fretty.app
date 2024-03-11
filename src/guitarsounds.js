@@ -190,7 +190,7 @@ export function flatToSharp(scale) {
     return scale;
 }
 
-export function convertToScientific(inputScale) {
+export function convertToScientificScale(inputScale) {
     let root = inputScale[0];
     let output = [];
     let octave = 3;
@@ -218,6 +218,15 @@ export function convertToScientific(inputScale) {
     output.push(octave == 3 ? root + "4" : root + octave.toString());
     return output;
 }
+export function convertToScientificChord(inputScale) {
+    let output = [];
+    for (let i = 0; i < inputScale.length; i++) {
+        output[i] = inputScale[i] + "3"
+    }
+    output.push(inputScale[0] + "4");
+    // console.log("convertchord output ", output)
+    return output;
+}
 
 export function playNote(key){
     let note = fretNote[key]
@@ -233,7 +242,7 @@ export function playNoteByName(name){
 
 export function playChord(chord){
     chord = flatToSharp(chord)
-    chord = convertToScientific(chord)
+    chord = convertToScientificChord(chord)
     console.log("guitarSound playChord ", chord)
     Tone.start();
     guitarSounds.triggerAttackRelease(chord,.75)
@@ -242,7 +251,7 @@ export function playChord(chord){
 export function playSetOfNotes(scale){
     // let converted = flatToSharp(scale)
     scale = flatToSharp(scale)
-    scale = convertToScientific(scale)
+    scale = convertToScientificScale(scale)
     Tone.start()
     let index = 0
     const seq = new Tone.Sequence((time, note) => {
