@@ -1,4 +1,4 @@
-/* eslint-disable */
+// /* eslint-disable */
 import * as Tone from 'tone';
 
 
@@ -218,15 +218,24 @@ export function convertToScientificScale(inputScale) {
     output.push(octave == 3 ? root + "4" : root + octave.toString());
     return output;
 }
-export function convertToScientificChord(inputScale) {
-    let output = [];
-    for (let i = 0; i < inputScale.length; i++) {
-        output[i] = inputScale[i] + "3"
-    }
-    output.push(inputScale[0] + "4");
-    // console.log("convertchord output ", output)
-    return output;
-}
+// export function convertToScientificChord(inputScale) {
+//     let output = [];
+//     for (let i = 0; i < inputScale.length; i++) {
+//         output[i] = inputScale[i] + "3"
+//     }
+//     output.push(inputScale[0] + "4");
+//     // console.log("convertchord output ", output)
+//     return output;
+// }
+// export function convertToScientificInterval(inputScale) {
+//     let output = [];
+//     for (let i = 0; i < inputScale.length; i++) {
+//         output[i] = inputScale[i] + "3"
+//     }
+//     // output.push(inputScale[0] + "4");
+//     // console.log("convertchord output ", output)
+//     return output;
+// }
 
 export function playNote(key){
     let note = fretNote[key]
@@ -235,21 +244,57 @@ export function playNote(key){
 }
 
 export function playNoteByName(name){
-    // console.log("name " + name)
     Tone.start();
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
 
 export function playChord(chord){
     chord = flatToSharp(chord)
-    chord = convertToScientificChord(chord)
-    console.log("guitarSound playChord ", chord)
+    let root = chord[0]
+    chord = chord.map(x => x + "3"); //Add scientific notation
+    chord.push(root + "4"); //Add octave note for better sounding chord
     Tone.start();
-    guitarSounds.triggerAttackRelease(chord,.75)
+    guitarSounds.triggerAttackRelease(chord,1)
 }
 
-export function playSetOfNotes(scale){
-    // let converted = flatToSharp(scale)
+export function playChordIndividually(chord){
+    console.log("playindividual: ", chord)
+    chord = flatToSharp(chord)
+    chord = convertToScientificScale(chord)
+    // let root = chord[0]
+    // chord = chord.map(x => x + "3"); //Add scientific notation
+    // chord.push(root + "4"); //Add octave note for better sounding chord
+    Tone.start();
+    let index = 0;
+    const seq = new Tone.Sequence((time, note) => {
+	    playNoteByName(note);
+        index++
+        if(index == chord.length){
+            seq.stop();
+            Tone.Transport.stop();
+        }
+        }, chord,'4n').start(0);
+        Tone.Transport.start();
+}
+
+export function playInterval(notes){
+    notes = flatToSharp(notes)
+    notes = notes.map(x => x + "3");
+    Tone.start()
+    let index = 0;
+    const seq = new Tone.Sequence((time, note) => {
+	    playNoteByName(note);
+        index++
+        if(index == notes.length){
+            seq.stop();
+            Tone.Transport.stop();
+        }
+        }, notes,'4n').start(0);
+        Tone.Transport.start();
+}
+
+
+export function playScale(scale){
     scale = flatToSharp(scale)
     scale = convertToScientificScale(scale)
     Tone.start()

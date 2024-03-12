@@ -366,7 +366,7 @@ export default {
     },
     //This method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
-      console.log("this tuning ", this.tuning)
+      console.log("this tuning ", this.tuning);
       guitarSounds.playNote(note.key);
       let name = note.name;
       if (this.fretboardNotation == "Intervals") {
@@ -463,7 +463,7 @@ export default {
       }
     },
     play_scale() {
-      guitarSounds.playSetOfNotes(this.scale_info.notes);
+      guitarSounds.playScale(this.scale_info.notes);
     },
 
     test_method() {

@@ -270,8 +270,7 @@ export default {
       playNote(note.key);
     },
     testMethod() {
-      console.log("test " + this.scale_info.notes);
-      console.log("test 1: " + this.notes);
+      console.log("Scale Notes: " + this.scale_info.notes);
     },
   },
 };
