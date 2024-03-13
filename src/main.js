@@ -3,7 +3,7 @@ import App from "./App.vue";
 import VueRouter from "vue-router";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
-import IntervalGame from "./Views/IntervalGame.vue";
+import ListeningGame from "./Views/ListeningGame.vue";
 import store from "./store.js";
 import Buefy from "buefy/src";
 import { ConfigProgrammatic } from "buefy";
@@ -67,9 +67,9 @@ const routes = [
     component: BuildGame,
   },
   {
-    path: "/IntervalGame",
-    name: "IntervalGame",
-    component: IntervalGame,
+    path: "/ListeningGame",
+    name: "ListeningGame",
+    component: ListeningGame,
   },
 ];
 

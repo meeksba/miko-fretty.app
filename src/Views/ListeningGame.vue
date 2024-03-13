@@ -18,7 +18,7 @@
       What Interval Has Played?
     </h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <IntervalFretboard
+      <ListeningFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="fretboardNotation"
@@ -126,7 +126,7 @@
         <b-button
           @click="playInterval()"
           label="Play Interval"
-          type="is-info "
+          type="is-info"
           outlined
           style="margin-bottom: 20px"
         />
@@ -194,13 +194,12 @@
 </template>
 
 <script>
-import IntervalFretboard from "../components/IntervalFretboard.vue";
+import ListeningFretboard from "../components/ListeningFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
-// import { Chord } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
 
@@ -211,10 +210,10 @@ for (var scale of ScaleType.all()) {
 }
 
 export default {
-  name: "IntervalGame",
+  name: "ListeningGames",
 
   components: {
-    IntervalFretboard,
+    ListeningFretboard,
     // TuningSelection,
     Notation,
     Chords,

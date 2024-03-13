@@ -146,7 +146,7 @@
 import { Midi } from "tonal";
 
 export default {
-  name: "IntervalFretboard",
+  name: "ListeningFretboard",
 
   props: {
     tuning: {

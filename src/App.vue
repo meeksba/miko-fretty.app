@@ -7,7 +7,7 @@
       <router-link to="/BuildGame">
         <b-button @click="showBuild = !showBuild">Build</b-button>
       </router-link>
-      <router-link to="/IntervalGame">
+      <router-link to="/ListeningGame">
         <b-button @click="showInterval = !showInterval">Interval</b-button>
       </router-link>
     </div>
@@ -23,7 +23,7 @@
     </div>
     <IdentifyGame v-if="showGame" />
     <BuildGame v-if="showBuild" />
-    <IntervalGame v-if="showInterval" />
+    <ListeningGame v-if="showInterval" />
   </section>
 </template>
 
@@ -31,7 +31,7 @@
 import Editor from "./components/Editor.vue";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
-import IntervalGame from "./Views/IntervalGame.vue";
+import ListeningGame from "./Views/ListeningGame.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
@@ -40,7 +40,7 @@ export default {
     Editor,
     IdentifyGame,
     BuildGame,
-    IntervalGame,
+    ListeningGame,
     // NoteSelect
   },
   data() {
