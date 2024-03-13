@@ -61,7 +61,7 @@
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
-        @click="show_settings()"
+        @click="showSettings()"
         label="Begin"
         type="is-link"
         outlined
@@ -100,7 +100,7 @@
           />
         </b-field>
         <b-button
-          @click="submit_settings()"
+          @click="submitSettings()"
           label="Begin Game"
           type="is-link"
           outlined
@@ -114,7 +114,7 @@
         <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
         <b-button
-          @click="play_scale"
+          @click="playScale"
           label="Play Scale"
           style="margin-top: 20px"
           type="is-link"
@@ -122,7 +122,7 @@
         />
       </div>
       <b-button
-        @click="test_method"
+        @click="testMethod"
         label="TESTBUTTON"
         style="margin-top: 20px"
       />
@@ -234,7 +234,7 @@ export default {
     // normalize(notes) {
     //   return notes.map((x) => x % 12);
     // },
-    // toname(x) {
+    // toName(x) {
     //   return Midi.midiToNoteName(x, {
     //     sharps: this.notation != "flat",
     //     pitchClass: true,
@@ -249,24 +249,24 @@ export default {
       this.usr_tuning = tuning;
       this.saveSettings();
     },
-    show_settings() {
+    showSettings() {
       this.ShowSettings = true; //show settings like tuning and difficulty
       this.ShowBegin = false; //hide Begin button
     },
-    submit_settings() {
+    submitSettings() {
       this.StartGame = true; //start game once users have submit settings
       this.ShowSettings = false; //hide settings menu
       if (this.gameMode == "Interval") {
         this.fretboardNotation = "Intervals";
-        this.start_game(); //start game
+        this.startGame(); //start game
         return;
       }
-      this.start_game(); //start game
+      this.startGame(); //start game
     },
-    start_game() {
+    startGame() {
       this.clickedKeys = [];
-      this.calculate_tonic(); //set initial answer
-      this.calculate_scale_type();
+      this.calculateTonic(); //set initial answer
+      this.calculateScaleType();
       console.log("Game Started");
       if (
         this.scale_info.notes.some((f) => f.includes("b")) &&
@@ -277,22 +277,15 @@ export default {
       }
     },
 
-    calculate_scale_type() {
+    calculateScaleType() {
       let randInt = Math.random();
       switch (this.gameDifficulty) {
         case "Easy":
-          if (randInt < 0.5) {
-            this.scale.type = "minor pentatonic";
-            return;
-          }
-          this.scale.type = "major pentatonic";
+          this.scale.type =
+            randInt < 0.5 ? "minor pentatonic" : "major pentatonic";
           return;
         case "Medium":
-          if (randInt < 0.5) {
-            this.scale.type = "minor";
-            return;
-          }
-          this.scale.type = "major";
+          this.scale.type = randInt < 0.5 ? "minor" : "major";
           return;
         case "Hard":
           this.scale.type = "harmonic minor";
@@ -300,26 +293,21 @@ export default {
     },
 
     //this function returns a random element of an array
-    calculate_random_element(inputArray) {
+    calculateRandomElement(inputArray) {
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
     },
-    calculate_tonic() {
-      let tonic = this.calculate_random_element(this.tonicArray);
+    calculateTonic() {
+      let tonic = this.calculateRandomElement(this.tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(this.tonicArray);
-        if (tonic != this.scale.tonic) {
-          //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
-          break;
-        }
+        tonic = this.calculateRandomElement(this.tonicArray);
       }
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
-
       return tonic;
     },
-    calculate_scale_notes() {
+    calculateScaleNotes() {
       return this.scale_info.notes.map(Note.chroma);
     },
     //this function finds the correct interval of the note given its name and knowing the tonic of the scale
@@ -375,35 +363,35 @@ export default {
       if (this.StartGame) {
         // console.log("note " + JSON.stringify(note, null, 2));
         if (this.clickedKeys.includes(note.key)) {
-          this.alert_messages("Duplicate");
+          this.alertMessages("Duplicate");
           return;
         }
         if (this.clickedNotes.includes(name) && name != this.scale.tonic) {
-          this.alert_messages(">1nonroot");
+          this.alertMessages(">1nonroot");
           return;
         }
         if (name == this.scale.tonic) {
           this.tonicCount++; //counter only allows tonic note and its octave
           if (this.tonicCount > 2) {
-            this.alert_messages(">2root");
+            this.alertMessages(">2root");
             return;
           }
         }
         if (!this.scale_info.notes.includes(name)) {
-          this.alert_messages("wrong");
+          this.alertMessages("wrong");
           return;
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
         if (this.clickedKeys.length == this.scale_info.notes.length + 1) {
-          this.alert_messages("end");
+          this.alertMessages("end");
         }
-        this.alert_messages("correct");
+        this.alertMessages("correct");
       }
 
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
-    alert_messages(message) {
+    alertMessages(message) {
       switch (message) {
         case "correct":
           this.$buefy.toast.open({
@@ -462,11 +450,11 @@ export default {
           return;
       }
     },
-    play_scale() {
+    playScale() {
       guitarSounds.playScale(this.scale_info.notes);
     },
 
-    test_method() {
+    testMethod() {
       console.log("scale info notes " + this.scale_info.notes);
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },

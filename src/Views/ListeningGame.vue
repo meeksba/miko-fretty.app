@@ -304,7 +304,7 @@ export default {
     normalize(notes) {
       return notes.map((x) => x % 12);
     },
-    toname(x) {
+    toName(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.notation != "flat",
         pitchClass: true,
@@ -349,10 +349,6 @@ export default {
       //this loop ensures the same tonic wont be chosen twice in a row
       while (tonic == this.scale.tonic) {
         tonic = this.calculateRandomElement(this.tonicArray);
-        //if new tonic is different from current tonic (this.scale.tonic) break the loop
-        if (tonic != this.scale.tonic) {
-          break;
-        }
       }
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
@@ -367,7 +363,6 @@ export default {
       while (this.previousIntervalAns.includes(secondNote)) {
         secondNote = this.calculateRandomElement(this.chromaticScale);
       }
-
       // root == secondNote ? this.intervalAns = "8P" : this.intervalAns = Interval.distance(root, secondNote)
 
       this.intervalAns =

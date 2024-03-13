@@ -213,7 +213,7 @@ export default {
           let note = {
             num: num,
             fret: fret,
-            name: this.toname(num),
+            name: this.toName(num),
             x: (this.fretpos(fret - 1) + this.fretpos(fret)) / 2,
             key: "n" + string + "_" + fret,
           };
@@ -227,7 +227,7 @@ export default {
           result.push({
             nr: string,
             y: string * this.string_spacing,
-            tuning: this.toname(tuning),
+            tuning: this.toName(tuning),
             visible: visible,
             hidden: hidden,
           });
@@ -319,7 +319,7 @@ export default {
     removeDouble(scale) {
       console.log("hello" + scale);
     },
-    toname(num) {
+    toName(num) {
       let sharp = this.notation != "flat";
       let name = Midi.midiToNoteName(num, {
         sharps: sharp,

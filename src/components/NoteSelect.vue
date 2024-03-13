@@ -124,7 +124,7 @@ export default {
   computed: {
     computedValue: {
       get() {
-        return this.toname(this.newValue); // toname(Math.abs(this.newValue) % 12);
+        return this.toName(this.newValue); // toName(Math.abs(this.newValue) % 12);
       },
       set(value) {
         value = Note.chroma(value);
@@ -157,7 +157,7 @@ export default {
     },
   },
   methods: {
-    toname(x) {
+    toName(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.sharps == "sharps",
         pitchClass: true,

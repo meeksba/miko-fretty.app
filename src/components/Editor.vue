@@ -255,7 +255,7 @@ export default {
     normalize(notes) {
       return notes.map((x) => x % 12);
     },
-    toname(x) {
+    toName(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.notation != "flat",
         pitchClass: true,

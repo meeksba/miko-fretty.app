@@ -139,7 +139,7 @@ export default {
       return Scale.get(name);
     },
     chromatic: function () {
-      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(this.toname);
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(this.toName);
     },
     scale_search() {
       return this.all_scales;
@@ -150,7 +150,7 @@ export default {
     normalize(notes) {
       return notes.map((x) => x % 12);
     },
-    toname(x) {
+    toName(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.sharps == "sharps",
         pitchClass: true,

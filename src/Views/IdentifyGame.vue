@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-button
-      @click="test_method"
+      @click="testMethod"
       label="TESTBUTTON"
       style="margin-top: 40px"
       class="has-text-centered"
@@ -27,7 +27,7 @@
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
-        @click="show_settings()"
+        @click="showSettings()"
         label="Begin"
         type="is-link"
         outlined
@@ -66,7 +66,7 @@
           />
         </b-field>
         <b-button
-          @click="submit_settings()"
+          @click="submitSettings()"
           label="Begin Game"
           type="is-link"
           outlined
@@ -229,7 +229,7 @@ export default {
     normalize(notes) {
       return notes.map((x) => x % 12);
     },
-    toname(x) {
+    toName(x) {
       return Midi.midiToNoteName(x, {
         sharps: this.notation != "flat",
         pitchClass: true,
@@ -244,18 +244,18 @@ export default {
       this.usr_tuning = tuning;
       this.saveSettings();
     },
-    calculate_random_element(inputArray) {
+    calculateRandomElement(inputArray) {
       //this function returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
     },
 
-    calculate_tonic() {
-      let tonic = this.calculate_random_element(this.tonicArray);
+    calculateTonic() {
+      let tonic = this.calculateRandomElement(this.tonicArray);
       while (tonic == this.scale.tonic) {
         //this loop ensures the same tonic wont be chosen twice in a row
-        tonic = this.calculate_random_element(this.tonicArray);
+        tonic = this.calculateRandomElement(this.tonicArray);
         if (tonic != this.scale.tonic) {
           //if new tonic is different from displayed tonic (this.scale.tonic) break the loop
           break;
@@ -267,45 +267,38 @@ export default {
       return tonic;
     },
     //this function calculates the type of scale (maj,min) given the chosen difficulty
-    calculate_scale_type() {
+    calculateScaleType() {
       let randInt = Math.random();
       switch (this.gameDifficulty) {
         case "Easy":
-          if (randInt < 0.5) {
-            this.scale.type = "minor pentatonic";
-            return;
-          }
-          this.scale.type = "major pentatonic";
+          this.scale.type =
+            randInt < 0.5 ? "minor pentatonic" : "major pentatonic";
           return;
         case "Medium":
-          if (randInt < 0.5) {
-            this.scale.type = "minor";
-            return;
-          }
-          this.scale.type = "major";
+          this.scale.type = randInt < 0.5 ? "minor" : "major";
           return;
         case "Hard":
           this.scale.type = "harmonic minor";
       }
     },
-    show_settings() {
+    showSettings() {
       this.ShowSettings = true; //show settings like tuning and difficulty
       this.ShowBegin = false; //hide Begin button
     },
-    submit_settings() {
+    submitSettings() {
       this.StartGame = true; //start game once users have submit settings
       this.ShowSettings = false; //hide settings menu
       if (this.gameMode == "Interval") {
         this.fretboardNotation = "Intervals";
-        this.start_game(); //start game
+        this.startGame(); //start game
         return;
       }
       this.ShowMusicSheet = true;
-      this.start_game(); //start game
+      this.startGame(); //start game
     },
-    start_game() {
-      this.calculate_tonic(); //set initial answer
-      this.calculate_scale_type(); //create scale based on difficulty
+    startGame() {
+      this.calculateTonic(); //set initial answer
+      this.calculateScaleType(); //create scale based on difficulty
     },
 
     submit_answer() {
@@ -316,21 +309,21 @@ export default {
       ) {
         //if user ans == displayed scale
         this.userScore += 20; //update userscore/progress bar
-        this.alert_messages("correct");
+        this.alertMessages("correct");
       } else {
-        this.alert_messages("wrong");
+        this.alertMessages("wrong");
       }
       this.questionCount--;
       if (this.questionCount == 0) {
-        this.alert_messages("end");
+        this.alertMessages("end");
       }
-      this.calculate_scale_type(); //calculate scale according to difficulty
-      this.calculate_tonic(); //resets fretboard with tonic of new scale
+      this.calculateScaleType(); //calculate scale according to difficulty
+      this.calculateTonic(); //resets fretboard with tonic of new scale
       this.playerTonic = null; //reset tonic input
       this.playerScale = null; //reset scale type input
     },
 
-    alert_messages(message) {
+    alertMessages(message) {
       switch (message) {
         case "correct":
           this.$buefy.toast.open({
@@ -365,7 +358,7 @@ export default {
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
 
-    test_method() {
+    testMethod() {
       console.log("Answer: " + this.scale.tonic + " " + this.scale.type);
     },
   },

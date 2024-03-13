@@ -96,7 +96,7 @@
                     var tmp = [];
                     for(var c of chromatic) {
                         if (scale_notes.includes(c % 12)) {
-                            tmp.push(this.toname(c));
+                            tmp.push(this.toName(c));
                         }
                         else {
                             tmp.push(null);
@@ -114,7 +114,7 @@
                 var d = s - (s / Math.pow(2, (n / 12)));
                 return Math.round(d * 1000) / 1000;
             },
-            toname(x) { return Tonal.Midi.midiToNoteName(x, { sharps: this.sharps, pitchClass: true }); },
+            toName(x) { return Tonal.Midi.midiToNoteName(x, { sharps: this.sharps, pitchClass: true }); },
         },
       })
 </script>
