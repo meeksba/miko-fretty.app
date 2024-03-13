@@ -83,7 +83,7 @@
         />
         <b-button
           @click="playChordIndividually()"
-          label="Play Chord Individually"
+          label="Play Notes Individually"
           type="is-info "
           outlined
           style="margin-bottom: 20px"
@@ -137,18 +137,23 @@
           >
             <!-- Interval Select -->
             <b-field>
-              <b-select placeholder="Select an Interval" icon="account">
-                <option value="silver">Minor 2nd</option>
-                <option value="vane">Major 2nd</option>
-                <option value="billy">Minor 3rd</option>
-                <option value="jack">Major 3rd</option>
-                <option value="jack">Perfect 4th</option>
-                <option value="heisenberg">Diminished 5th/Augmented 4th</option>
-                <option value="jesse">Perfect 5th</option>
-                <option value="saul">Minor 6th</option>
-                <option value="mike">Major 6th</option>
-                <option value="tyrion-lannister">Minor 7th</option>
-                <option value="jamie-lannister">Major 7th</option>
+              <b-select
+                v-model="playerAns"
+                placeholder="Select an Interval"
+                icon="account"
+              >
+                <option value="2m">Minor 2nd</option>
+                <option value="2M">Major 2nd</option>
+                <option value="3m">Minor 3rd</option>
+                <option value="3M">Major 3rd</option>
+                <option value="4P">Perfect 4th</option>
+                <option value="5d">Diminished 5th</option>
+                <option value="5P">Perfect 5th</option>
+                <option value="6m">Minor 6th</option>
+                <option value="6M">Major 6th</option>
+                <option value="7m">Minor 7th</option>
+                <option value="7M">Major 7th</option>
+                <option value="8P">Octave</option>
               </b-select>
             </b-field>
             <!-- Interval Mode Submit Answer Button -->
@@ -221,17 +226,32 @@ export default {
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "F", type: "" },
-      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
+      tonicArray: ["C", "D", "E", "F", "G", "A", "B"],
+      chromaticScale: [
+        "C",
+        "Db",
+        "D",
+        "Eb",
+        "E",
+        "F",
+        "Gb",
+        "G",
+        "Ab",
+        "A",
+        "Bb",
+        "B",
+      ],
       gameDifficulty: "Medium",
       gameMode: "ChordMode",
-      fretboardNotation: "sharp",
+      fretboardNotation: "flat",
       ShowMusicSheet: false,
       ShowChords: false,
+      ShowBegin: true,
       ShowSettings: false,
       StartGame: false,
-      ShowBegin: true,
-      intervalNotes: [],
       chordAns: null,
+      intervalNotes: [],
+      previousIntervalAns: [],
       intervalAns: null,
       playerAns: null,
       questionCount: 5,
@@ -316,7 +336,7 @@ export default {
         return;
       }
       this.calculateTonic(); //Set Initial Tonic
-      this.calculateChordAns(); //Calculate Initial Answer
+      this.calculateChordAns(); //Calculate Initial Chord Answer
       this.scale.type = "major";
     },
     calculateRandomElement(inputArray) {
@@ -340,22 +360,24 @@ export default {
     },
     //This method calculates a random interval for the interval game
     calculateIntervalAns() {
-      if (this.gameDifficulty == "Easy") {
-        this.scale.tonic = "C";
-        this.scale.type = "chromatic";
-        let tempScale = JSON.parse(JSON.stringify(this.scale_info.notes));
-        this.scale.type = "";
-        this.intervalNotes[0] = "C";
-        this.intervalNotes.push(this.calculateRandomElement(tempScale));
-        // console.log("outputInterval: ", outputInterval);
-        this.intervalAns = Interval.distance(
-          this.intervalNotes[0],
-          this.intervalNotes[1]
-        );
-        console.log("Interval: ", this.intervalAns);
-        // guitarSounds.playScale(outputInterval);
+      let root =
+        this.gameDifficulty == "Easy"
+          ? "C"
+          : this.calculateRandomElement(this.chromaticScale);
+      let secondNote = this.calculateRandomElement(this.chromaticScale);
+      while (this.previousIntervalAns.includes(secondNote)) {
+        secondNote = this.calculateRandomElement(this.chromaticScale);
       }
+
+      // root == secondNote ? this.intervalAns = "8P" : this.intervalAns = Interval.distance(root, secondNote)
+
+      this.intervalAns =
+        root == secondNote ? "8P" : Interval.distance(root, secondNote);
+      this.intervalNotes = [root, secondNote];
+      this.previousIntervalAns.push(secondNote);
+      return;
     },
+
     //This method calculates a random chord type for the chord game
     calculateChordAns() {
       let randInt = Math.floor(Math.random() * 5);
@@ -383,6 +405,7 @@ export default {
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
     playInterval() {
+      console.log("intervalNotes: ", this.intervalNotes);
       guitarSounds.playInterval(this.intervalNotes);
     },
     playChord() {
@@ -406,16 +429,16 @@ export default {
         this.alertMessages("wrong");
       }
       this.questionCount--;
-      if (this.questionCount == 0 && this.gameMode == "ChordMode") {
+      if (this.questionCount == 0) {
         this.alertMessages("endChord");
       }
       this.calculateTonic(); //Change Tonic For Next Question
       this.calculateChordAns(); //Change Answer for Next Question
     },
     submitAnswerIntervalGame() {
-      console.log("Player Answer: ", this.playerAns);
-      console.log("Correct Answer: ", this.chordAns);
-      if (this.playerAns == this.chordAns) {
+      console.log("Player interval: ", this.playerAns);
+      console.log("Correct interval: ", this.intervalAns);
+      if (this.playerAns == this.intervalAns) {
         this.userScore += 20;
         this.playerAns = null;
         this.alertMessages("correct");
@@ -424,11 +447,11 @@ export default {
         this.alertMessages("wrong");
       }
       this.questionCount--;
-      if (this.questionCount == 0 && this.gameMode == "ChordMode") {
-        this.alertMessages("endChord");
+      if (this.questionCount == 0) {
+        this.alertMessages("endInterval");
       }
-      this.calculateTonic(); //Change Tonic For Next Question
-      this.calculateChordAns(); //Change Answer for Next Question
+      this.intervalNotes = [];
+      this.calculateIntervalAns(); //Change Answer for Next Question
     },
 
     alertMessages(message) {
@@ -461,19 +484,24 @@ export default {
           this.scale.type = "";
           // this.ShowMusicSheet = false;
           return;
-        case "end":
+        case "endInterval":
           this.$buefy.dialog.alert({
-            message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
+            message: `Thank you for playing the Interval Ear Training Game! You scored ${this.userScore}% `,
           });
           this.StartGame = false;
           this.ShowBegin = true;
           this.questionCount = 5;
           this.userScore = 0;
+          this.previousIntervalAns = [];
+        // this.scale.tonic = "";
+        // this.scale.type = "";
         // this.ShowMusicSheet = false;
       }
     },
 
     testMethod() {
+      console.log("intervalAns: ", this.intervalAns);
+      console.log("chordAns: ", this.chordAns);
       // let chord = Chord.getChord("7",this.scale.tonic)
       // console.log("chordAns: ", this.chordAns);
       // this.scale.tonic = "C";

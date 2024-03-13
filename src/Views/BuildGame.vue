@@ -172,7 +172,7 @@ export default {
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "A", type: "major" },
-      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
+      tonicArray: ["C", "D", "E", "F", "G", "A", "B"],
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
@@ -384,7 +384,7 @@ export default {
         }
         if (name == this.scale.tonic) {
           this.tonicCount++; //counter only allows tonic note and its octave
-          if (this.tonicCount >= 3) {
+          if (this.tonicCount > 2) {
             this.alert_messages(">2root");
             return;
           }
@@ -467,16 +467,8 @@ export default {
     },
 
     test_method() {
-      // this.scale_info.tonic = "F"
-      // this.scale_info.type = "major"
       console.log("scale info notes " + this.scale_info.notes);
-      // this.scale.type = "major pentatonic"
-      // let temp = this.flatToSharp(this.scale_info.notes)
-      // console.log("temp " + temp)
-      // console.log("checking " + this.scale_info.some(f=> f.includes('b')));
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
-      // console.log(typeof(this.scale_notes)
-      // console.log("calc notes " + this.calculate_scale_notes());
     },
   },
 };

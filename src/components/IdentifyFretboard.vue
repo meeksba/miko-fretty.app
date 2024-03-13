@@ -374,7 +374,7 @@ export default {
       let n = chromaticNotes.length; //also length of chromaticIntervals
       let cur = 0;
       for (let i = chromaticNotes.indexOf(this.scale.tonic); cur < n; i++) {
-        console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
+        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
         if (chromaticNotes[((i % n) + n) % n] == name) {
           return chromaticIntervals[cur];
         }

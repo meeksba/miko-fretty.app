@@ -1,4 +1,4 @@
-// /* eslint-disable */
+/* eslint-disable */
 import * as Tone from 'tone';
 
 
@@ -279,7 +279,12 @@ export function playChordIndividually(chord){
 
 export function playInterval(notes){
     notes = flatToSharp(notes)
-    notes = notes.map(x => x + "3");
+    if(notes[0] == notes[1]){ //If notes are same, make 2nd one octave higher  
+        notes[0] = notes[0] + "3" 
+        notes[1] = notes[1] + "4"
+    } else {
+        notes = notes.map(x => x + "3"); //else, make both notes in same octave 
+    }
     Tone.start()
     let index = 0;
     const seq = new Tone.Sequence((time, note) => {

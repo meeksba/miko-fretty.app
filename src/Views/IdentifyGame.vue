@@ -166,7 +166,7 @@ export default {
       sharps: "sharps",
       frets: 18,
       scale: { tonic: "F", type: "minor" },
-      tonicArray: ["A", "B", "C", "D", "E", "F", "G"],
+      tonicArray: ["C", "D", "E", "F", "G", "A", "B"],
       gameDifficulty: "Medium",
       gameMode: "Note",
       fretboardNotation: "sharp",
