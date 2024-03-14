@@ -218,24 +218,7 @@ export function convertToScientificScale(inputScale) {
     output.push(octave == 3 ? root + "4" : root + octave.toString());
     return output;
 }
-// export function convertToScientificChord(inputScale) {
-//     let output = [];
-//     for (let i = 0; i < inputScale.length; i++) {
-//         output[i] = inputScale[i] + "3"
-//     }
-//     output.push(inputScale[0] + "4");
-//     // console.log("convertchord output ", output)
-//     return output;
-// }
-// export function convertToScientificInterval(inputScale) {
-//     let output = [];
-//     for (let i = 0; i < inputScale.length; i++) {
-//         output[i] = inputScale[i] + "3"
-//     }
-//     // output.push(inputScale[0] + "4");
-//     // console.log("convertchord output ", output)
-//     return output;
-// }
+
 
 export function playNote(key){
     let note = fretNote[key]
@@ -247,7 +230,6 @@ export function playNoteByName(name){
     Tone.start();
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
-
 
 export function playChord(type, root){
     let chord = Chord.notes(type, root + "3");
@@ -275,13 +257,6 @@ export function playChordIndividually(type, root){
 }
 
 export function playInterval(notes){
-    // notes = flatToSharp(notes)
-    // if(notes[0] == notes[1]){ //If notes are same, make 2nd one octave higher  
-    //     notes[0] = notes[0] + "3" 
-    //     notes[1] = notes[1] + "4"
-    // } else {
-    //     notes = notes.map(x => x + "3"); //else, make both notes in same octave 
-    // }
     Tone.start()
     let index = 0;
     const seq = new Tone.Sequence((time, note) => {
@@ -295,10 +270,7 @@ export function playInterval(notes){
         Tone.Transport.start();
 }
 
-
 export function playScale(scale){
-    // scale = flatToSharp(scale)
-    scale = convertToScientificScale(scale)
     Tone.start()
     let index = 0
     const seq = new Tone.Sequence((time, note) => {

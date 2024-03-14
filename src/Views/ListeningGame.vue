@@ -384,9 +384,6 @@ export default {
       let secondNote = Note.transpose(root, this.intervalAns); //Pass in root and interval to get 2nd note in interval
 
       this.intervalNotes = [root, secondNote];
-      // console.log("intervalNotes: ", this.intervalNotes);
-
-      return;
     },
 
     //This method calculates a random chord type for the chord game

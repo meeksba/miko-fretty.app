@@ -271,7 +271,7 @@ export default {
       this.clickedKeys = [];
       this.clickedNotes = [];
       this.calculateTonic(); //set initial answer
-      this.calculateScaleType();
+      this.calculateScaleType(); //create scale based on tonic
       this.ansArray =
         this.gameMode == "Note" ? this.scale_notes : this.scale_info.intervals;
     },
@@ -306,14 +306,11 @@ export default {
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
     },
-    calculateScaleNotes() {
-      return this.scale_info.notes.map(Note.chroma);
-    },
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
-      this.clickedNotes.push(name);
-      this.clickedKeys.push(note.key);
+      // this.clickedNotes.push(name);
+      // this.clickedKeys.push(note.key);
       if (this.StartGame) {
         if (this.clickedKeys.includes(note.key)) {
           this.alertMessages("Duplicate");
@@ -404,7 +401,8 @@ export default {
       }
     },
     playScale() {
-      guitarSounds.playScale(this.scale_info.notes);
+      let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);
+      guitarSounds.playScale(scale.notes);
     },
 
     chordCheck() {
