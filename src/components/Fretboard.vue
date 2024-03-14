@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { Midi } from "tonal";
+import { Midi, Scale } from "tonal";
 
 export default {
   name: "Fretboard",
@@ -316,37 +316,43 @@ export default {
         return p20 + (p20 - p19) * (n - 20);
       }
     },
-    removeDouble(scale) {
-      console.log("hello" + scale);
-    },
-    toName(num) {
-      let sharp = this.notation != "flat";
-      let name = Midi.midiToNoteName(num, {
-        sharps: sharp,
-        pitchClass: true,
-      });
-
-      if (this.notation == "Intervals") {
-        return this.findIntervalNotation(name);
-      }
-
-      var index = this.scale.notes.indexOf(name);
-      //only enters this loop if note is within scale but notename itself is incorrect
-      if (index == -1 && this.normalize(this.notes).includes(num)) {
-        //if name not found in notes (eg C# in F minor rather than Db)
-        let temp = this.findCorrectNote(num);
-        if (this.notation == "sharp") {
-          if (name == "B") {
-            return "B";
-          }
-          //return notename eg Db if notation is not interval
-          return this.scale.notes[temp];
+    flatToSharp(scale) {
+      let equivalent = {
+        Ab: "G#",
+        Bb: "A#",
+        Cb: "B#",
+        Db: "C#",
+        Eb: "D#",
+        Fb: "E#",
+        Gb: "F#",
+      };
+      for (let i = 0; i < scale.length; i++) {
+        if (scale[i] in equivalent) {
+          scale[i] = equivalent[scale[i]];
         }
       }
+      return scale;
+    },
+    toName(x) {
+      if (this.notation == "Intervals") {
+        return this.toNameInterval(x);
+        // return this.toNameInterval(x);
+      }
+      let isSharp = true;
+      if (this.scale.notes.some((f) => f.includes("b"))) {
+        isSharp = true; //if a flat is detected in the scale, set flag to false
+      }
+      let name = Midi.midiToNoteName(x, {
+        sharps: isSharp, //if false (flat in scale), set notation to flat mode
+        pitchClass: true,
+      });
       return name;
     },
-    //this function finds the correct interval of the note given its name and knowing the tonic of the scale
-    findIntervalNotation(name) {
+    findIntervalNotation(x) {
+      let name = Midi.midiToNoteName(x, {
+        sharps: true, //if false (flat in scale), set notation to flat mode
+        pitchClass: true,
+      });
       let chromaticIntervals = [
         "1P",
         "2m",
@@ -377,21 +383,32 @@ export default {
       ];
       let n = chromaticNotes.length; //also length of chromaticIntervals
       let cur = 0;
-      for (let i = chromaticNotes.indexOf(this.scale.tonic); cur < n; i++) {
+      for (let i = chromaticNotes.indexOf(this.scale.tonic); i < 25; i++) {
+        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
         if (chromaticNotes[((i % n) + n) % n] == name) {
           return chromaticIntervals[cur];
         }
         cur++;
       }
+      console.log("oldmethodwrong");
     },
-    findCorrectNote(num) {
-      //Converts sharp notes to flat notes in instances like F minor where you want Ab instead of G#
-      let name = Midi.midiToNoteName(num, {
-        sharps: false,
+    toNameInterval(x) {
+      let name = Midi.midiToNoteName(x, {
+        sharps: true, //all note names default to sharp
         pitchClass: true,
       });
-      var index = this.scale.notes.indexOf(name);
-      return index;
+      let chromaticScale = Scale.get(this.scale.tonic + " chromatic");
+      let chromaticNotes = this.flatToSharp(chromaticScale.notes); //convert chrom scale to sharp to match note names
+      var index = chromaticNotes.indexOf(name);
+      if (index == -1) {
+        if (name == "B") {
+          return "5d"; //edge case
+        }
+        console.log("chromaticNotes: ", chromaticNotes);
+        console.log("name: ", name);
+        return "?";
+      }
+      return chromaticScale.intervals[index];
     },
     normalize(notes) {
       return notes.map((x) => x % 12);

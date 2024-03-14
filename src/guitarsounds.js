@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Tone from 'tone';
-
+import { Chord } from 'tonal';
 
 export const guitarSounds = new Tone.Sampler({
 	urls: {
@@ -248,22 +248,19 @@ export function playNoteByName(name){
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
 
-export function playChord(chord){
-    chord = flatToSharp(chord)
-    let root = chord[0]
-    chord = chord.map(x => x + "3"); //Add scientific notation
-    chord.push(root + "4"); //Add octave note for better sounding chord
+
+export function playChord(type, root){
+    let chord = Chord.notes(type, root + "3");
+    chord.push(root + "4");  //Add octave to make fuller sound
+    console.log("chord ",chord)
     Tone.start();
     guitarSounds.triggerAttackRelease(chord,1)
+
 }
 
-export function playChordIndividually(chord){
-    console.log("playindividual: ", chord)
-    chord = flatToSharp(chord)
-    chord = convertToScientificScale(chord)
-    // let root = chord[0]
-    // chord = chord.map(x => x + "3"); //Add scientific notation
-    // chord.push(root + "4"); //Add octave note for better sounding chord
+export function playChordIndividually(type, root){
+    let chord = Chord.notes(type, root + "3");
+    chord.push(root + "4");  //Add octave to make fuller sound
     Tone.start();
     let index = 0;
     const seq = new Tone.Sequence((time, note) => {

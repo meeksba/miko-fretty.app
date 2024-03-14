@@ -45,7 +45,6 @@
         @clickNote="clickHandle"
       />
     </div>
-
     <h1 v-if="ShowBegin" class="has-text-centered" style="margin-bottom: 30px">
       Build the Scale Given!
     </h1>
@@ -145,8 +144,7 @@ import BuildFretboard from "../components/BuildFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
-
-// import NoteSelect from "./NoteSelect.vue";
+// import * as utils from "../utils.js";
 import { Note, Scale, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
@@ -184,6 +182,7 @@ export default {
       userScore: 0,
       tonicCount: 0,
       questionCount: 3,
+      ansArray: [],
       clickedKeys: [],
       clickedNotes: [],
     };
@@ -267,14 +266,7 @@ export default {
       this.clickedKeys = [];
       this.calculateTonic(); //set initial answer
       this.calculateScaleType();
-      console.log("Game Started");
-      if (
-        this.scale_info.notes.some((f) => f.includes("b")) &&
-        this.fretboardNotation == "sharp"
-      ) {
-        console.log("Converted to Flat Notation");
-        this.fretboardNotation = "flat";
-      }
+      this.ansArray = this.gameMode == "Note" ? this.scale_notes: this.scale_info.intervals
     },
 
     calculateScaleType() {
@@ -310,80 +302,32 @@ export default {
     calculateScaleNotes() {
       return this.scale_info.notes.map(Note.chroma);
     },
-    //this function finds the correct interval of the note given its name and knowing the tonic of the scale
-    intervalToNote(name) {
-      console.log("name " + name);
-      let chromaticIntervals = [
-        "1P",
-        "2m",
-        "2M",
-        "3m",
-        "3M",
-        "4P",
-        "5d",
-        "5P",
-        "6m",
-        "6M",
-        "7m",
-        "7M",
-      ];
-      let chromaticNotes = [
-        "A",
-        "A#",
-        "B",
-        "C",
-        "C#",
-        "D",
-        "D#",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#",
-      ];
-      let n = chromaticNotes.length; //also length of chromaticIntervals
-      let tonicIndex = chromaticNotes.indexOf(this.scale.tonic);
-      let cur = 0;
-      for (let i = tonicIndex; i < 25; i++) {
-        if (chromaticIntervals[cur] == name) {
-          console.log("note found " + chromaticNotes[((i % n) + n) % n]);
-          return chromaticNotes[((i % n) + n) % n];
-        }
-        cur++;
-      }
-    },
-    //This method is called from the click handler and pushes the clicked note onto the clickedNotes array
     clickHandle(note) {
-      console.log("this tuning ", this.tuning);
       guitarSounds.playNote(note.key);
       let name = note.name;
-      if (this.fretboardNotation == "Intervals") {
-        name = this.intervalToNote(note.name);
-      }
       if (this.StartGame) {
-        // console.log("note " + JSON.stringify(note, null, 2));
         if (this.clickedKeys.includes(note.key)) {
           this.alertMessages("Duplicate");
           return;
         }
-        if (this.clickedNotes.includes(name) && name != this.scale.tonic) {
+        if (this.clickedNotes.includes(name) && name != this.ansArray[0]) {
           this.alertMessages(">1nonroot");
           return;
         }
-        if (name == this.scale.tonic) {
+        if (name == this.ansArray[0]) {
           this.tonicCount++; //counter only allows tonic note and its octave
           if (this.tonicCount > 2) {
             this.alertMessages(">2root");
             return;
           }
         }
-        if (!this.scale_info.notes.includes(name)) {
+        if (!this.ansArray.includes(name)) {
           this.alertMessages("wrong");
           return;
         }
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
-        if (this.clickedKeys.length == this.scale_info.notes.length + 1) {
+        if (this.clickedKeys.length == this.ansArray.length + 1) {
           this.alertMessages("end");
         }
         this.alertMessages("correct");
@@ -455,7 +399,9 @@ export default {
     },
 
     testMethod() {
-      console.log("scale info notes " + this.scale_info.notes);
+      console.log("scale info ", this.scale_info);
+      console.log("ansarray: ",this.ansArray)
+      // console.log("ansarray: ",this.ansArray)
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },
   },

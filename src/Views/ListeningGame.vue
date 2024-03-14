@@ -199,7 +199,8 @@ import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 // import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
+// import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
+import { Note, Scale, Midi, ScaleType, Mode, Interval } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
 
@@ -361,10 +362,11 @@ export default {
           : this.calculateRandomElement(this.chromaticScale);
       let secondNote = this.calculateRandomElement(this.chromaticScale);
       while (this.previousIntervalAns.includes(secondNote)) {
-        secondNote = this.calculateRandomElement(this.chromaticScale);
+        secondNote = this.calculateRandomElement(this.chromaticScale); //ensure duplicate intervals not chosen in easy
       }
       // root == secondNote ? this.intervalAns = "8P" : this.intervalAns = Interval.distance(root, secondNote)
 
+      //if interval is octave, set answer to octave
       this.intervalAns =
         root == secondNote ? "8P" : Interval.distance(root, secondNote);
       this.intervalNotes = [root, secondNote];
@@ -403,12 +405,11 @@ export default {
       guitarSounds.playInterval(this.intervalNotes);
     },
     playChord() {
-      let chord = Chord.getChord(this.chordAns, this.scale.tonic);
-      guitarSounds.playChord(chord.notes);
+      guitarSounds.playChord(this.chordAns, this.scale.tonic);
     },
     playChordIndividually() {
-      let chord = Chord.getChord(this.chordAns, this.scale.tonic);
-      guitarSounds.playChordIndividually(chord.notes);
+      // let chord = Chord.getChord(this.chordAns, this.scale.tonic);/
+      guitarSounds.playChordIndividually(this.chordAns, this.scale.tonic);
     },
 
     submitAnswerChordGame() {

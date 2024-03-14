@@ -144,6 +144,7 @@
 
 <script>
 import { Midi } from "tonal";
+import * as utils from "../utils";
 
 export default {
   name: "Fretboard",
@@ -325,31 +326,11 @@ export default {
         return p20 + (p20 - p19) * (n - 20);
       }
     },
-    toName(num) {
-      let sharp = this.notation != "flat";
-      let name = Midi.midiToNoteName(num, {
-        sharps: sharp,
-        pitchClass: true,
-      });
-
+    toName(x) {
       if (this.notation == "Intervals") {
-        return this.findIntervalNotation(name);
+        return utils.toNameInterval(x, this.scale.tonic);
       }
-
-      var index = this.scale.notes.indexOf(name);
-      //only enters this loop if note is within scale but notename itself is incorrect
-      if (index == -1 && this.normalize(this.notes).includes(num)) {
-        //if name not found in notes (eg C# in F minor rather than Db)
-        let temp = this.findCorrectNote(num);
-        if (this.notation == "sharp") {
-          if (name == "B") {
-            return "B";
-          }
-          //return notename eg Db if notation is not interval
-          return this.scale.notes[temp];
-        }
-      }
-      return name;
+      return utils.toName(x, this.notation, this.scale.notes);
     },
     findCorrectNote(num) {
       //Converts sharp notes to flat notes in instances like F minor where you want Ab instead of G#
