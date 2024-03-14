@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { Midi, Scale } from "tonal";
+import * as utils from "../utils";
 
 export default {
   name: "Fretboard",
@@ -316,100 +316,13 @@ export default {
         return p20 + (p20 - p19) * (n - 20);
       }
     },
-    flatToSharp(scale) {
-      let equivalent = {
-        Ab: "G#",
-        Bb: "A#",
-        Cb: "B#",
-        Db: "C#",
-        Eb: "D#",
-        Fb: "E#",
-        Gb: "F#",
-      };
-      for (let i = 0; i < scale.length; i++) {
-        if (scale[i] in equivalent) {
-          scale[i] = equivalent[scale[i]];
-        }
-      }
-      return scale;
-    },
     toName(x) {
       if (this.notation == "Intervals") {
-        return this.toNameInterval(x);
-        // return this.toNameInterval(x);
+        return utils.toNameInterval(x, this.scale.tonic);
       }
-      let isSharp = true;
-      if (this.scale.notes.some((f) => f.includes("b"))) {
-        isSharp = true; //if a flat is detected in the scale, set flag to false
-      }
-      let name = Midi.midiToNoteName(x, {
-        sharps: isSharp, //if false (flat in scale), set notation to flat mode
-        pitchClass: true,
-      });
-      return name;
+      return utils.toName(x, this.notation, this.scale.notes);
     },
-    findIntervalNotation(x) {
-      let name = Midi.midiToNoteName(x, {
-        sharps: true, //if false (flat in scale), set notation to flat mode
-        pitchClass: true,
-      });
-      let chromaticIntervals = [
-        "1P",
-        "2m",
-        "2M",
-        "3m",
-        "3M",
-        "4P",
-        "5d",
-        "5P",
-        "6m",
-        "6M",
-        "7m",
-        "7M",
-      ];
-      let chromaticNotes = [
-        "A",
-        "A#",
-        "B",
-        "C",
-        "C#",
-        "D",
-        "D#",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#",
-      ];
-      let n = chromaticNotes.length; //also length of chromaticIntervals
-      let cur = 0;
-      for (let i = chromaticNotes.indexOf(this.scale.tonic); i < 25; i++) {
-        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
-        if (chromaticNotes[((i % n) + n) % n] == name) {
-          return chromaticIntervals[cur];
-        }
-        cur++;
-      }
-      console.log("oldmethodwrong");
-    },
-    toNameInterval(x) {
-      let name = Midi.midiToNoteName(x, {
-        sharps: true, //all note names default to sharp
-        pitchClass: true,
-      });
-      let chromaticScale = Scale.get(this.scale.tonic + " chromatic");
-      let chromaticNotes = this.flatToSharp(chromaticScale.notes); //convert chrom scale to sharp to match note names
-      var index = chromaticNotes.indexOf(name);
-      if (index == -1) {
-        if (name == "B") {
-          return "5d"; //edge case
-        }
-        console.log("chromaticNotes: ", chromaticNotes);
-        console.log("name: ", name);
-        return "?";
-      }
-      return chromaticScale.intervals[index];
-    },
+    
     normalize(notes) {
       return notes.map((x) => x % 12);
     },

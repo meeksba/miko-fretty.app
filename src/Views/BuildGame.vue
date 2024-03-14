@@ -125,6 +125,11 @@
         label="TESTBUTTON"
         style="margin-top: 20px"
       />
+      <b-button
+        @click="chordCheck()"
+        label="Chord check"
+        style="margin-top: 20px"
+      />
     </section>
     <Chords
       v-if="this.ShowChords == 'true'"
@@ -145,7 +150,7 @@ import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 // import * as utils from "../utils.js";
-import { Note, Scale, ScaleType, Mode } from "tonal";
+import { Note, Scale, ScaleType, Mode, Chord } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
 var ALL_SCALES = [];
@@ -264,6 +269,7 @@ export default {
     },
     startGame() {
       this.clickedKeys = [];
+      this.clickedNotes = [];
       this.calculateTonic(); //set initial answer
       this.calculateScaleType();
       this.ansArray = this.gameMode == "Note" ? this.scale_notes: this.scale_info.intervals
@@ -305,6 +311,8 @@ export default {
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
+      this.clickedNotes.push(name)
+      this.clickedKeys.push(note.key)
       if (this.StartGame) {
         if (this.clickedKeys.includes(note.key)) {
           this.alertMessages("Duplicate");
@@ -398,9 +406,15 @@ export default {
       guitarSounds.playScale(this.scale_info.notes);
     },
 
+    chordCheck(){
+      let temp = Chord.detect(this.clickedNotes)
+      console.log("Detected Chord: ", temp)
+    },
+
     testMethod() {
-      console.log("scale info ", this.scale_info);
-      console.log("ansarray: ",this.ansArray)
+      // console.log("scale info ", this.scale_info);
+      // console.log("ansarray: ",this.ansArray)
+      console.log("clicked notes: ", this.clickedNotes)
       // console.log("ansarray: ",this.ansArray)
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },

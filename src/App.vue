@@ -8,8 +8,9 @@
         <b-button @click="showBuild = !showBuild">Build</b-button>
       </router-link>
       <router-link to="/ListeningGame">
-        <b-button @click="showInterval = !showInterval">Interval</b-button>
+        <b-button @click="showInterval = !showInterval">Ear Training</b-button>
       </router-link>
+      <b-button @click="changeBackground()">Color</b-button>
     </div>
     <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
     <div v-if="!showGame && !showBuild && !showInterval">
@@ -18,7 +19,7 @@
         <Editor v-on:remove-fretboard="remove(editor)" />
       </div>
     </div>
-    <div class="has-text-centered" v-if="!showGame && !showBuild">
+    <div class="has-text-centered" v-if="!showGame && !showBuild && !showInterval">
       <a @click="add">+ Add Fretboard</a>
     </div>
     <IdentifyGame v-if="showGame" />
@@ -60,6 +61,9 @@ export default {
       if (index > -1) {
         this.editors.splice(index, 1);
       }
+    },
+    changeBackground() {
+      document.body.style.backgroundColor = "lightgrey";
     },
   },
 };
