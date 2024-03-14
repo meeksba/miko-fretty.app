@@ -190,36 +190,6 @@ export function flatToSharp(scale) {
     return scale;
 }
 
-export function convertToScientificScale(inputScale) {
-    let root = inputScale[0];
-    let output = [];
-    let octave = 3;
-    //flag set to true if octave iterated, prevents another octave from being incremented
-    let encountered = false;
-    //adds scientific notation, changes octave after passing C/C#/D to create ascending sound
-    for (let i = 0; i < inputScale.length; i++) {
-        if (
-        (inputScale[i] == "C" ||
-            inputScale[i] == "C#" ||
-            inputScale[i] == "D") &&
-        i != 0 &&
-        !encountered
-        ) {
-        octave++;
-        encountered = true;
-        }
-        if (root == "C") {
-        encountered = true;
-        }
-        output[i] = inputScale[i] + octave.toString();
-    }
-    //Add additional root note at end to make octave
-    //if root not incremented, manually add octave to 2nd root added
-    output.push(octave == 3 ? root + "4" : root + octave.toString());
-    return output;
-}
-
-
 export function playNote(key){
     let note = fretNote[key]
     Tone.start();
