@@ -19,7 +19,10 @@
         <Editor v-on:remove-fretboard="remove(editor)" />
       </div>
     </div>
-    <div class="has-text-centered" v-if="!showGame && !showBuild && !showInterval">
+    <div
+      class="has-text-centered"
+      v-if="!showGame && !showBuild && !showInterval"
+    >
       <a @click="add">+ Add Fretboard</a>
     </div>
     <IdentifyGame v-if="showGame" />

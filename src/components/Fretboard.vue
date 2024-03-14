@@ -322,7 +322,7 @@ export default {
       }
       return utils.toName(x, this.notation, this.scale.notes);
     },
-    
+
     normalize(notes) {
       return notes.map((x) => x % 12);
     },

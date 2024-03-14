@@ -275,13 +275,13 @@ export function playChordIndividually(type, root){
 }
 
 export function playInterval(notes){
-    notes = flatToSharp(notes)
-    if(notes[0] == notes[1]){ //If notes are same, make 2nd one octave higher  
-        notes[0] = notes[0] + "3" 
-        notes[1] = notes[1] + "4"
-    } else {
-        notes = notes.map(x => x + "3"); //else, make both notes in same octave 
-    }
+    // notes = flatToSharp(notes)
+    // if(notes[0] == notes[1]){ //If notes are same, make 2nd one octave higher  
+    //     notes[0] = notes[0] + "3" 
+    //     notes[1] = notes[1] + "4"
+    // } else {
+    //     notes = notes.map(x => x + "3"); //else, make both notes in same octave 
+    // }
     Tone.start()
     let index = 0;
     const seq = new Tone.Sequence((time, note) => {
@@ -297,7 +297,7 @@ export function playInterval(notes){
 
 
 export function playScale(scale){
-    scale = flatToSharp(scale)
+    // scale = flatToSharp(scale)
     scale = convertToScientificScale(scale)
     Tone.start()
     let index = 0

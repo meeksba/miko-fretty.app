@@ -200,7 +200,7 @@ import Notation from "../components/Notation.vue";
 // import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
 // import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
-import { Note, Scale, Midi, ScaleType, Mode, Interval } from "tonal";
+import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
 
@@ -241,6 +241,20 @@ export default {
         "Bb",
         "B",
       ],
+      chromaticIntervals: [
+        "2m",
+        "2M",
+        "3m",
+        "3M",
+        "4P",
+        "5d",
+        "5P",
+        "6m",
+        "6M",
+        "7m",
+        "7M",
+        "8P",
+      ],
       gameDifficulty: "Medium",
       gameMode: "ChordMode",
       fretboardNotation: "flat",
@@ -251,7 +265,7 @@ export default {
       StartGame: false,
       chordAns: null,
       intervalNotes: [],
-      previousIntervalAns: [],
+      previousIntervals: [],
       intervalAns: null,
       playerAns: null,
       questionCount: 5,
@@ -358,19 +372,20 @@ export default {
     calculateIntervalAns() {
       let root =
         this.gameDifficulty == "Easy"
-          ? "C"
-          : this.calculateRandomElement(this.chromaticScale);
-      let secondNote = this.calculateRandomElement(this.chromaticScale);
-      while (this.previousIntervalAns.includes(secondNote)) {
-        secondNote = this.calculateRandomElement(this.chromaticScale); //ensure duplicate intervals not chosen in easy
+          ? "C3"
+          : this.calculateRandomElement(this.chromaticScale) + "3";
+      this.intervalAns = this.calculateRandomElement(this.chromaticIntervals); //pick random interval
+      while (this.previousIntervals.includes(this.intervalAns)) {
+        this.intervalAns = this.calculateRandomElement(this.chromaticIntervals); //ensure duplicate intervals not chosen in easy mode
       }
-      // root == secondNote ? this.intervalAns = "8P" : this.intervalAns = Interval.distance(root, secondNote)
+      if (this.gameDifficulty == "Easy") {
+        this.previousIntervals.push(this.intervalAns); // Easy mode: ensure no duplicate intervals chosen
+      }
+      let secondNote = Note.transpose(root, this.intervalAns); //Pass in root and interval to get 2nd note in interval
 
-      //if interval is octave, set answer to octave
-      this.intervalAns =
-        root == secondNote ? "8P" : Interval.distance(root, secondNote);
       this.intervalNotes = [root, secondNote];
-      this.previousIntervalAns.push(secondNote);
+      // console.log("intervalNotes: ", this.intervalNotes);
+
       return;
     },
 
@@ -487,7 +502,7 @@ export default {
           this.ShowBegin = true;
           this.questionCount = 5;
           this.userScore = 0;
-          this.previousIntervalAns = [];
+          this.previousIntervals = [];
         // this.scale.tonic = "";
         // this.scale.type = "";
         // this.ShowMusicSheet = false;

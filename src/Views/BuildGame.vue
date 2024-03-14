@@ -272,7 +272,8 @@ export default {
       this.clickedNotes = [];
       this.calculateTonic(); //set initial answer
       this.calculateScaleType();
-      this.ansArray = this.gameMode == "Note" ? this.scale_notes: this.scale_info.intervals
+      this.ansArray =
+        this.gameMode == "Note" ? this.scale_notes : this.scale_info.intervals;
     },
 
     calculateScaleType() {
@@ -311,8 +312,8 @@ export default {
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
-      this.clickedNotes.push(name)
-      this.clickedKeys.push(note.key)
+      this.clickedNotes.push(name);
+      this.clickedKeys.push(note.key);
       if (this.StartGame) {
         if (this.clickedKeys.includes(note.key)) {
           this.alertMessages("Duplicate");
@@ -406,15 +407,15 @@ export default {
       guitarSounds.playScale(this.scale_info.notes);
     },
 
-    chordCheck(){
-      let temp = Chord.detect(this.clickedNotes)
-      console.log("Detected Chord: ", temp)
+    chordCheck() {
+      let temp = Chord.detect(this.clickedNotes);
+      console.log("Detected Chord: ", temp);
     },
 
     testMethod() {
       // console.log("scale info ", this.scale_info);
       // console.log("ansarray: ",this.ansArray)
-      console.log("clicked notes: ", this.clickedNotes)
+      console.log("clicked notes: ", this.clickedNotes);
       // console.log("ansarray: ",this.ansArray)
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },
