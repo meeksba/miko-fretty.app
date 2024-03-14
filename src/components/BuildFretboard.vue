@@ -143,7 +143,6 @@
 </template>
 
 <script>
-import { Midi } from "tonal";
 import * as utils from "../utils";
 
 export default {
@@ -331,55 +330,6 @@ export default {
         return utils.toNameInterval(x, this.scale.tonic);
       }
       return utils.toName(x, this.notation, this.scale.notes);
-    },
-    findCorrectNote(num) {
-      //Converts sharp notes to flat notes in instances like F minor where you want Ab instead of G#
-      let name = Midi.midiToNoteName(num, {
-        sharps: false,
-        pitchClass: true,
-      });
-      var index = this.scale.notes.indexOf(name);
-      return index;
-    },
-    //this function finds the correct interval of the note given its name and knowing the tonic of the scale
-    findIntervalNotation(name) {
-      let chromaticIntervals = [
-        "1P",
-        "2m",
-        "2M",
-        "3m",
-        "3M",
-        "4P",
-        "5d",
-        "5P",
-        "6m",
-        "6M",
-        "7m",
-        "7M",
-      ];
-      let chromaticNotes = [
-        "A",
-        "A#",
-        "B",
-        "C",
-        "C#",
-        "D",
-        "D#",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#",
-      ];
-      let n = chromaticNotes.length; //also length of chromaticIntervals
-      let cur = 0;
-      for (let i = chromaticNotes.indexOf(this.scale.tonic); i < 25; i++) {
-        // console.log("chromaticNotes " + chromaticNotes[((i % n) + n) % n]);
-        if (chromaticNotes[((i % n) + n) % n] == name) {
-          return chromaticIntervals[cur];
-        }
-        cur++;
-      }
     },
     normalize(notes) {
       return notes.map((x) => x % 12); // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
