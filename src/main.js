@@ -5,8 +5,20 @@ import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
 import ListeningGame from "./Views/ListeningGame.vue";
 import store from "./store.js";
-import Buefy from "buefy/src";
-import { ConfigProgrammatic } from "buefy";
+// import Buefy from "buefy/src";
+import {
+  ConfigProgrammatic,
+  Autocomplete,
+  Input,
+  Field,
+  Button,
+  Dropdown,
+  Numberinput,
+  Radio,
+  Table,
+  Icon,
+  Checkbox,
+} from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 // internal icons
@@ -42,7 +54,17 @@ Vue.component("vue-fontawesome", FontAwesomeIcon);
 
 import "./assets/scss/app.scss";
 
-Vue.use(Buefy);
+Vue.use(ConfigProgrammatic);
+Vue.use(Autocomplete);
+Vue.use(Input);
+Vue.use(Field);
+Vue.use(Button);
+Vue.use(Dropdown);
+Vue.use(Numberinput);
+Vue.use(Radio);
+Vue.use(Table);
+Vue.use(Icon);
+Vue.use(Checkbox);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({
