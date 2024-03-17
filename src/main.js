@@ -18,6 +18,12 @@ import {
   Table,
   Icon,
   Checkbox,
+  Menu,
+  Sidebar,
+  Select,
+  Toast,
+  Dialog,
+  Progress,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -34,6 +40,11 @@ import {
   faMusic,
   faGuitar,
   faUser,
+  faBars,
+  faLink,
+  faInfo,
+  faHammer,
+  faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -48,7 +59,12 @@ library.add(
   faTrash,
   faMusic,
   faGuitar,
-  faUser
+  faUser,
+  faBars,
+  faLink,
+  faInfo,
+  faHammer,
+  faGamepad
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 
@@ -65,6 +81,12 @@ Vue.use(Radio);
 Vue.use(Table);
 Vue.use(Icon);
 Vue.use(Checkbox);
+Vue.use(Menu);
+Vue.use(Sidebar);
+Vue.use(Select);
+Vue.use(Toast);
+Vue.use(Dialog);
+Vue.use(Progress);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({

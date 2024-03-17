@@ -334,6 +334,7 @@ export default {
         this.clickedKeys.push(note.key); //key recorded to only render single note - need to double check
         this.clickedNotes.push(name); //records notes pressed to prevent non root duplicates
         if (this.clickedKeys.length == this.ansArray.length + 1) {
+          console.log("Buildgame done ")
           this.alertMessages("end");
         }
         this.alertMessages("correct");
