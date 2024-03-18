@@ -88,7 +88,7 @@
           >
         </router-link>
         <!-- Ear Training Button -->
-        <router-link to="/ListeningGame">
+        <router-link to="/EarTraining">
           <b-button
             @click="
               showInterval = !showInterval;
@@ -119,7 +119,7 @@
 import Editor from "./components/Editor.vue";
 // import IdentifyGame from "./Views/IdentifyGame.vue";
 // import BuildGame from "./Views/BuildGame.vue";
-// import ListeningGame from "./Views/ListeningGame.vue";
+// import EarTraining from "./Views/EarTraining.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
@@ -128,7 +128,7 @@ export default {
     Editor,
     // IdentifyGame,
     // BuildGame,
-    // ListeningGame,
+    // EarTraining,
     // NoteSelect
   },
   data() {

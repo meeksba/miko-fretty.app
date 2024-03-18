@@ -3,7 +3,7 @@ import App from "./App.vue";
 import VueRouter from "vue-router";
 import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
-import ListeningGame from "./Views/ListeningGame.vue";
+import EarTraining from "./Views/EarTraining.vue";
 import store from "./store.js";
 // import Buefy from "buefy/src";
 import {
@@ -113,9 +113,9 @@ const routes = [
     component: BuildGame,
   },
   {
-    path: "/ListeningGame",
-    name: "ListeningGame",
-    component: ListeningGame,
+    path: "/EarTraining",
+    name: "EarTraining",
+    component: EarTraining,
   },
 ];
 

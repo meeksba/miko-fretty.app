@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- BuildGame Settings -->
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
         >Settings</b-button
