@@ -2,7 +2,7 @@
   <div>
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
-        >Build Settings</b-button
+      >Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
@@ -33,11 +33,14 @@
         </form>
       </b-dropdown-item>
     </b-dropdown>
+    <h1 v-if="ShowBegin" class="has-text-centered">
+      Build the Scale Given!
+    </h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <BuildFretboard
-        :tuning="tuning"
-        :notes="notes"
-        :notation="fretboardNotation"
+      :tuning="tuning"
+      :notes="notes"
+      :notation="fretboardNotation"
         :frets="frets"
         :root="root"
         :scale="scale_info"
@@ -45,9 +48,6 @@
         @clickNote="clickHandle"
       />
     </div>
-    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-bottom: 30px">
-      Build the Scale Given!
-    </h1>
     <section
       class="has-text-centered"
       style="
@@ -63,7 +63,6 @@
         @click="showSettings()"
         label="Begin"
         type="is-link"
-        outlined
       />
       <div v-if="ShowSettings">
         <!-- Settings Before Game -->
@@ -306,6 +305,16 @@ export default {
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
     },
+    playScale() {
+      let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);
+      scale.notes.push(this.scale.tonic + "4") //add octave of root 
+      guitarSounds.playScale(scale.notes);
+    },
+
+    chordCheck() {
+      let temp = Chord.detect(this.clickedNotes);
+      console.log("Detected Chord: ", temp);
+    },
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
@@ -401,15 +410,6 @@ export default {
           return;
       }
     },
-    playScale() {
-      let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);
-      guitarSounds.playScale(scale.notes);
-    },
-
-    chordCheck() {
-      let temp = Chord.detect(this.clickedNotes);
-      console.log("Detected Chord: ", temp);
-    },
 
     testMethod() {
       // console.log("scale info ", this.scale_info);
@@ -424,6 +424,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
 h2 {
   font-size: 25px;
   font-weight: bold;

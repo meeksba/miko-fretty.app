@@ -1,191 +1,192 @@
 <template>
   <div>
-    <b-button
-      @click="testMethod"
-      label="test button"
-      style="margin-top: 40px"
-      class="has-text-centered"
-    />
-    <h1 v-if="ShowBegin" class="has-text-centered">Ear Training Games</h1>
-    <h1 v-if="StartGame && gameMode == 'ChordMode'" class="has-text-centered">
+    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 50px">Ear Training Games</h1>
+    <h1 v-if="StartGame && gameMode == 'ChordMode'" class="has-text-centered" style="margin-top: 50px">
       What Chord Has Played?
     </h1>
     <!-- <b-button @click="playChord()" label="Play Sound"/> -->
     <h1
-      v-if="StartGame && gameMode == 'IntervalMode'"
-      class="has-text-centered"
+    v-if="StartGame && gameMode == 'IntervalMode'"
+    class="has-text-centered"
     >
-      What Interval Has Played?
-    </h1>
-    <div class="card-image" style="text-align: center; overflow-x: auto">
-      <ListeningFretboard
-        :tuning="tuning"
-        :notes="notes"
-        :notation="fretboardNotation"
-        :frets="frets"
-        :root="root"
-        :scale="scale_info"
-        @clickNote="clickHandle"
-      />
-    </div>
-
-    <section
-      class="has-text-centered"
-      style="display: flex; flex-direction: column; align-items: center"
-    >
-      <!-- Begin Button -->
-      <b-button
-        v-if="ShowBegin"
-        @click="showSettings()"
-        label="Begin"
-        type="is-link"
-      />
-      <!-- Settings Before Game -->
-      <div v-if="ShowSettings">
-        <h2>Choose Your Game Mode</h2>
-        <b-field>
-          <!-- Game Mode Setting -->
-          <div>
-            <b-radio-button v-model="gameMode" native-value="ChordMode">
-              <span>Chord Training</span>
-            </b-radio-button>
-            <b-radio-button v-model="gameMode" native-value="IntervalMode">
-              <span>Interval Training</span>
-            </b-radio-button>
-          </div>
-        </b-field>
-        <b-field>
-          <div v-if="gameMode == 'IntervalMode'">
-            <h5>Difficulty</h5>
-            <b-radio-button v-model="gameDifficulty" native-value="Easy">
-              <span>Easy</span>
-            </b-radio-button>
-            <b-radio-button v-model="gameDifficulty" native-value="Hard">
-              <span>Hard</span>
-            </b-radio-button>
-          </div>
-          <!-- Tuning -->
-          <!-- <TuningSelection
-            @tuningChange="handleTuning"
-            style="margin-top: 20px"
-          /> -->
-        </b-field>
-        <b-button @click="submitSettings()" label="Begin Game" />
-      </div>
-      <!-- Chord Mode Input Fields -->
-      <div v-if="StartGame && gameMode == 'ChordMode'">
-        <b-button
-          @click="playChord()"
-          label="Play Chord"
-          type="is-info "
-          outlined
-          style="margin-bottom: 20px"
-        />
-        <b-button
-          @click="playChordIndividually()"
-          label="Play Notes Individually"
-          type="is-info "
-          outlined
-          style="margin-bottom: 20px"
-        />
-        <b-field label="Choose Your Answer">
-          <div
-            class="columns is-multiline is-centered"
-            style="margin-top: 10px"
-          >
-            <b-field>
-              <b-radio-button v-model="playerAns" native-value="maj">
-                <span>Major</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="min">
-                <span>Minor</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="maj7">
-                <span>Maj7</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="min7">
-                <span>Min7</span>
-              </b-radio-button>
-              <b-radio-button v-model="playerAns" native-value="7">
-                <span>(Dom)7</span>
-              </b-radio-button>
-            </b-field>
-            <!-- Chord Mode Submit Answer Button -->
-            <b-button
-              @click="submitAnswerChordGame()"
-              label="Submit"
-              style="margin-left: 20px"
-              type="is-link"
-            />
-          </div>
-          <h4>Questions Remaining: {{ questionCount }}</h4>
-        </b-field>
-      </div>
-      <!-- Interval Mode Input Fields -->
-      <div v-if="StartGame && gameMode == 'IntervalMode'">
-        <b-button
-          @click="playInterval()"
-          label="Play Interval"
-          type="is-info"
-          outlined
-          style="margin-bottom: 20px"
-        />
-        <b-field label="Choose Your Answer">
-          <div
-            class="columns is-multiline is-centered"
-            style="margin-top: 10px"
-          >
-            <!-- Interval Select -->
-            <b-field>
-              <b-select
-                v-model="playerAns"
-                placeholder="Select an Interval"
-                icon="account"
-              >
-                <option value="2m">Minor 2nd</option>
-                <option value="2M">Major 2nd</option>
-                <option value="3m">Minor 3rd</option>
-                <option value="3M">Major 3rd</option>
-                <option value="4P">Perfect 4th</option>
-                <option value="5d">Diminished 5th</option>
-                <option value="5P">Perfect 5th</option>
-                <option value="6m">Minor 6th</option>
-                <option value="6M">Major 6th</option>
-                <option value="7m">Minor 7th</option>
-                <option value="7M">Major 7th</option>
-                <option value="8P">Octave</option>
-              </b-select>
-            </b-field>
-            <!-- Interval Mode Submit Answer Button -->
-            <b-button
-              @click="submitAnswerIntervalGame()"
-              label="Submit"
-              style="margin-left: 20px"
-              type="is-link"
-            />
-          </div>
-          <h4>Questions Remaining: {{ questionCount }}</h4>
-        </b-field>
-      </div>
-      <!-- Score Header -->
-      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
-        Score
-      </h3>
-    </section>
-    <!-- Score Bar -->
-    <b-progress
-      v-if="StartGame"
-      v-model="userScore"
-      style="margin-top: 10px"
-      type="is-info"
-      show-value
-    ></b-progress>
-    <Notation
-      v-if="this.ShowMusicSheet"
-      :scale="scale_info"
-      :scale-name="scale_info.name"
+    What Interval Has Played?
+  </h1>
+  <div class="card-image" style="text-align: center; overflow-x: auto">
+    <ListeningFretboard
+    :tuning="tuning"
+    :notes="notes"
+    :notation="fretboardNotation"
+    :frets="frets"
+    :root="root"
+    :scale="scale_info"
+    @clickNote="clickHandle"
     />
-    <Chords
+  </div>
+  
+  <section
+  class="has-text-centered"
+  style="display: flex; flex-direction: column; align-items: center"
+  >
+  <!-- Begin Button -->
+  <b-button
+  v-if="ShowBegin"
+  @click="showSettings()"
+  label="Begin"
+  type="is-link"
+  />
+  <!-- Settings Before Game -->
+  <div v-if="ShowSettings">
+    <h2>Choose Your Game Mode</h2>
+    <b-field>
+      <!-- Game Mode Setting -->
+      <div>
+        <b-radio-button v-model="gameMode" native-value="ChordMode">
+          <span>Chord Training</span>
+        </b-radio-button>
+        <b-radio-button v-model="gameMode" native-value="IntervalMode">
+          <span>Interval Training</span>
+        </b-radio-button>
+      </div>
+    </b-field>
+    <b-field>
+      <div v-if="gameMode == 'IntervalMode'">
+        <h5>Difficulty</h5>
+        <b-radio-button v-model="gameDifficulty" native-value="Easy">
+          <span>Easy</span>
+        </b-radio-button>
+        <b-radio-button v-model="gameDifficulty" native-value="Hard">
+          <span>Hard</span>
+        </b-radio-button>
+      </div>
+      <!-- Tuning -->
+      <!-- <TuningSelection
+        @tuningChange="handleTuning"
+        style="margin-top: 20px"
+        /> -->
+      </b-field>
+      <b-button @click="submitSettings()" label="Begin Game" type="is-link"
+          outlined />
+    </div>
+    <!-- Chord Mode Input Fields -->
+    <div v-if="StartGame && gameMode == 'ChordMode'">
+      <b-button
+      @click="playChord()"
+      label="Play Chord"
+      type="is-info "
+      outlined
+      style="margin-bottom: 20px"
+      />
+      <b-button
+      @click="playChordIndividually()"
+      label="Play Notes Individually"
+      type="is-info "
+      outlined
+      style="margin-bottom: 20px"
+      />
+      <b-field label="Choose Your Answer">
+        <div
+        class="columns is-multiline is-centered"
+        style="margin-top: 10px"
+        >
+        <b-field>
+          <b-radio-button v-model="playerAns" native-value="maj">
+            <span>Major</span>
+          </b-radio-button>
+          <b-radio-button v-model="playerAns" native-value="min">
+            <span>Minor</span>
+          </b-radio-button>
+          <b-radio-button v-model="playerAns" native-value="maj7">
+            <span>Maj7</span>
+          </b-radio-button>
+          <b-radio-button v-model="playerAns" native-value="min7">
+            <span>Min7</span>
+          </b-radio-button>
+          <b-radio-button v-model="playerAns" native-value="7">
+            <span>(Dom)7</span>
+          </b-radio-button>
+        </b-field>
+        <!-- Chord Mode Submit Answer Button -->
+        <b-button
+        @click="submitAnswerChordGame()"
+        label="Submit"
+        style="margin-left: 20px"
+        type="is-link"
+        />
+      </div>
+      <h4>Questions Remaining: {{ questionCount }}</h4>
+    </b-field>
+  </div>
+  <!-- Interval Mode Input Fields -->
+  <div v-if="StartGame && gameMode == 'IntervalMode'">
+    <b-button
+    @click="playInterval()"
+    label="Play Interval"
+    type="is-info"
+    outlined
+    style="margin-bottom: 20px"
+    />
+    <b-field label="Choose Your Answer">
+      <div
+      class="columns is-multiline is-centered"
+      style="margin-top: 10px"
+      >
+      <!-- Interval Select -->
+      <b-field>
+        <b-select
+        v-model="playerAns"
+        placeholder="Select an Interval"
+        icon="account"
+        >
+        <option value="2m">Minor 2nd</option>
+        <option value="2M">Major 2nd</option>
+        <option value="3m">Minor 3rd</option>
+        <option value="3M">Major 3rd</option>
+        <option value="4P">Perfect 4th</option>
+        <option value="5d">Diminished 5th</option>
+        <option value="5P">Perfect 5th</option>
+        <option value="6m">Minor 6th</option>
+        <option value="6M">Major 6th</option>
+        <option value="7m">Minor 7th</option>
+        <option value="7M">Major 7th</option>
+        <option value="8P">Octave</option>
+      </b-select>
+    </b-field>
+    <!-- Interval Mode Submit Answer Button -->
+    <b-button
+    @click="submitAnswerIntervalGame()"
+    label="Submit"
+    style="margin-left: 20px"
+    type="is-link"
+    />
+  </div>
+  <h4>Questions Remaining: {{ questionCount }}</h4>
+</b-field>
+</div>
+<b-button
+  @click="testMethod"
+  label="test button"
+  style="margin-top: 40px"
+  class="has-text-centered"
+/>
+<!-- Score Header -->
+<h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
+  Score
+</h3>
+</section>
+<!-- Score Bar -->
+<b-progress
+v-if="StartGame"
+v-model="userScore"
+style="margin-top: 10px"
+type="is-info"
+show-value
+></b-progress>
+<Notation
+v-if="this.ShowMusicSheet"
+:scale="scale_info"
+:scale-name="scale_info.name"
+/>
+<Chords
       v-if="this.ShowChords"
       :chords="scaleChords"
       style="margin-bottom: 50px"

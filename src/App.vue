@@ -35,70 +35,82 @@
           </b-menu>
         </div>
       </b-sidebar>
+      <!-- Sidebar Button -->
       <b-button
         @click="open = true"
+        size="is-medium"
         icon-right="bars"
         type="is-ghost is-rounded"
-      ></b-button>
+        ></b-button>
+        <!-- Home Button -->
+        <router-link to="/"> 
+          <b-button
+          @click="homePage()"
+          size="is-medium"
+          icon-right="home"
+          type="is-ghost is-rounded"
+          ></b-button>
+        </router-link>
     </section>
 
     <section class="section">
       <div class="has-text-centered" style="margin-bottom: 20px">
+        <!-- Scale Identification Button -->
         <router-link to="/IdentifyGame">
-          <b-button @click="showGame = !showGame" type="is-rounded"
-            >Scale Identification</b-button
+          <b-button @click="showGame = !showGame; showHome = false" type="is-rounded is-info is-light"
+          >Scale Identification</b-button
           >
         </router-link>
+        <!-- Scale Building Button -->
         <router-link to="/BuildGame">
-          <b-button @click="showBuild = !showBuild" type="is-rounded"
-            >Scale Building</b-button
+          <b-button @click="showBuild = !showBuild; showHome = false" type="is-rounded is-info is-light"
+          >Scale Building</b-button
           >
         </router-link>
+        <!-- Ear Training Button -->
         <router-link to="/ListeningGame">
-          <b-button @click="showInterval = !showInterval" type="is-rounded"
+          <b-button @click="showInterval = !showInterval; showHome = false" type="is-rounded is-info is-light"
             >Ear Training</b-button
           >
         </router-link>
       </div>
       <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
-      <div v-if="!showGame && !showBuild && !showInterval">
+      <div v-if="showHome">
         <div class="container" v-for="editor in editors" v-bind:key="editor">
           <!--<note-select />-->
           <Editor v-on:remove-fretboard="remove(editor)" />
+          <div
+            class="has-text-centered"
+          >
+            <a @click="add">+ Add Fretboard</a>
+          </div>
         </div>
       </div>
-      <div
-        class="has-text-centered"
-        v-if="!showGame && !showBuild && !showInterval"
-      >
-        <a @click="add">+ Add Fretboard</a>
-      </div>
-      <IdentifyGame v-if="showGame" />
-      <BuildGame v-if="showBuild" />
-      <ListeningGame v-if="showInterval" />
+      <router-view></router-view>
     </section>
   </div>
 </template>
 
 <script>
 import Editor from "./components/Editor.vue";
-import IdentifyGame from "./Views/IdentifyGame.vue";
-import BuildGame from "./Views/BuildGame.vue";
-import ListeningGame from "./Views/ListeningGame.vue";
+// import IdentifyGame from "./Views/IdentifyGame.vue";
+// import BuildGame from "./Views/BuildGame.vue";
+// import ListeningGame from "./Views/ListeningGame.vue";
 // import NoteSelect from "./components/NoteSelect.vue";
 
 export default {
   name: "App",
   components: {
     Editor,
-    IdentifyGame,
-    BuildGame,
-    ListeningGame,
+    // IdentifyGame,
+    // BuildGame,
+    // ListeningGame,
     // NoteSelect
   },
   data() {
     return {
       editors: [1],
+      showHome: true,
       showGame: false,
       showBuild: false,
       showInterval: false,
@@ -121,6 +133,13 @@ export default {
         ? "white"
         : "dimgrey";
     },
+    homePage(){
+      console.log("hello")
+      this.showHome = true;
+      this.showBuild = false;
+      this.showGame = false;
+      this.showInterval = false;
+    }
   },
 };
 </script>
