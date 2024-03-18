@@ -24,6 +24,7 @@ import {
   Toast,
   Dialog,
   Progress,
+  Switch,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -87,6 +88,7 @@ Vue.use(Select);
 Vue.use(Toast);
 Vue.use(Dialog);
 Vue.use(Progress);
+Vue.use(Switch);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({

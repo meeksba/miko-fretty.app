@@ -3,70 +3,62 @@
     <section>
       <b-sidebar
         type="is-light"
-        :fullheight="fullheight"
-        :fullwidth="fullwidth"
-        :overlay="overlay"
-        :right="right"
+        :fullheight="true"
+        :fullwidth="false"
+        :overlay="false"
+        :right="false"
         v-model="open"
       >
         <div class="p-1">
           <b-menu>
-            <b-menu-list label="Games">
+            <!-- <b-menu-list label="Games">
               <b-menu-item icon="gamepad" label="Identify"></b-menu-item>
               <b-menu-item icon="gamepad" label="Build"></b-menu-item>
               <b-menu-item icon="gamepad" label="Hear"> </b-menu-item>
+            </b-menu-list> -->
+            <!-- <b-button @click="changeBackground()" style="background-color: #ff6347; color: #fff;">Dark Mode</b-button> -->
+            <b-menu-list label="Account">
               <b-menu-item icon="user" label="My Account">
                 <b-menu-item label="Account data"></b-menu-item>
                 <b-menu-item label="Addresses"></b-menu-item>
               </b-menu-item>
-            </b-menu-list>
-            <b-menu-list>
-              <b-menu-item
-                label="Expo"
-                tag="router-link"
-                target="_blank"
-                to="/expo"
-              ></b-menu-item>
-            </b-menu-list>
-            <b-menu-list label="Actions">
               <b-menu-item label="Logout"></b-menu-item>
             </b-menu-list>
+            <b-switch
+              @input="changeBackground()"
+              v-model="lightMode"
+              passive-type="is-dark"
+              type="is-warning"
+            >
+              {{ lightMode ? "Light Mode" : "Dark Mode" }}
+            </b-switch>
           </b-menu>
         </div>
       </b-sidebar>
-      <!-- <div class="block">
-      <b-field grouped group-multiline>
-        <div class="control">
-          <b-switch v-model="overlay">Overlay</b-switch>
-        </div>
-        <div class="control">
-          <b-switch v-model="fullheight">Fullheight</b-switch>
-        </div>
-        <div class="control">
-          <b-switch v-model="fullwidth">Fullwidth</b-switch>
-        </div>
-        <div class="control">
-          <b-switch v-model="right">Right</b-switch>
-        </div>
-      </b-field>
-    </div> -->
-      <b-button @click="open = true" icon-right="bars"></b-button>
+      <b-button
+        @click="open = true"
+        icon-right="bars"
+        type="is-ghost is-rounded"
+      ></b-button>
     </section>
 
     <section class="section">
       <div class="has-text-centered" style="margin-bottom: 20px">
         <router-link to="/IdentifyGame">
-          <b-button @click="showGame = !showGame">Identify</b-button>
+          <b-button @click="showGame = !showGame" type="is-rounded"
+            >Scale Identification</b-button
+          >
         </router-link>
         <router-link to="/BuildGame">
-          <b-button @click="showBuild = !showBuild">Build</b-button>
+          <b-button @click="showBuild = !showBuild" type="is-rounded"
+            >Scale Building</b-button
+          >
         </router-link>
         <router-link to="/ListeningGame">
-          <b-button @click="showInterval = !showInterval"
+          <b-button @click="showInterval = !showInterval" type="is-rounded"
             >Ear Training</b-button
           >
         </router-link>
-        <b-button @click="changeBackground()">Color</b-button>
       </div>
       <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
       <div v-if="!showGame && !showBuild && !showInterval">
@@ -111,10 +103,7 @@ export default {
       showBuild: false,
       showInterval: false,
       open: false,
-      overlay: false,
-      fullheight: true,
-      fullwidth: false,
-      right: false,
+      lightMode: true,
     };
   },
   methods: {
@@ -128,7 +117,9 @@ export default {
       }
     },
     changeBackground() {
-      document.body.style.backgroundColor = "lightgrey";
+      document.body.style.backgroundColor = this.lightMode
+        ? "white"
+        : "dimgrey";
     },
   },
 };
