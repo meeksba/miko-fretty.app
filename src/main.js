@@ -45,6 +45,7 @@ import {
   faLink,
   faInfo,
   faHome,
+  faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -63,8 +64,8 @@ library.add(
   faBars,
   faLink,
   faInfo,
-  faHome
-
+  faHome,
+  faGamepad
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 

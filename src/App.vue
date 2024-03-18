@@ -11,27 +11,35 @@
       >
         <div class="p-1">
           <b-menu>
-            <!-- <b-menu-list label="Games">
-              <b-menu-item icon="gamepad" label="Identify"></b-menu-item>
-              <b-menu-item icon="gamepad" label="Build"></b-menu-item>
-              <b-menu-item icon="gamepad" label="Hear"> </b-menu-item>
-            </b-menu-list> -->
-            <!-- <b-button @click="changeBackground()" style="background-color: #ff6347; color: #fff;">Dark Mode</b-button> -->
+            <b-menu-list label="Games">
+              <b-menu-item
+                icon="gamepad"
+                label="Scale Identification Game"
+              ></b-menu-item>
+              <b-menu-item
+                icon="gamepad"
+                label="Scale Building Game"
+              ></b-menu-item>
+              <b-menu-item icon="gamepad" label="Ear Training Games">
+              </b-menu-item>
+            </b-menu-list>
             <b-menu-list label="Account">
               <b-menu-item icon="user" label="My Account">
                 <b-menu-item label="Account data"></b-menu-item>
                 <b-menu-item label="Addresses"></b-menu-item>
+                <b-menu-item label="Logout"></b-menu-item>
               </b-menu-item>
-              <b-menu-item label="Logout"></b-menu-item>
             </b-menu-list>
-            <b-switch
-              @input="changeBackground()"
-              v-model="lightMode"
-              passive-type="is-dark"
-              type="is-warning"
-            >
-              {{ lightMode ? "Light Mode" : "Dark Mode" }}
-            </b-switch>
+            <b-menu-list label="App Settings">
+              <b-switch
+                @input="changeBackground()"
+                v-model="lightMode"
+                passive-type="is-dark"
+                type="is-warning"
+              >
+                {{ lightMode ? "Light Mode" : "Dark Mode" }}
+              </b-switch>
+            </b-menu-list>
           </b-menu>
         </div>
       </b-sidebar>
@@ -41,35 +49,53 @@
         size="is-medium"
         icon-right="bars"
         type="is-ghost is-rounded"
-        ></b-button>
-        <!-- Home Button -->
-        <router-link to="/"> 
-          <b-button
+      ></b-button>
+      <!-- Home Page Button -->
+      <router-link to="/">
+        <b-button
           @click="homePage()"
           size="is-medium"
           icon-right="home"
           type="is-ghost is-rounded"
-          ></b-button>
-        </router-link>
+        ></b-button>
+      </router-link>
     </section>
 
     <section class="section">
       <div class="has-text-centered" style="margin-bottom: 20px">
         <!-- Scale Identification Button -->
         <router-link to="/IdentifyGame">
-          <b-button @click="showGame = !showGame; showHome = false" type="is-rounded is-info is-light"
-          >Scale Identification</b-button
+          <b-button
+            @click="
+              showGame = !showGame;
+              showHome = false;
+            "
+            type="is-rounded is-info is-light"
+            outlined
+            >Scale Identification</b-button
           >
         </router-link>
         <!-- Scale Building Button -->
         <router-link to="/BuildGame">
-          <b-button @click="showBuild = !showBuild; showHome = false" type="is-rounded is-info is-light"
-          >Scale Building</b-button
+          <b-button
+            @click="
+              showBuild = !showBuild;
+              showHome = false;
+            "
+            type="is-rounded is-info is-light"
+            outlined
+            >Scale Building</b-button
           >
         </router-link>
         <!-- Ear Training Button -->
         <router-link to="/ListeningGame">
-          <b-button @click="showInterval = !showInterval; showHome = false" type="is-rounded is-info is-light"
+          <b-button
+            @click="
+              showInterval = !showInterval;
+              showHome = false;
+            "
+            type="is-rounded is-info is-light"
+            outlined
             >Ear Training</b-button
           >
         </router-link>
@@ -79,9 +105,7 @@
         <div class="container" v-for="editor in editors" v-bind:key="editor">
           <!--<note-select />-->
           <Editor v-on:remove-fretboard="remove(editor)" />
-          <div
-            class="has-text-centered"
-          >
+          <div class="has-text-centered">
             <a @click="add">+ Add Fretboard</a>
           </div>
         </div>
@@ -133,13 +157,13 @@ export default {
         ? "white"
         : "dimgrey";
     },
-    homePage(){
-      console.log("hello")
+    homePage() {
+      console.log("hello");
       this.showHome = true;
       this.showBuild = false;
       this.showGame = false;
       this.showInterval = false;
-    }
+    },
   },
 };
 </script>

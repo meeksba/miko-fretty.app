@@ -2,7 +2,7 @@
   <div>
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
-      >Settings</b-button
+        >Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
         <form action>
@@ -33,14 +33,12 @@
         </form>
       </b-dropdown-item>
     </b-dropdown>
-    <h1 v-if="ShowBegin" class="has-text-centered">
-      Build the Scale Given!
-    </h1>
+    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given!</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <BuildFretboard
-      :tuning="tuning"
-      :notes="notes"
-      :notation="fretboardNotation"
+        :tuning="tuning"
+        :notes="notes"
+        :notation="fretboardNotation"
         :frets="frets"
         :root="root"
         :scale="scale_info"
@@ -307,7 +305,7 @@ export default {
     },
     playScale() {
       let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);
-      scale.notes.push(this.scale.tonic + "4") //add octave of root 
+      scale.notes.push(this.scale.tonic + "4"); //add octave of root
       guitarSounds.playScale(scale.notes);
     },
 
