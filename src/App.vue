@@ -158,7 +158,6 @@ export default {
         : "dimgrey";
     },
     homePage() {
-      console.log("hello");
       this.showHome = true;
       this.showBuild = false;
       this.showGame = false;

@@ -87,7 +87,7 @@ const SCALES = [
   ["1P 2m 3M 4P 5P 6m 7m", "phrygian dominant", "spanish", "phrygian major"],
   ["1P 2m 3m 4P 5P 6m 7M", "balinese"],
   ["1P 2m 3m 4P 5P 6M 7M", "neopolitan major"],
-  ["1P 2M 3m 4P 5P 6m 7m", "aeolian", "minor"],
+  ["1P 2M 3m 4P 5P 6m 7m", "aeolian", "natural minor"],
   ["1P 2M 3M 4P 5P 6m 7M", "harmonic major"],
   ["1P 2m 3M 4P 5P 6m 7M", "double harmonic major", "gypsy"],
   ["1P 2M 3m 4P 5P 6M 7m", "dorian"],

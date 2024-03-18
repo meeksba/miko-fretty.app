@@ -431,7 +431,8 @@ export default {
       guitarSounds.playChord(this.chordAns, this.scale.tonic);
     },
     playChordIndividually() {
-      // let chord = Chord.getChord(this.chordAns, this.scale.tonic);/
+      // let chord = Chord.getChord("dim", "C");
+      // console.log("chord", chord)
       guitarSounds.playChordIndividually(this.chordAns, this.scale.tonic);
     },
 

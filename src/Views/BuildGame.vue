@@ -33,7 +33,7 @@
         </form>
       </b-dropdown-item>
     </b-dropdown>
-    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given!</h1>
+    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <BuildFretboard
         :tuning="tuning"
@@ -80,11 +80,20 @@
           </b-field>
           <!-- Notation Setting -->
           <b-field label="Notation" style="margin-left: 20px">
-            <b-radio-button v-model="gameMode" native-value="Note">
+            <b-radio-button v-model="notationMode" native-value="Note">
               <span>Note</span>
             </b-radio-button>
-            <b-radio-button v-model="gameMode" native-value="Interval">
+            <b-radio-button v-model="notationMode" native-value="Interval">
               <span>Interval</span>
+            </b-radio-button>
+          </b-field>
+          <!-- Game Mode Setting -->
+          <b-field label="Game Mode" style="margin-left: 20px">
+            <b-radio-button v-model="gameMode" native-value="Scale">
+              <span>Scale</span>
+            </b-radio-button>
+            <b-radio-button v-model="gameMode" native-value="Arpeggio">
+              <span>Arpeggio</span>
             </b-radio-button>
           </b-field>
         </b-field>
@@ -104,14 +113,21 @@
       </div>
       <div v-if="StartGame" class="has-text-centered">
         <h1>
-          Build <b>{{ scale.tonic }} {{ scale.type }} </b> on the Fretboard
+          Build <b>{{ scale.tonic }} {{ scale.type || this.arpeggioType }} </b> on the Fretboard
           Above
         </h1>
         <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
-        <b-button
-          @click="playScale"
-          label="Play Scale"
+        <b-button v-if="this.gameMode == 'Scale'"
+        @click="playScale"
+        label="Play Scale"
+        style="margin-top: 20px"
+        type="is-link"
+        outlined
+        />
+        <b-button v-if="this.gameMode == 'Arpeggio'"
+          @click="playArpeggio"
+          label="Play Arpeggio"
           style="margin-top: 20px"
           type="is-link"
           outlined
@@ -171,13 +187,15 @@ export default {
       usr_tuning: localStorage.getItem("tuning") || "E A D G B E",
       sharps: "sharps",
       frets: 18,
-      scale: { tonic: "A", type: "major" },
+      scale: { tonic: "A", type: "" },
       tonicArray: ["C", "D", "E", "F", "G", "A", "B"],
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
-      gameMode: "Note",
+      notationMode: "Note",
+      gameMode: "Scale",
       fretboardNotation: "sharp",
+      arpeggioType: "",
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
@@ -257,7 +275,7 @@ export default {
     submitSettings() {
       this.StartGame = true; //start game once users have submit settings
       this.ShowSettings = false; //hide settings menu
-      if (this.gameMode == "Interval") {
+      if (this.notationMode == "Interval") {
         this.fretboardNotation = "Intervals";
         this.startGame(); //start game
         return;
@@ -267,12 +285,41 @@ export default {
     startGame() {
       this.clickedKeys = [];
       this.clickedNotes = [];
-      this.calculateTonic(); //set initial answer
-      this.calculateScaleType(); //create scale based on tonic
-      this.ansArray =
-        this.gameMode == "Note" ? this.scale_notes : this.scale_info.intervals;
+      this.calculateTonic(); //set initial tonic
+      if(this.gameMode == "Scale"){
+        this.calculateScaleType(); //create scale based on tonic
+        this.ansArray =
+          this.notationMode == "Note" ? this.scale_notes : this.scale_info.intervals;
+          return;
+      }
+      this.calculateArpeggioType();
+      this.ansArray = Chord.notes(this.arpeggioType, this.scale.tonic)
     },
-
+    calculateArpeggioType(){
+      let randInt = Math.random();
+      switch (this.gameDifficulty) {
+        case "Easy":
+          this.arpeggioType =
+            randInt < 0.5 ? "min" : "maj";
+          return;
+        case "Medium":
+          if(randInt <= .33){
+            this.arpeggioType = "maj7"
+            return;
+          }
+          if(randInt <= .66){
+            this.arpeggioType = "min7"
+            return;
+          }
+          if(randInt <= .99){
+            this.arpeggioType = "7"
+            return;
+          }
+          return;
+        case "Hard":
+          this.arpeggioType = "dim";
+      }
+    },
     calculateScaleType() {
       let randInt = Math.random();
       switch (this.gameDifficulty) {
@@ -287,7 +334,6 @@ export default {
           this.scale.type = "harmonic minor";
       }
     },
-
     //this function returns a random element of an array
     calculateRandomElement(inputArray) {
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
@@ -303,12 +349,15 @@ export default {
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
     },
+    playArpeggio(){
+      let arpeggio = Chord.notes(this.arpeggioType, this.scale.tonic + "3")
+      guitarSounds.playScale(arpeggio)
+    },
     playScale() {
       let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);
       scale.notes.push(this.scale.tonic + "4"); //add octave of root
       guitarSounds.playScale(scale.notes);
     },
-
     chordCheck() {
       let temp = Chord.detect(this.clickedNotes);
       console.log("Detected Chord: ", temp);
@@ -316,8 +365,6 @@ export default {
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
-      // this.clickedNotes.push(name);
-      // this.clickedKeys.push(note.key);
       if (this.StartGame) {
         if (this.clickedKeys.includes(note.key)) {
           this.alertMessages("Duplicate");
@@ -346,7 +393,6 @@ export default {
         }
         this.alertMessages("correct");
       }
-
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
     alertMessages(message) {
@@ -403,8 +449,6 @@ export default {
           this.clickedKeys = [];
           this.clickedNotes = [];
           this.tonicCount = 0;
-          // location.reload();
-
           return;
       }
     },
