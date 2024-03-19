@@ -26,6 +26,7 @@ import {
   Dialog,
   Progress,
   Switch,
+  Notification,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -90,6 +91,7 @@ Vue.use(Toast);
 Vue.use(Dialog);
 Vue.use(Progress);
 Vue.use(Switch);
+Vue.use(Notification);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({

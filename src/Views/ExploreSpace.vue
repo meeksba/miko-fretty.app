@@ -30,7 +30,7 @@
             </b-field>
 
             <!-- Tonic + Scale -->
-            <b-field label="Tonic:">
+            <!-- <b-field label="Tonic:">
               <b-input
                 v-model="scale.tonic"
                 icon="music"
@@ -46,14 +46,23 @@
                 append-to-body
                 @select="(option) => (selected = option)"
               ></b-autocomplete>
-            </b-field>
+            </b-field> -->
 
-            <!-- Settings -->
             <b-field>
+              <!-- Clear Button and Check Chord Button -->
+              <b-button @click="clearFretboard()" style="margin-right: 10px"
+              >Clear Fretboard</b-button
+              >
+              <b-button
+              @click="checkChord()"
+              style="margin-right: 10px"
+              >Chord Check</b-button
+              >
+              <!-- Settings -->
               <template slot="label">
                 <span style="color: transparent; user-select: none">More</span>
               </template>
-
+              
               <b-dropdown append-to-body aria-role="menu" trap-focus>
                 <b-button class="button" slot="trigger" icon-left="cog"
                   >Settings</b-button
@@ -124,7 +133,6 @@
                             </b-radio-button>
                           </b-field>
                         </b-field>
-                        <!-- <b-checkbox>Show piano</b-checkbox>-->
                       </section>
                     </div>
                   </form>
@@ -134,7 +142,7 @@
           </b-field>
         </div>
       </div>
-
+      
       <div class="card-image" style="text-align: center; overflow-x: auto">
         <ExploreFretboard
         :tuning="tuning"
@@ -145,17 +153,19 @@
         :scale="scale_info"
         :clickedKeys="clickedKeys"
         @clickNote="clickHandle"
-      />
+        />
+        <h2 v-if="displayChords">Chord Detected: {{ this.chordsFound }}</h2>
       </div>
-      <Chords
+      <!-- <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
         style="margin-bottom: 50px"
-      />
+      /> -->
       <Notation
         v-if="this.ShowMusicSheet == 'true'"
         :scale="scale_info"
         :scale-name="scale_info.name"
+        :notes="this.clickedNotes"
       />
       <b-button
         style="margin-bottom: 75px"
@@ -167,13 +177,10 @@
     <router-view></router-view>
   </div>
 </template>
-
 <script>
 import ExploreFretboard from "../components/ExploreFretboard.vue";
-import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
-// import NoteSelect from "./NoteSelect.vue";
-import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
+import { Note, Scale, Midi, ScaleType, Mode, Chord } from "tonal";
 import { Tunings } from "../tunings.js";
 import { playNote } from "../guitarsounds";
 
@@ -188,9 +195,8 @@ export default {
 
   components: {
     ExploreFretboard,
-    Chords,
     Notation,
-},
+  },
 
   data: function () {
     return {
@@ -201,8 +207,10 @@ export default {
       ShowMusicSheet: "true",
       ShowChords: "true",
       notation: "sharp",
+      displayChords: false,
       clickedKeys: [],
       clickedNotes: [],
+      chordsFound: ""
     };
   },
 
@@ -270,9 +278,30 @@ export default {
     },
     clickHandle(note) {
       playNote(note.key);
-      let name = note.name
-      this.clickedKeys.push(note.key); 
+      let name = note.name;
       this.clickedNotes.push(name);
+      this.clickedKeys.push(note.key);
+    },
+    clearFretboard() {
+      this.clickedNotes = [];
+      this.clickedKeys = [];
+      this.chordsFound = "";
+      this.displayChords = false;
+    },
+    checkChord() {
+      this.chordsFound = ""
+      console.log("clickedNotes: ", this.clickedNotes);
+      // let found = Chord.detect(this.clickedNotes);
+      
+      let temp = Chord.detect(this.clickedNotes);
+      for(let i = 0; i < temp.length; i++){
+        this.chordsFound += temp[i] + "  |  "
+      }
+      if(this.chordsFound.length > 0){
+        this.displayChords = true;
+      }
+      // console.log("chordsFound", found )
+      // console.log("detectedChord: ", chord);
     },
     testMethod() {
       console.log("Scale Notes: " + this.scale_info.notes);
@@ -282,4 +311,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: -35px;
+}
+</style>
