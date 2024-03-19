@@ -3,7 +3,9 @@
     <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
-          <b-button @click="testMethod">Test</b-button>
+          <b-tooltip label="Test">
+            <b-button @click="testMethod">Test</b-button>
+          </b-tooltip>
           <b-field grouped group-multiline position="is-centered">
             <!-- Tuning -->
             <b-field label="Tuning">

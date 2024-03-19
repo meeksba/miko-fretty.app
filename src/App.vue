@@ -33,9 +33,16 @@
             </b-menu-list>
             <b-menu-list label="Account">
               <b-menu-item icon="user" label="My Account">
-                <b-menu-item label="Account data"></b-menu-item>
-                <b-menu-item label="Addresses"></b-menu-item>
-                <b-menu-item label="Logout"></b-menu-item>
+                <b-menu-item
+                  v-if="userLoggedIn"
+                  label="Login"
+                  @click="showLogin = true"
+                ></b-menu-item>
+                <b-menu-item
+                  v-if="!userLoggedIn"
+                  label="Register"
+                  @click="showRegister = true"
+                ></b-menu-item>
               </b-menu-item>
             </b-menu-list>
             <b-menu-list label="App Settings">
@@ -54,19 +61,23 @@
       <!-- Sidebar Button -->
       <!-- Home Page Button -->
       <router-link to="/">
+        <b-tooltip label="Home Page" position="is-right">
+          <b-button
+            @click="homePage()"
+            size="is-medium"
+            icon-right="home"
+            type="is-ghost is-rounded"
+          ></b-button>
+        </b-tooltip>
+      </router-link>
+      <b-tooltip label="Scale Identification Game" position="is-bottom">
         <b-button
           @click="homePage()"
           size="is-medium"
-          icon-right="home"
+          icon-right="search"
           type="is-ghost is-rounded"
         ></b-button>
-      </router-link>
-      <b-button
-        @click="homePage()"
-        size="is-medium"
-        icon-right="search"
-        type="is-ghost is-rounded"
-      ></b-button>
+      </b-tooltip>
       <b-button
         @click="homePage()"
         size="is-medium"
@@ -148,13 +159,45 @@
           </div>
         </div>
       </div>
-      <router-view></router-view>
     </section>
+    <router-view></router-view>
+    <!-- Login Form -->
+    <b-modal
+      v-model="showLogin"
+      has-modal-card
+      trap-focus
+      :destroy-on-hide="false"
+      aria-role="dialog"
+      aria-label="Login Form"
+      close-button-aria-label="Close"
+      aria-modal
+    >
+      <template #default="props">
+        <LoginForm @close="props.close"></LoginForm>
+      </template>
+    </b-modal>
+    <!-- Register Form -->
+    <b-modal
+      v-model="showRegister"
+      has-modal-card
+      trap-focus
+      :destroy-on-hide="false"
+      aria-role="dialog"
+      aria-label="Register Form"
+      close-button-aria-label="Close"
+      aria-modal
+    >
+      <template #default="props">
+        <RegisterForm @close="props.close"></RegisterForm>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import Editor from "./components/Editor.vue";
+import LoginForm from "./components/LoginForm.vue";
+import RegisterForm from "./components/RegisterForm.vue";
 // import IdentifyGame from "./Views/IdentifyGame.vue";
 // import BuildGame from "./Views/BuildGame.vue";
 // import EarTraining from "./Views/EarTraining.vue";
@@ -164,10 +207,8 @@ export default {
   name: "App",
   components: {
     Editor,
-    // IdentifyGame,
-    // BuildGame,
-    // EarTraining,
-    // NoteSelect
+    LoginForm,
+    RegisterForm,
   },
   data() {
     return {
@@ -176,8 +217,11 @@ export default {
       showGame: false,
       showBuild: false,
       showInterval: false,
+      userLoggedIn: false,
       open: false,
       lightMode: true,
+      showLogin: false,
+      showRegister: false,
     };
   },
   methods: {

@@ -5,7 +5,10 @@ import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
 import EarTraining from "./Views/EarTraining.vue";
 import ExploreSpace from "./Views/ExploreSpace.vue";
+import LoginPage from "./Views/LoginPage.vue";
 import store from "./store.js";
+import firebase from "firebase/compat/app";
+// import 'firebase/compat/auth'
 // import Buefy from "buefy/src";
 import {
   ConfigProgrammatic,
@@ -27,6 +30,8 @@ import {
   Progress,
   Switch,
   Notification,
+  Tooltip,
+  Modal,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -100,6 +105,8 @@ Vue.use(Dialog);
 Vue.use(Progress);
 Vue.use(Switch);
 Vue.use(Notification);
+Vue.use(Tooltip);
+Vue.use(Modal);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({
@@ -107,6 +114,18 @@ ConfigProgrammatic.setOptions({
   defaultIconPack: "fas",
   defaultContainerElement: "#content",
 });
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKuHk6tBymAhCAm5ocSoRCOpcFYxhkoVM",
+  authDomain: "mikofretty.firebaseapp.com",
+  projectId: "mikofretty",
+  storageBucket: "mikofretty.appspot.com",
+  messagingSenderId: "857699131525",
+  appId: "1:857699131525:web:da64b1713687c8fd2789ec",
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 Vue.config.productionTip = false;
 
@@ -132,6 +151,11 @@ const routes = [
     path: "/ExploreSpace",
     name: "ExploreSpace",
     component: ExploreSpace,
+  },
+  {
+    path: "/LoginPage",
+    name: "LoginPage",
+    component: LoginPage,
   },
 ];
 
