@@ -22,6 +22,7 @@
               ></b-menu-item>
               <b-menu-item icon="gamepad" label="Ear Training Games">
               </b-menu-item>
+              <b-menu-item icon="gamepad" label="Explore Page"> </b-menu-item>
             </b-menu-list>
             <b-menu-list label="Account">
               <b-menu-item icon="user" label="My Account">

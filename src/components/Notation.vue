@@ -17,9 +17,16 @@ export default {
     scale: {
       type: Object,
     },
+    notes: {
+      type: Array,
+      default: () => [],
+    },
   },
   watch: {
     scaleName() {
+      this.render();
+    },
+    notes() {
       this.render();
     },
   },
@@ -46,7 +53,7 @@ export default {
       const stave = new Stave(0, -10, width);
       stave.addClef("treble").addTimeSignature("4/4");
       stave.setContext(context).draw();
-      const scaleNotes = this.scale.notes;
+      let scaleNotes = this.notes.length > 0 ? this.notes : this.scale.notes;
       const notes = [];
       let pos = 4;
       scaleNotes.forEach((note) => {

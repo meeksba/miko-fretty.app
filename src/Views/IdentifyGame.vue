@@ -1,5 +1,11 @@
 <template>
   <div>
+    <b-button
+      @click="testMethod"
+      label="TESTBUTTON"
+      style="margin-top: 40px"
+      class="has-text-centered"
+    />
     <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 50px">
       Identify the Scale Shown
     </h1>
@@ -103,15 +109,9 @@
         <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
       </div>
-      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
+      <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 15px">
         Score
       </h3>
-      <b-button
-        @click="testMethod"
-        label="TESTBUTTON"
-        style="margin-top: 40px"
-        class="has-text-centered"
-      />
     </section>
     <!-- Progress Bar -->
     <b-progress

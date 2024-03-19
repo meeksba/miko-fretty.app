@@ -1,9 +1,12 @@
 <template>
   <div>
+    <h1 class="has-text-centered" style="margin-top: 50px; margin-bottom: 10px">
+      Explore Space
+    </h1>
     <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
-          <b-button @click="testMethod">Explore test</b-button>
+          <!-- <b-button @click="testMethod">Explore test</b-button> -->
           <b-field grouped group-multiline position="is-centered">
             <!-- Tuning -->
             <b-field label="Tuning">
@@ -51,18 +54,16 @@
             <b-field>
               <!-- Clear Button and Check Chord Button -->
               <b-button @click="clearFretboard()" style="margin-right: 10px"
-              >Clear Fretboard</b-button
+                >Clear Fretboard</b-button
               >
-              <b-button
-              @click="checkChord()"
-              style="margin-right: 10px"
-              >Chord Check</b-button
+              <b-button @click="checkChord()" style="margin-right: 10px"
+                >Chord Check</b-button
               >
               <!-- Settings -->
               <template slot="label">
                 <span style="color: transparent; user-select: none">More</span>
               </template>
-              
+
               <b-dropdown append-to-body aria-role="menu" trap-focus>
                 <b-button class="button" slot="trigger" icon-left="cog"
                   >Settings</b-button
@@ -99,7 +100,7 @@
                             <span>Intervals</span>
                           </b-radio-button>
                         </b-field>
-                        <b-field label="Show Chords">
+                        <!-- <b-field label="Show Chords">
                           <b-field>
                             <b-radio-button
                               v-model="ShowChords"
@@ -115,7 +116,7 @@
                               <span>False</span>
                             </b-radio-button>
                           </b-field>
-                        </b-field>
+                        </b-field> -->
                         <b-field label="Music Sheet">
                           <b-field>
                             <b-radio-button
@@ -142,19 +143,22 @@
           </b-field>
         </div>
       </div>
-      
+
       <div class="card-image" style="text-align: center; overflow-x: auto">
         <ExploreFretboard
-        :tuning="tuning"
-        :notes="notes"
-        :notation="fretboardNotation"
-        :frets="frets"
-        :root="root"
-        :scale="scale_info"
-        :clickedKeys="clickedKeys"
-        @clickNote="clickHandle"
+          :tuning="tuning"
+          :notes="notes"
+          :notation="fretboardNotation"
+          :frets="frets"
+          :root="root"
+          :scale="scale_info"
+          :clickedKeys="clickedKeys"
+          @clickNote="clickHandle"
         />
-        <h2 v-if="displayChords">Chord Detected: {{ this.chordsFound }}</h2>
+        <h2 v-if="displayNotes">Notes Pressed: {{ this.clickedNotes }}</h2>
+        <h2 v-if="displayChords" style="margin-top: 5px">
+          Chord(s) Detected: {{ this.chordsFound }}
+        </h2>
       </div>
       <!-- <Chords
         v-if="this.ShowChords == 'true'"
@@ -163,8 +167,6 @@
       /> -->
       <Notation
         v-if="this.ShowMusicSheet == 'true'"
-        :scale="scale_info"
-        :scale-name="scale_info.name"
         :notes="this.clickedNotes"
       />
       <b-button
@@ -208,9 +210,10 @@ export default {
       ShowChords: "true",
       notation: "sharp",
       displayChords: false,
+      displayNotes: false,
       clickedKeys: [],
       clickedNotes: [],
-      chordsFound: ""
+      chordsFound: "",
     };
   },
 
@@ -281,23 +284,25 @@ export default {
       let name = note.name;
       this.clickedNotes.push(name);
       this.clickedKeys.push(note.key);
+      this.displayNotes = true;
     },
     clearFretboard() {
       this.clickedNotes = [];
       this.clickedKeys = [];
       this.chordsFound = "";
       this.displayChords = false;
+      this.displayNotes = false;
     },
     checkChord() {
-      this.chordsFound = ""
+      this.chordsFound = "";
       console.log("clickedNotes: ", this.clickedNotes);
       // let found = Chord.detect(this.clickedNotes);
-      
+
       let temp = Chord.detect(this.clickedNotes);
-      for(let i = 0; i < temp.length; i++){
-        this.chordsFound += temp[i] + "  |  "
+      for (let i = 0; i < temp.length; i++) {
+        this.chordsFound += temp[i] + "  |  ";
       }
-      if(this.chordsFound.length > 0){
+      if (this.chordsFound.length > 0) {
         this.displayChords = true;
       }
       // console.log("chordsFound", found )
@@ -312,6 +317,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
 h2 {
   font-size: 18px;
   font-weight: bold;

@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div>
+      <!-- <b-button
+      @click="testMethod"
+      label="TESTBUTTON"
+      style="margin-top: 20px"
+      /> -->
+    </div>
     <!-- BuildGame Settings -->
     <b-dropdown append-to-body aria-role="menu" trap-focus>
       <b-button class="button" slot="trigger" icon-left="cog"
@@ -19,7 +26,7 @@
                   </b-radio-button>
                 </b-field>
               </b-field>
-              <b-field label="Show Chords">
+              <!-- <b-field label="Show Chords">
                 <b-field>
                   <b-radio-button v-model="ShowChords" native-value="true">
                     <span>True</span>
@@ -28,7 +35,7 @@
                     <span>False</span>
                   </b-radio-button>
                 </b-field>
-              </b-field>
+              </b-field> -->
             </section>
           </div>
         </form>
@@ -137,22 +144,12 @@
           outlined
         />
       </div>
-      <b-button
-        @click="testMethod"
-        label="TESTBUTTON"
-        style="margin-top: 20px"
-      />
-      <b-button
-        @click="chordCheck()"
-        label="Chord check"
-        style="margin-top: 20px"
-      />
     </section>
-    <Chords
+    <!-- <Chords
       v-if="this.ShowChords == 'true'"
       :chords="scaleChords"
       style="margin-bottom: 50px"
-    />
+    /> -->
     <Notation
       v-if="this.ShowMusicSheet == 'true'"
       :scale="scale_info"
@@ -163,7 +160,7 @@
 
 <script>
 import BuildFretboard from "../components/BuildFretboard.vue";
-import Chords from "../components/Chords.vue";
+// import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 // import * as utils from "../utils.js";
@@ -181,7 +178,7 @@ export default {
 
   components: {
     BuildFretboard,
-    Chords,
+    // Chords,
     Notation,
     TuningSelection,
   },
@@ -363,10 +360,6 @@ export default {
       scale.notes.push(this.scale.tonic + "4"); //add octave of root
       guitarSounds.playScale(scale.notes);
     },
-    chordCheck() {
-      let temp = Chord.detect(this.clickedNotes);
-      console.log("Detected Chord: ", temp);
-    },
     clickHandle(note) {
       guitarSounds.playNote(note.key);
       let name = note.name;
@@ -461,7 +454,7 @@ export default {
     testMethod() {
       // console.log("scale info ", this.scale_info);
       // console.log("ansarray: ",this.ansArray)
-      console.log("clicked notes: ", this.clickedNotes);
+      // console.log("clicked notes: ", this.clickedNotes);
       // console.log("ansarray: ",this.ansArray)
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },
