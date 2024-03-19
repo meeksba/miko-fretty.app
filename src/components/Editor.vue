@@ -124,7 +124,6 @@
                             </b-radio-button>
                           </b-field>
                         </b-field>
-                        <!-- <b-checkbox>Show piano</b-checkbox>-->
                       </section>
                     </div>
                   </form>
@@ -149,7 +148,7 @@
       <Chords
         v-if="this.ShowChords == 'true'"
         :chords="scaleChords"
-        style="margin-bottom: 50px"
+        style="margin-bottom: 20px"
       />
       <Notation
         v-if="this.ShowMusicSheet == 'true'"

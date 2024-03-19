@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-field grouped group-multiline position="is-centered"> </b-field>
-    <hr />
+    <!-- <hr /> -->
     <div ref="musicNotation"></div>
     <div ref="guitarTab"></div>
   </div>
