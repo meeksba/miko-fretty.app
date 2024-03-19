@@ -55,55 +55,55 @@
       <!-- Home Page Button -->
       <router-link to="/">
         <b-button
-        @click="homePage()"
-        size="is-medium"
-        icon-right="home"
-        type="is-ghost is-rounded"
+          @click="homePage()"
+          size="is-medium"
+          icon-right="home"
+          type="is-ghost is-rounded"
         ></b-button>
       </router-link>
       <b-button
-      @click="homePage()"
-      size="is-medium"
-      icon-right="search"
-      type="is-ghost is-rounded"
+        @click="homePage()"
+        size="is-medium"
+        icon-right="search"
+        type="is-ghost is-rounded"
       ></b-button>
       <b-button
-      @click="homePage()"
-      size="is-medium"
-      icon-right="hammer"
-      type="is-ghost is-rounded"
+        @click="homePage()"
+        size="is-medium"
+        icon-right="hammer"
+        type="is-ghost is-rounded"
       ></b-button>
       <b-button
-      @click="homePage()"
-      size="is-medium"
-      icon-right="headphones"
-      type="is-ghost is-rounded"
+        @click="homePage()"
+        size="is-medium"
+        icon-right="headphones"
+        type="is-ghost is-rounded"
       ></b-button>
       <b-button
-      @click="homePage()"
-      size="is-medium"
-      icon-right="book-open"
-      type="is-ghost is-rounded"
+        @click="homePage()"
+        size="is-medium"
+        icon-right="book-open"
+        type="is-ghost is-rounded"
       ></b-button>
     </section>
-    
+
     <section class="section">
       <div class="has-text-centered" style="margin-bottom: 20px">
         <!-- Scale Identification Button -->
         <router-link to="/IdentifyGame">
           <b-button
-          @click="
+            @click="
               showGame = !showGame;
               showHome = false;
             "
             type="is-rounded is-info is-light"
             outlined
             >Scale Identification</b-button
-            >
-          </router-link>
-          <!-- Scale Building Button -->
-          <router-link to="/BuildGame">
-            <b-button
+          >
+        </router-link>
+        <!-- Scale Building Button -->
+        <router-link to="/BuildGame">
+          <b-button
             @click="
               showBuild = !showBuild;
               showHome = false;
@@ -111,11 +111,11 @@
             type="is-rounded is-info is-light"
             outlined
             >Scale Building</b-button
-            >
-          </router-link>
-          <!-- Ear Training Button -->
-          <router-link to="/EarTraining">
-            <b-button
+          >
+        </router-link>
+        <!-- Ear Training Button -->
+        <router-link to="/EarTraining">
+          <b-button
             @click="
               showInterval = !showInterval;
               showHome = false;
@@ -123,11 +123,11 @@
             type="is-rounded is-info is-light"
             outlined
             >Ear Training</b-button
-            >
-          </router-link>
-          <!-- Explore Space Button -->
-          <router-link to="/ExploreSpace">
-            <b-button
+          >
+        </router-link>
+        <!-- Explore Space Button -->
+        <router-link to="/ExploreSpace">
+          <b-button
             @click="
               showInterval = !showInterval;
               showHome = false;
@@ -135,21 +135,21 @@
             type="is-rounded is-info is-light"
             outlined
             >Explore Space</b-button
-            >
-          </router-link>
-        </div>
-        <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
-        <div v-if="showHome">
-          <div class="container" v-for="editor in editors" v-bind:key="editor">
-            <!--<note-select />-->
-            <Editor v-on:remove-fretboard="remove(editor)" />
-            <div class="has-text-centered">
-              <a @click="add">+ Add Fretboard</a>
-            </div>
+          >
+        </router-link>
+      </div>
+      <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
+      <div v-if="showHome">
+        <div class="container" v-for="editor in editors" v-bind:key="editor">
+          <!--<note-select />-->
+          <Editor v-on:remove-fretboard="remove(editor)" />
+          <div class="has-text-centered">
+            <a @click="add">+ Add Fretboard</a>
           </div>
         </div>
-        <router-view></router-view>
-      </section>
+      </div>
+      <router-view></router-view>
+    </section>
   </div>
 </template>
 

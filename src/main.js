@@ -75,7 +75,7 @@ library.add(
   faSearch,
   faHammer,
   faHeadphones,
-  faBookOpen,
+  faBookOpen
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 
