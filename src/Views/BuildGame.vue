@@ -114,19 +114,22 @@
       </div>
       <div v-if="StartGame" class="has-text-centered">
         <h1>
-          Build <b>{{ scale.tonic }} {{ scale.type || this.arpeggioType }} </b> on the Fretboard
-          Above
+          Build
+          <b>{{ scale.tonic }} {{ scale.type || this.arpeggioType }} </b> on the
+          Fretboard Above
         </h1>
         <!-- Question Count -->
         <h4>Questions Remaining: {{ questionCount }}</h4>
-        <b-button v-if="this.gameMode == 'Scale'"
-        @click="playScale"
-        label="Play Scale"
-        style="margin-top: 20px"
-        type="is-link"
-        outlined
+        <b-button
+          v-if="this.gameMode == 'Scale'"
+          @click="playScale"
+          label="Play Scale"
+          style="margin-top: 20px"
+          type="is-link"
+          outlined
         />
-        <b-button v-if="this.gameMode == 'Arpeggio'"
+        <b-button
+          v-if="this.gameMode == 'Arpeggio'"
           @click="playArpeggio"
           label="Play Arpeggio"
           style="margin-top: 20px"
@@ -287,33 +290,34 @@ export default {
       this.clickedKeys = [];
       this.clickedNotes = [];
       this.calculateTonic(); //set initial tonic
-      if(this.gameMode == "Scale"){
+      if (this.gameMode == "Scale") {
         this.calculateScaleType(); //create scale based on tonic
         this.ansArray =
-          this.notationMode == "Note" ? this.scale_notes : this.scale_info.intervals;
-          return;
+          this.notationMode == "Note"
+            ? this.scale_notes
+            : this.scale_info.intervals;
+        return;
       }
       this.calculateArpeggioType();
-      this.ansArray = Chord.notes(this.arpeggioType, this.scale.tonic)
+      this.ansArray = Chord.notes(this.arpeggioType, this.scale.tonic);
     },
-    calculateArpeggioType(){
+    calculateArpeggioType() {
       let randInt = Math.random();
       switch (this.gameDifficulty) {
         case "Easy":
-          this.arpeggioType =
-            randInt < 0.5 ? "min" : "maj";
+          this.arpeggioType = randInt < 0.5 ? "min" : "maj";
           return;
         case "Medium":
-          if(randInt <= .33){
-            this.arpeggioType = "maj7"
+          if (randInt <= 0.33) {
+            this.arpeggioType = "maj7";
             return;
           }
-          if(randInt <= .66){
-            this.arpeggioType = "min7"
+          if (randInt <= 0.66) {
+            this.arpeggioType = "min7";
             return;
           }
-          if(randInt <= .99){
-            this.arpeggioType = "7"
+          if (randInt <= 0.99) {
+            this.arpeggioType = "7";
             return;
           }
           return;
@@ -350,9 +354,9 @@ export default {
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
     },
-    playArpeggio(){
-      let arpeggio = Chord.notes(this.arpeggioType, this.scale.tonic + "3")
-      guitarSounds.playScale(arpeggio)
+    playArpeggio() {
+      let arpeggio = Chord.notes(this.arpeggioType, this.scale.tonic + "3");
+      guitarSounds.playScale(arpeggio);
     },
     playScale() {
       let scale = Scale.get(this.scale.tonic + "3 " + this.scale.type);

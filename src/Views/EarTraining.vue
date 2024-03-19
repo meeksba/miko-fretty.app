@@ -10,7 +10,6 @@
     >
       What Chord Has Played?
     </h1>
-    <!-- <b-button @click="playChord()" label="Play Sound"/> -->
     <h1
       v-if="StartGame && gameMode == 'IntervalMode'"
       class="has-text-centered"
@@ -365,7 +364,7 @@ export default {
       this.scale.type = "major";
     },
     calculateRandomElement(inputArray) {
-      //this function returns a random element of an array
+      //this method returns a random element of an array
       let random = Math.floor(Math.random() * inputArray.length); //find random index given array of inputArray
       let elem = inputArray[random]; //select random element of inputArray
       return elem;
@@ -379,8 +378,8 @@ export default {
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
       return tonic;
     },
-    //This method calculates a random interval for the interval game
     calculateIntervalAns() {
+      //This method calculates a random interval for the interval game
       let root =
         this.gameDifficulty == "Easy"
           ? "C3"

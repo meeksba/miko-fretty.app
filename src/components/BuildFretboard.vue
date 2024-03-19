@@ -111,7 +111,7 @@
               :stroke-dasharray="
                 hover_note == note.num && note.num != root ? '4,4' : '0'
               "
-              :fill="root == note.num ? 'white' : 'white'"
+              :fill="root == note.num ? 'lightslategrey' : 'white'"
               stroke="black"
             />
             <!-- name -->
@@ -120,8 +120,8 @@
               :x="note.x"
               :y="string.y"
               dominant-baseline="central"
-              :fill="root == note.num ? 'black' : 'black'"
-              :font-weight="root == note.num ? 'normal' : 'normal'"
+              :fill="root == note.num ? 'white' : 'black'"
+              :font-weight="root == note.num ? 'bold' : 'bold'"
               text-anchor="middle"
             >
               {{ note.name }}

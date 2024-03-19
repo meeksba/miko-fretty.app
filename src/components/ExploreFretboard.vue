@@ -111,7 +111,7 @@
               :stroke-dasharray="
                 hover_note == note.num && note.num != root ? '4,4' : '0'
               "
-              :fill="root == note.num ? 'lightslategrey' : 'white'"
+              fill="lightslategrey"
               stroke="black"
             />
             <!-- name -->
@@ -120,8 +120,8 @@
               :x="note.x"
               :y="string.y"
               dominant-baseline="central"
-              :fill="root == note.num ? 'white' : 'black'"
-              :font-weight="root == note.num ? 'bold' : 'bold'"
+              fill="white"
+              :font-weight="root == note.num ? 'normal' : 'normal'"
               text-anchor="middle"
             >
               {{ note.name }}
@@ -157,6 +157,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    clickedKeys: {
+      type: Array,
+      default: () => [],
+    },
     inlays: {
       default: () => [3, 5, 7, 9, 12, 15, 17, 19, 21],
     },
@@ -169,6 +173,14 @@ export default {
     frets: {
       type: Number,
       default: 18,
+    },
+    minFret: {
+      type: Number,
+      default: null, //may be used if we want to limit render to certain frets
+    },
+    maxFret: {
+      type: Number, //may be used if we want to limit render to certain frets
+      default: null,
     },
     notation: {
       type: String,
@@ -187,7 +199,6 @@ export default {
       // fretboardHeight: 0,
     };
   },
-
   // mounted() {
   //   this.fretsShape = this.fret_lines;
   //   this.polys = this.inlay_polys;
@@ -204,8 +215,6 @@ export default {
     strings: function () {
       let result = [];
       this.tuning.forEach((tuning, string) => {
-        // find notes
-        let normalized_notes = this.normalize(this.notes);
         let visible = [];
         let hidden = [];
         for (let fret = 0; fret < this.frets; fret++) {
@@ -217,7 +226,7 @@ export default {
             x: (this.fretpos(fret - 1) + this.fretpos(fret)) / 2,
             key: "n" + string + "_" + fret,
           };
-          if (normalized_notes.includes(num)) {
+          if (this.clickedKeys.includes(note.key)) {
             visible.push(note);
           } else {
             hidden.push(note);
@@ -322,14 +331,22 @@ export default {
       }
       return utils.toName(x, this.notation, this.scale.notes);
     },
-
     normalize(notes) {
-      return notes.map((x) => x % 12);
+      return notes.map((x) => x % 12); // 12 tones in music, divide note by 12 to get 1 of 12 tones rather than ie 26
     },
     clickEvent(note) {
-      console.log("note clicked " + JSON.stringify(note));
       this.$emit("clickNote", note);
     },
+    // showFret(fret){ //this may not be needed, written to create conditional variable based on fret number
+    //   if(this.minFret == null || this.maxFret == null){
+    //     return true; //if no min or max fret, return true, all frets shown
+    //   }
+    //   if(this.minFret !=null && this.maxFret != null){
+    //     if(this.minFret <= fret && fret <= this.maxFret){
+    //       return true; // if fret within given limits, show note
+    //     }
+    //   }
+    // },
   },
 };
 </script>

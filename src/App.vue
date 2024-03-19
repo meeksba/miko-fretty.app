@@ -99,6 +99,18 @@
             >Ear Training</b-button
           >
         </router-link>
+        <!-- Explore Space Button -->
+        <router-link to="/ExploreSpace">
+          <b-button
+            @click="
+              showInterval = !showInterval;
+              showHome = false;
+            "
+            type="is-rounded is-info is-light"
+            outlined
+            >Explore Space</b-button
+          >
+        </router-link>
       </div>
       <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
       <div v-if="showHome">
