@@ -18,23 +18,10 @@
       >
         <div class="p-1">
           <b-menu>
-            <b-menu-list label="Games">
-              <b-menu-item
-                icon="gamepad"
-                label="Scale Identification Game"
-              ></b-menu-item>
-              <b-menu-item
-                icon="gamepad"
-                label="Scale Building Game"
-              ></b-menu-item>
-              <b-menu-item icon="gamepad" label="Ear Training Games">
-              </b-menu-item>
-              <b-menu-item icon="gamepad" label="Explore Page"> </b-menu-item>
-            </b-menu-list>
             <b-menu-list label="Account">
               <b-menu-item icon="user" label="My Account">
                 <b-menu-item
-                  v-if="userLoggedIn"
+                  v-if="!userLoggedIn"
                   label="Login"
                   @click="showLogin = true"
                 ></b-menu-item>

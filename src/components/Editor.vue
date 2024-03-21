@@ -34,6 +34,7 @@
             <!-- Tonic + Scale -->
             <b-field label="Tonic:">
               <b-input
+                password-reveal
                 v-model="scale.tonic"
                 icon="music"
                 style="max-width: 100px"
