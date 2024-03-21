@@ -1,97 +1,68 @@
 <template>
   <div>
     <section>
-      <b-button
-        @click="open = true"
-        size="is-medium"
-        icon-right="bars"
-        type="is-ghost is-rounded"
-        class="is-pulled-right"
-      ></b-button>
-      <b-sidebar
-        type="is-light"
-        :fullheight="true"
-        :fullwidth="false"
-        :overlay="false"
-        :right="true"
-        v-model="open"
-      >
-        <div class="p-1">
-          <b-menu>
-            <b-menu-list label="Account">
-              <b-menu-item icon="user" label="My Account">
-                <b-menu-item
-                  v-if="!userLoggedIn"
-                  label="Login"
-                  @click="showLogin = true"
-                ></b-menu-item>
-                <b-menu-item
-                  v-if="!userLoggedIn"
-                  label="Register"
-                  @click="showRegister = true"
-                ></b-menu-item>
-              </b-menu-item>
-            </b-menu-list>
-            <b-menu-list label="App Settings">
-              <b-switch
-                @input="changeBackground()"
-                v-model="lightMode"
-                passive-type="is-dark"
-                type="is-warning"
-              >
-                {{ lightMode ? "Light Mode" : "Dark Mode" }}
-              </b-switch>
-            </b-menu-list>
-          </b-menu>
-        </div>
-      </b-sidebar>
-      <!-- Sidebar Button -->
       <!-- Home Page Button -->
-      <router-link to="/">
-        <b-tooltip label="Home Page" position="is-right">
-          <b-button
-            @click="homePage()"
-            size="is-medium"
-            icon-right="home"
-            type="is-ghost is-rounded"
-          ></b-button>
-        </b-tooltip>
-      </router-link>
-      <b-tooltip label="Scale Identification Game" position="is-bottom">
-        <b-button
-          @click="homePage()"
-          size="is-medium"
-          icon-right="search"
-          type="is-ghost is-rounded"
-        ></b-button>
-      </b-tooltip>
-      <b-button
-        @click="homePage()"
-        size="is-medium"
-        icon-right="hammer"
-        type="is-ghost is-rounded"
-      ></b-button>
-      <b-button
-        @click="homePage()"
-        size="is-medium"
-        icon-right="headphones"
-        type="is-ghost is-rounded"
-      ></b-button>
-      <b-button
-        @click="homePage()"
-        size="is-medium"
-        icon-right="book-open"
-        type="is-ghost is-rounded"
-      ></b-button>
+      <b-field>
+        <router-link to="/">
+          <b-tooltip label="Home Page" position="is-right">
+            <b-button
+              @click="homePage()"
+              size="is-medium"
+              icon-right="home"
+              type="is-ghost is-rounded"
+              outlined
+            ></b-button>
+          </b-tooltip>
+        </router-link>
+        <!-- Account Button (Dropdown) -->
+        <b-dropdown aria-role="list">
+          <template #trigger="{}">
+            <b-button
+              :label=" userLoggedIn ? 'Signed In' : ''"
+              icon-left="user"
+              type="is-ghost is-rounded"
+              style="margin-top:5px"
+              outlined
+            />
+          </template>
+          <!-- Login -->
+          <b-dropdown-item v-if="!userLoggedIn" @click="showLogin = true">
+            Login
+          </b-dropdown-item>
+          <!-- Register -->
+          <b-dropdown-item v-if="!userLoggedIn" @click="showRegister = true">
+            Register
+          </b-dropdown-item>
+          <!-- Account Info -->
+          <router-link to="/AccountPage">
+            <b-dropdown-item v-if="userLoggedIn" @click="showHome = false; showAccountInfo=true">
+              Account Info
+            </b-dropdown-item>
+          </router-link>
+          <!-- Logout -->
+          <b-dropdown-item v-if="userLoggedIn" @click="logOut()">
+            Logout
+          </b-dropdown-item>
+        </b-dropdown>
+        <!-- Dark Mode Switch -->
+        <b-switch
+          @input="changeBackground()"
+          v-model="lightMode"
+          passive-type="is-dark"
+          type="is-warning"
+        >
+          {{ lightMode ? "Light Mode" : "Dark Mode" }}
+        </b-switch>
+      </b-field>
     </section>
 
     <section class="section">
-      <div class="has-text-centered" style="margin-bottom: 20px">
+      <div v-if="!showAccountInfo" class="has-text-centered" style="margin-top: -20px;">
         <!-- Scale Identification Button -->
         <router-link to="/IdentifyGame">
           <b-button
             @click="
-              showGame = !showGame;
+              showIdentify = !showIdentify;
               showHome = false;
             "
             type="is-rounded is-info is-light"
@@ -136,14 +107,14 @@
           >
         </router-link>
       </div>
-      <!-- <b-button class="is-pulled-right" icon-left="user"> Profile </b-button> -->
+      <!-- <b-button @click="loginStatus()">TEST</b-button> -->
       <div v-if="showHome">
-        <div class="container" v-for="editor in editors" v-bind:key="editor">
+        <div class="container" v-for="editor in editors" v-bind:key="editor" style="margin-top: 30px;">
           <!--<note-select />-->
           <Editor v-on:remove-fretboard="remove(editor)" />
-          <div class="has-text-centered">
-            <a @click="add">+ Add Fretboard</a>
-          </div>
+        </div>
+        <div class="has-text-centered">
+          <a @click="add">+ Add Fretboard</a>
         </div>
       </div>
     </section>
@@ -185,6 +156,9 @@
 import Editor from "./components/Editor.vue";
 import LoginForm from "./components/LoginForm.vue";
 import RegisterForm from "./components/RegisterForm.vue";
+import firebase from "firebase/compat/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "firebase/compat/auth";
 // import IdentifyGame from "./Views/IdentifyGame.vue";
 // import BuildGame from "./Views/BuildGame.vue";
 // import EarTraining from "./Views/EarTraining.vue";
@@ -201,7 +175,8 @@ export default {
     return {
       editors: [1],
       showHome: true,
-      showGame: false,
+      showAccountInfo: false,
+      showIdentify: false,
       showBuild: false,
       showInterval: false,
       userLoggedIn: false,
@@ -210,6 +185,9 @@ export default {
       showLogin: false,
       showRegister: false,
     };
+  },
+  mounted(){
+    this.loginStatus();
   },
   methods: {
     add: function () {
@@ -229,8 +207,53 @@ export default {
     homePage() {
       this.showHome = true;
       this.showBuild = false;
-      this.showGame = false;
+      this.showIdentify = false;
       this.showInterval = false;
+    },
+    logOut() {
+      if (!this.userLoggedIn) {
+        this.$buefy.dialog.alert({
+          title: "Error",
+          message: "No User Currently Logged In",
+          type: "is-danger",
+          confirmText: "Ok",
+        });
+        return;
+      }
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log("logged out");
+          this.$buefy.dialog.alert({
+            title: "Success",
+            message: "You Have Successfully Logged Out",
+            type: "is-success",
+            confirmText: "Ok",
+          });
+        })
+        .catch((error) => {
+          console.log("log out error");
+          this.$buefy.dialog.alert({
+            title: "Error",
+            message: error.message,
+            type: "is-danger",
+            confirmText: "Ok",
+          });
+        });
+    },
+    loginStatus() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("logged in");
+          this.userLoggedIn = true;
+          return;
+        } else {
+          console.log("not logged in");
+          this.userLoggedIn = false;
+        }
+      });
     },
   },
 };

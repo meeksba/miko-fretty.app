@@ -3,9 +3,9 @@
     <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
-          <b-tooltip label="Test">
+          <!-- <b-tooltip label="Test">
             <b-button @click="testMethod">Test</b-button>
-          </b-tooltip>
+          </b-tooltip> -->
           <b-field grouped group-multiline position="is-centered">
             <!-- Tuning -->
             <b-field label="Tuning">
@@ -34,7 +34,6 @@
             <!-- Tonic + Scale -->
             <b-field label="Tonic:">
               <b-input
-                password-reveal
                 v-model="scale.tonic"
                 icon="music"
                 style="max-width: 100px"

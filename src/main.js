@@ -5,9 +5,11 @@ import IdentifyGame from "./Views/IdentifyGame.vue";
 import BuildGame from "./Views/BuildGame.vue";
 import EarTraining from "./Views/EarTraining.vue";
 import ExploreSpace from "./Views/ExploreSpace.vue";
-import LoginPage from "./Views/LoginPage.vue";
+import AccountPage from "./Views/AccountPage.vue";
 import store from "./store.js";
+import { ToastProgrammatic as ToastNotif } from 'buefy/src'
 import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 // import 'firebase/compat/auth'
 // import Buefy from "buefy/src";
 import {
@@ -57,6 +59,8 @@ import {
   faHammer,
   faHeadphones,
   faBookOpen,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -80,7 +84,9 @@ library.add(
   faSearch,
   faHammer,
   faHeadphones,
-  faBookOpen
+  faBookOpen,
+  faEye,
+  faEyeSlash
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 
@@ -153,15 +159,34 @@ const routes = [
     component: ExploreSpace,
   },
   {
-    path: "/LoginPage",
-    name: "LoginPage",
-    component: LoginPage,
+    path: "/AccountPage",
+    name: "AccountPage",
+    component: AccountPage,
+    meta: { authRequired: true },
   },
 ];
 
 const router = new VueRouter({
   mode: "history",
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.authRequired)) {
+    if (firebase.auth().currentUser) {
+      next();
+    } else {
+      ToastNotif.open({
+        duration: 3000,
+        message: "You Must Be Logged On to Access This",
+        position: "is-top",
+        type: "is-danger",
+      });
+      return;
+    }
+  } else {
+    next();
+  }
 });
 
 window.onload = function () {
