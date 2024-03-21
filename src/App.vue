@@ -18,10 +18,10 @@
         <b-dropdown aria-role="list">
           <template #trigger="{}">
             <b-button
-              :label=" userLoggedIn ? 'Signed In' : ''"
+              :label="userLoggedIn ? 'Signed In' : ''"
               icon-left="user"
               type="is-ghost is-rounded"
-              style="margin-top:5px"
+              style="margin-top: 5px"
               outlined
             />
           </template>
@@ -35,7 +35,13 @@
           </b-dropdown-item>
           <!-- Account Info -->
           <router-link to="/AccountPage">
-            <b-dropdown-item v-if="userLoggedIn" @click="showHome = false; showAccountInfo=true">
+            <b-dropdown-item
+              v-if="userLoggedIn"
+              @click="
+                showHome = false;
+                showAccountInfo = true;
+              "
+            >
               Account Info
             </b-dropdown-item>
           </router-link>
@@ -57,7 +63,11 @@
     </section>
 
     <section class="section">
-      <div v-if="!showAccountInfo" class="has-text-centered" style="margin-top: -20px;">
+      <div
+        v-if="!showAccountInfo"
+        class="has-text-centered"
+        style="margin-top: -20px"
+      >
         <!-- Scale Identification Button -->
         <router-link to="/IdentifyGame">
           <b-button
@@ -109,7 +119,12 @@
       </div>
       <!-- <b-button @click="loginStatus()">TEST</b-button> -->
       <div v-if="showHome">
-        <div class="container" v-for="editor in editors" v-bind:key="editor" style="margin-top: 30px;">
+        <div
+          class="container"
+          v-for="editor in editors"
+          v-bind:key="editor"
+          style="margin-top: 30px"
+        >
           <!--<note-select />-->
           <Editor v-on:remove-fretboard="remove(editor)" />
         </div>
@@ -186,7 +201,7 @@ export default {
       showRegister: false,
     };
   },
-  mounted(){
+  mounted() {
     this.loginStatus();
   },
   methods: {
@@ -206,6 +221,7 @@ export default {
     },
     homePage() {
       this.showHome = true;
+      this.showAccountInfo = false;
       this.showBuild = false;
       this.showIdentify = false;
       this.showInterval = false;

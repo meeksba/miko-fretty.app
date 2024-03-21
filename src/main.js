@@ -7,8 +7,9 @@ import EarTraining from "./Views/EarTraining.vue";
 import ExploreSpace from "./Views/ExploreSpace.vue";
 import AccountPage from "./Views/AccountPage.vue";
 import store from "./store.js";
-import { ToastProgrammatic as ToastNotif } from 'buefy/src'
+import { ToastProgrammatic as ToastNotif } from "buefy/src";
 import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 import "firebase/compat/auth";
 // import 'firebase/compat/auth'
 // import Buefy from "buefy/src";
@@ -130,12 +131,13 @@ const firebaseConfig = {
   appId: "1:857699131525:web:da64b1713687c8fd2789ec",
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 Vue.config.productionTip = false;
 
+export const db = firebase.firestore();
+
 Vue.use(VueRouter);
+// Vue.use(VueFire);
 
 const routes = [
   {

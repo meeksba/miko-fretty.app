@@ -140,6 +140,18 @@ import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
+import {
+  // getFirestore,
+  // onSnapshot,
+  collection,
+  // doc,
+  // setDoc,
+  addDoc,
+  // orderBy,
+  // query,
+} from "firebase/firestore";
+import firebase from "firebase/compat/app";
+import { db } from "../main.js";
 // import NoteSelect from "./NoteSelect.vue";
 import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
@@ -178,9 +190,10 @@ export default {
       ShowBegin: true,
       playerTonic: null,
       playerScale: null,
-      correctAnswer: null,
       questionCount: 5,
       userScore: 0,
+      compiledQuizInfo: [],
+      quizQuestions: [],
     };
   },
 
@@ -262,7 +275,6 @@ export default {
           break;
         }
       }
-      this.correctAnswer = tonic;
       this.scale.tonic = tonic; //update on screen fretboard with new tonic
 
       return tonic;
@@ -304,6 +316,11 @@ export default {
 
     submit_answer() {
       this.playerTonic = this.playerTonic.toUpperCase();
+
+      this.quizQuestions.push({
+        Answer: this.scale.tonic + " " + this.scale.type,
+        Player_Answer: this.playerTonic + this.playerScale,
+      });
       if (
         this.playerTonic + this.playerScale ==
         this.scale.tonic + this.scale.type
@@ -346,6 +363,7 @@ export default {
           this.$buefy.dialog.alert({
             message: `Thank you for playing the Identify Scale Game! You scored ${this.userScore}% `,
           });
+          this.addToCollection();
           this.StartGame = false;
           this.ShowBegin = true;
           this.questionCount = 5;
@@ -357,6 +375,19 @@ export default {
     clickHandle(note) {
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
+    },
+
+    addToCollection() {
+      addDoc(collection(db, "IdentifyQuizzes"), {
+        userID: firebase.auth().currentUser.uid,
+        date: Date.now(),
+        mode: this.gameMode,
+        difficulty: this.gameDifficulty,
+        tuning: this.usr_tuning,
+        score: this.userScore,
+        questions: this.quizQuestions,
+      });
+      console.log("added data");
     },
 
     testMethod() {

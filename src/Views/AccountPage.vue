@@ -1,44 +1,54 @@
 <template>
-  <b-table :data="data" :columns="columns"></b-table>
+  <div>
+    <b-table :data="data" :columns="columns"></b-table>
+    <b-button @click="testMethod()"> Test </b-button>
+  </div>
 </template>
 
 <script>
-  export default {
-      data() {
-          return {
-              data: [
-                  { 'id': 1, 'first_name': 'Jesse', 'last_name': 'Simmons', 'date': '2016-10-15 13:43:27', 'gender': 'Male' },
-                  { 'id': 2, 'first_name': 'John', 'last_name': 'Jacobs', 'date': '2016-12-15 06:00:53', 'gender': 'Male' },
-                  { 'id': 3, 'first_name': 'Tina', 'last_name': 'Gilbert', 'date': '2016-04-26 06:26:28', 'gender': 'Female' },
-                  { 'id': 4, 'first_name': 'Clarence', 'last_name': 'Flores', 'date': '2016-04-10 10:28:46', 'gender': 'Male' },
-                  { 'id': 5, 'first_name': 'Anne', 'last_name': 'Lee', 'date': '2016-12-06 14:38:38', 'gender': 'Female' }
-              ],
-              columns: [
-                  {
-                      field: 'id',
-                      label: 'ID',
-                      width: '40',
-                      numeric: true
-                  },
-                  {
-                      field: 'first_name',
-                      label: 'First Name',
-                  },
-                  {
-                      field: 'last_name',
-                      label: 'Last Name',
-                  },
-                  {
-                      field: 'date',
-                      label: 'Date',
-                      centered: true
-                  },
-                  {
-                      field: 'gender',
-                      label: 'Gender',
-                  }
-              ]
-          }
-      }
-  }
+// import firebase from "firebase/compat/app";
+import {
+  // getFirestore,
+  onSnapshot,
+  collection,
+  // doc,
+  // setDoc,
+  // addDoc,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { ref } from "vue";
+import { db } from "../main.js";
+export default {
+  data: function () {
+    return {
+      information: ref([]),
+    };
+  },
+
+  mounted() {
+    let temp = this.getData();
+    console.log("data: ", temp)
+  },
+
+  methods: {
+    testMethod() {
+      // let user = firebase.auth().currentUser.uid;
+      let temp = this.getData();
+      console.log("info ", temp);
+    },
+    getData() {
+      let currentQuery = query(
+        collection(db, "IdentifyQuizzes"),
+        orderBy("userID")
+      );
+      onSnapshot(currentQuery, (snapshot) => {
+        this.information = snapshot.docs.map((doc) => {
+          return doc.data();
+        });
+        console.log("info ", this.information);
+      });
+    },
+  },
+};
 </script>
