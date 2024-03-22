@@ -1,7 +1,7 @@
 <template>
   <div>
     <section>
-      <b-button @click="testMethod()"> Test </b-button>
+      <b-button @click="testMethod()"> LoggedIn? </b-button>
 
       <!-- Home Page Button -->
       <b-field>

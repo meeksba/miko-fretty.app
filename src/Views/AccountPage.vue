@@ -1,71 +1,174 @@
 <template>
   <section>
+    <!-- Navigation Buttons -->
+    <div class="has-text-centered">
+      <b-button
+        @click="showIdentity = !showIdentity"
+        type="is-rounded is-info is-light"
+        outlined
+        >Scale Identification History</b-button
+      >
+      <b-button
+        @click="showBuild = !showBuild"
+        type="is-rounded is-info is-light"
+        outlined
+        >Scale Building History</b-button
+      >
+    </div>
     <b-button @click="testMethod()">testaccountpage </b-button>
-    <b-table :data="information" striped label="Identify Scale Game">
-      <b-table-column field="userID" label="Name of Game" width="40">
-        Identify Scale Game
-      </b-table-column>
+    <!-- Identify Table -->
+    <div v-if="showIdentity">
+      <b-table :data="identityInfo" striped>
+        <b-table-column field="userID" label="Name of Game" width="40">
+          Scale Identification
+        </b-table-column>
 
-      <b-table-column
-        field="date"
-        label="Date"
-        :th-attrs="dateThAttrs"
-        :td-attrs="columnTdAttrs"
-        centered
-        v-slot="props"
-      >
-        <span class="tag is-success">
-          {{ new Date(props.row.date).toLocaleString() }}
-        </span>
-      </b-table-column>
-      <b-table-column
-        field="mode"
-        label="Mode"
-        :td-attrs="columnTdAttrs"
-        v-slot="props"
-      >
-        {{ props.row.mode }}
-      </b-table-column>
+        <b-table-column
+          field="date"
+          label="Date"
+          :th-attrs="dateThAttrs"
+          :td-attrs="columnTdAttrs"
+          centered
+          v-slot="props"
+        >
+          <span class="tag is-success">
+            {{ new Date(props.row.date).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+        <b-table-column
+          field="tuning"
+          label="Tuning"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.tuning }}
+        </b-table-column>
+        <b-table-column
+          field="difficulty"
+          label="Difficulty"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.difficulty }}
+        </b-table-column>
+        <b-table-column
+          field="mode"
+          label="Notation Mode"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.mode }}
+        </b-table-column>
 
-      <b-table-column
-        field="difficulty"
-        label="Difficulty"
-        :td-attrs="columnTdAttrs"
-        v-slot="props"
-      >
-        {{ props.row.difficulty }}
-      </b-table-column>
-      <b-table-column
-        field="tuning"
-        label="Tuning"
-        :td-attrs="columnTdAttrs"
-        v-slot="props"
-      >
-        {{ props.row.tuning }}
-      </b-table-column>
-      <b-table-column
-        field="score"
-        label="Score"
-        :td-attrs="columnTdAttrs"
-        numeric
-        v-slot="props"
-      >
-        {{ props.row.score }}
-      </b-table-column>
+        <b-table-column
+          field="score"
+          label="Score"
+          :td-attrs="columnTdAttrs"
+          numeric
+          v-slot="props"
+        >
+          {{ props.row.score }}
+        </b-table-column>
 
-      <b-table-column
-        field="questions"
-        label="Questions"
-        :td-attrs="columnTdAttrs"
-        centered
-        v-slot="props"
-      >
-        <div v-for="(info, index) in props.row.questions" :key="index">
-          Correct Answer: {{ info.Answer }} | Player Answer:
-          {{ info.Player_Answer }} <br />
-        </div>
-      </b-table-column>
-    </b-table>
+        <b-table-column
+          field="questions"
+          label="Questions"
+          :td-attrs="columnTdAttrs"
+          centered
+          v-slot="props"
+        >
+          <div v-for="(info, index) in props.row.questions" :key="index">
+            Correct Answer: {{ info.Answer }} | Player Answer:
+            {{ info.Player_Answer }} <br />
+          </div>
+        </b-table-column>
+      </b-table>
+    </div>
+    <!-- Build Table -->
+    <div v-if="showBuild">
+      <b-table :data="buildInfo" striped label="Identify Scale Game">
+        <b-table-column field="userID" label="Name of Game" width="40">
+          Scale Building
+        </b-table-column>
+
+        <b-table-column
+          field="date"
+          label="Date"
+          :th-attrs="dateThAttrs"
+          :td-attrs="columnTdAttrs"
+          centered
+          v-slot="props"
+        >
+          <span class="tag is-success">
+            {{ new Date(props.row.date).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+        <b-table-column
+          field="tuning"
+          label="Tuning"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.tuning }}
+        </b-table-column>
+
+        <b-table-column
+          field="difficulty"
+          label="Difficulty"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.difficulty }}
+        </b-table-column>
+        <b-table-column
+          field="notationMode"
+          label="Notation Mode"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.notationMode }}
+        </b-table-column>
+        <b-table-column
+          field="gameMode"
+          label="Game Mode"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.gameMode }}
+        </b-table-column>
+
+        <b-table-column
+          field="scaleName"
+          label="Scale/Arpeggio Name"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.scaleName }}
+        </b-table-column>
+        <b-table-column
+          field="correctNotes"
+          label="Scale/Arpeggio Notes"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          <span v-for="note in props.row.correctNotes" :key="note">
+            {{ note }}
+          </span>
+        </b-table-column>
+
+        <b-table-column
+          field="Incorrect Notes"
+          label="Wrong Notes Clicked"
+          :td-attrs="columnTdAttrs"
+          numeric
+          v-slot="props"
+        >
+          <span v-for="note in props.row.incorrectNotes" :key="note">
+            {{ note }}
+          </span>
+        </b-table-column>
+      </b-table>
+    </div>
   </section>
 </template>
 
@@ -87,24 +190,18 @@ import { db } from "../main.js";
 export default {
   data: function () {
     return {
-      information: ref([]),
+      identityInfo: ref([]),
+      buildInfo: ref([]),
       identifyQuestions: [],
-      columns: [
-        { field: "userID", label: "User ID" },
-        { field: "date", label: "Date" },
-        { field: "mode", label: "Mode" },
-        { field: "difficulty", label: "Difficulty" },
-        { field: "tuning", label: "Tuning" },
-        { field: "score", label: "Score" },
-        { field: "Answer", label: "Answer" },
-        { field: "Player_Answer", label: "Player Answer" },
-      ],
+      showIdentity: false,
+      showBuild: false,
     };
   },
 
   mounted() {
-    let temp = this.getData();
-    console.log("data: ", temp);
+    this.getIdentityData("IdentifyQuizzes");
+    this.getBuildData("BuildQuizzes");
+    // this.getData("BuildQuizzes");
   },
 
   methods: {
@@ -115,17 +212,26 @@ export default {
       // console.log("identifyquestions ", this.identifyQuestions);
       console.log("userID", firebase.auth().currentUser.uid);
     },
-    getData() {
+    getIdentityData(collectionName) {
       let currentQuery = query(
-        collection(db, "IdentifyQuizzes"),
+        collection(db, collectionName),
         where("userID", "==", firebase.auth().currentUser.uid)
       );
       onSnapshot(currentQuery, (snapshot) => {
-        this.information = snapshot.docs.map((doc) => {
-          this.identifyQuestions.push({
-            Answer: doc.data().Answer,
-            Player_Answer: doc.data().Player_Answer,
-          });
+        this.identityInfo = snapshot.docs.map((doc) => {
+          console.log("grabbingData from: ", collectionName);
+          return doc.data();
+        });
+      });
+    },
+    getBuildData(collectionName) {
+      let currentQuery = query(
+        collection(db, collectionName),
+        where("userID", "==", firebase.auth().currentUser.uid)
+      );
+      onSnapshot(currentQuery, (snapshot) => {
+        this.buildInfo = snapshot.docs.map((doc) => {
+          console.log("grabbingData from: ", collectionName);
           return doc.data();
         });
       });

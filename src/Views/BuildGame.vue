@@ -1,11 +1,11 @@
 <template>
   <div>
     <div>
-      <!-- <b-button
-      @click="testMethod"
-      label="TESTBUTTON"
-      style="margin-top: 20px"
-      /> -->
+      <b-button
+        @click="testMethod"
+        label="testbuild"
+        style="margin-top: 20px"
+      />
     </div>
     <!-- BuildGame Settings -->
     <b-dropdown append-to-body aria-role="menu" trap-focus>
@@ -125,8 +125,6 @@
           <b>{{ scale.tonic }} {{ scale.type || this.arpeggioType }} </b> on the
           Fretboard Above
         </h1>
-        <!-- Question Count -->
-        <h4>Questions Remaining: {{ questionCount }}</h4>
         <b-button
           v-if="this.gameMode == 'Scale'"
           @click="playScale"
@@ -164,6 +162,9 @@ import BuildFretboard from "../components/BuildFretboard.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
 // import * as utils from "../utils.js";
+import { collection, addDoc } from "firebase/firestore";
+import firebase from "firebase/compat/app";
+import { db } from "../main.js";
 import { Note, Scale, ScaleType, Mode, Chord } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
@@ -190,6 +191,7 @@ export default {
       frets: 18,
       scale: { tonic: "A", type: "" },
       tonicArray: ["C", "D", "E", "F", "G", "A", "B"],
+      scaleName: "",
       ShowMusicSheet: "false",
       ShowChords: "false",
       gameDifficulty: "Medium",
@@ -200,10 +202,11 @@ export default {
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
-      userScore: 0,
       tonicCount: 0,
-      questionCount: 3,
+      questionCount: 0,
+      correctCount: 0,
       ansArray: [],
+      incorrectNotes: [],
       clickedKeys: [],
       clickedNotes: [],
     };
@@ -289,14 +292,24 @@ export default {
       this.calculateTonic(); //set initial tonic
       if (this.gameMode == "Scale") {
         this.calculateScaleType(); //create scale based on tonic
+        this.scaleName = this.scale.tonic + " " + this.scale.type;
         this.ansArray =
           this.notationMode == "Note"
             ? this.scale_notes
             : this.scale_info.intervals;
+        // this.questionCount = this.ansArray.length + 1;
+        // console.log("questionCount: ", this.questionCount)
+
         return;
       }
       this.calculateArpeggioType();
-      this.ansArray = Chord.notes(this.arpeggioType, this.scale.tonic);
+      this.scaleName = this.scale.tonic + " " + this.arpeggioType;
+      this.ansArray =
+        this.notationMode == "Note"
+          ? Chord.notes(this.arpeggioType, this.scale.tonic)
+          : Chord.get(this.arpeggioType, this.scale.tonic).intervals;
+      // this.questionCount = this.ansArray.length + 1;
+      // console.log("questionCount: ", this.questionCount)
     },
     calculateArpeggioType() {
       let randInt = Math.random();
@@ -380,6 +393,7 @@ export default {
           }
         }
         if (!this.ansArray.includes(name)) {
+          this.incorrectNotes.push(note.name);
           this.alertMessages("wrong");
           return;
         }
@@ -389,6 +403,7 @@ export default {
           console.log("Buildgame done ");
           this.alertMessages("end");
         }
+        // this.correctCount++;
         this.alertMessages("correct");
       }
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
@@ -440,6 +455,7 @@ export default {
           this.$buefy.dialog.alert({
             message: `Thank you for playing the Build Scale Game!`,
           });
+          this.addToCollection();
           this.fretboardNotation = "sharp";
           this.StartGame = false;
           this.ShowSettings = false;
@@ -451,11 +467,31 @@ export default {
       }
     },
 
+    addToCollection() {
+      addDoc(collection(db, "BuildQuizzes"), {
+        userID: firebase.auth().currentUser.uid,
+        date: Date.now(),
+        difficulty: this.gameDifficulty,
+        notationMode: this.notationMode, // interval or note
+        gameMode: this.gameMode, //scale or arpeggio
+        tuning: this.usr_tuning,
+        scaleName: this.scaleName,
+        correctNotes: this.ansArray,
+        incorrectNotes: this.incorrectNotes,
+      });
+      console.log("Added to DB");
+    },
+
     testMethod() {
       // console.log("scale info ", this.scale_info);
       // console.log("ansarray: ",this.ansArray)
+      // console.log("incoreeect: ",this.incorrectNotes)
+      // let temp = Chord.get(this.arpeggioType, this.scale.tonic).intervals;
+      // let temp2 = Chord.notes(this.arpeggioType, this.scale.tonic);
+      // console.log("arpeggio: ", temp);
+      // console.log("arpeggio: ", temp2)
       // console.log("clicked notes: ", this.clickedNotes);
-      // console.log("ansarray: ",this.ansArray)
+      console.log("ansarray: ", this.ansArray);
       // console.log("clickednotes " + JSON.stringify(this.scale_notes, null, 2));
     },
   },

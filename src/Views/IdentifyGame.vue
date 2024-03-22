@@ -140,16 +140,7 @@ import IdentifyFretboard from "../components/IdentifyFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
 import TuningSelection from "../components/TuningSelection.vue";
-import {
-  // getFirestore,
-  // onSnapshot,
-  collection,
-  // doc,
-  // setDoc,
-  addDoc,
-  // orderBy,
-  // query,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 import { db } from "../main.js";
 // import NoteSelect from "./NoteSelect.vue";
@@ -387,7 +378,6 @@ export default {
         score: this.userScore,
         questions: this.quizQuestions,
       });
-      console.log("added data");
     },
 
     testMethod() {
