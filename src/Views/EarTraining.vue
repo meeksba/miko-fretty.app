@@ -146,17 +146,33 @@
                 placeholder="Select an Interval"
                 icon="account"
               >
-                <option value="2m">Minor 2nd</option>
-                <option value="2M">Major 2nd</option>
+                <option v-if="gameDifficulty == 'Hard'" value="2m">
+                  Minor 2nd
+                </option>
+                <option v-if="gameDifficulty == 'Hard'" value="2M">
+                  Major 2nd
+                </option>
                 <option value="3m">Minor 3rd</option>
                 <option value="3M">Major 3rd</option>
-                <option value="4P">Perfect 4th</option>
-                <option value="5d">Diminished 5th</option>
+                <option v-if="gameDifficulty == 'Hard'" value="4P">
+                  Perfect 4th
+                </option>
+                <option v-if="gameDifficulty == 'Hard'" value="5d">
+                  Diminished 5th
+                </option>
                 <option value="5P">Perfect 5th</option>
-                <option value="6m">Minor 6th</option>
-                <option value="6M">Major 6th</option>
-                <option value="7m">Minor 7th</option>
-                <option value="7M">Major 7th</option>
+                <option v-if="gameDifficulty == 'Hard'" value="6m">
+                  Minor 6th
+                </option>
+                <option v-if="gameDifficulty == 'Hard'" value="6M">
+                  Major 6th
+                </option>
+                <option v-if="gameDifficulty == 'Hard'" value="7m">
+                  Minor 7th
+                </option>
+                <option v-if="gameDifficulty == 'Hard'" value="7M">
+                  Major 7th
+                </option>
                 <option value="8P">Octave</option>
               </b-select>
             </b-field>
@@ -268,6 +284,7 @@ export default {
         "7M",
         "8P",
       ],
+      easyIntervals: ["3m", "3M", "5P", "8P"],
       gameDifficulty: "",
       gameMode: "ChordMode",
       fretboardNotation: "flat",
@@ -383,20 +400,13 @@ export default {
       return tonic;
     },
     calculateIntervalAns() {
-      //This method calculates a random interval for the interval game
-      let root =
-        this.gameDifficulty == "Easy"
-          ? "C3"
-          : this.calculateRandomElement(this.chromaticScale) + "3";
-      this.intervalAns = this.calculateRandomElement(this.chromaticIntervals); //pick random interval
-      while (this.previousIntervals.includes(this.intervalAns)) {
-        this.intervalAns = this.calculateRandomElement(this.chromaticIntervals); //ensure duplicate intervals not chosen in easy mode
-      }
-      if (this.gameDifficulty == "Easy") {
-        this.previousIntervals.push(this.intervalAns); // Easy mode: ensure no duplicate intervals chosen
-      }
-      let secondNote = Note.transpose(root, this.intervalAns); //Pass in root and interval to get 2nd note in interval
+      let root = this.calculateRandomElement(this.chromaticScale) + "3";
+      this.intervalAns =
+        this.gameDifficulty == "Easy" //if easy, ans can only be 3M,
+          ? this.calculateRandomElement(this.easyIntervals)
+          : this.calculateRandomElement(this.chromaticIntervals);
 
+      let secondNote = Note.transpose(root, this.intervalAns); //Pass in root and interval to get 2nd note in interval
       this.intervalNotes = [root, secondNote];
     },
 
