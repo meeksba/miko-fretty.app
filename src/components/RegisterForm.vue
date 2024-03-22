@@ -76,7 +76,7 @@ export default {
         .then(() => {
           this.$buefy.dialog.alert({
             title: "Success",
-            message: "You Have Successfully Registered, Please Login",
+            message: "You Have Successfully Registered, You Are Now Signed In",
             type: "is-success",
             confirmText: "Ok",
           });

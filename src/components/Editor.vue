@@ -32,14 +32,14 @@
             </b-field>
 
             <!-- Tonic + Scale -->
-            <b-field label="Tonic:">
+            <b-field label="Tonic">
               <b-input
                 v-model="scale.tonic"
                 icon="music"
                 style="max-width: 100px"
               ></b-input>
             </b-field>
-            <b-field label="Scale:">
+            <b-field label="Scale">
               <b-autocomplete
                 v-model="scale.type"
                 :data="scale_search"

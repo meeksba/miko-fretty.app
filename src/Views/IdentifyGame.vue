@@ -80,7 +80,7 @@
             class="columns is-multiline is-centered"
             style="margin-top: 10px"
           >
-            <b-field class="Tonic" label="Tonic:">
+            <b-field class="Tonic" label="Tonic">
               <b-input
                 v-model="playerTonic"
                 icon="music"
@@ -319,7 +319,7 @@ export default {
 
       this.quizQuestions.push({
         Answer: this.scale.tonic + " " + this.scale.type,
-        Player_Answer: this.playerTonic + this.playerScale,
+        Player_Answer: this.playerTonic + " " + this.playerScale,
       });
       if (
         this.playerTonic + this.playerScale ==

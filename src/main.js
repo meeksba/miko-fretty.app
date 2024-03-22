@@ -62,6 +62,8 @@ import {
   faBookOpen,
   faEye,
   faEyeSlash,
+  faArrowUp,
+  faArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -87,7 +89,9 @@ library.add(
   faHeadphones,
   faBookOpen,
   faEye,
-  faEyeSlash
+  faEyeSlash,
+  faArrowUp,
+  faArrowDown
 );
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 

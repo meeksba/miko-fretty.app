@@ -1,6 +1,8 @@
 <template>
   <div>
     <section>
+      <b-button @click="testMethod()"> Test </b-button>
+
       <!-- Home Page Button -->
       <b-field>
         <router-link to="/">
@@ -270,6 +272,9 @@ export default {
           this.userLoggedIn = false;
         }
       });
+    },
+    testMethod() {
+      this.loginStatus();
     },
   },
 };
