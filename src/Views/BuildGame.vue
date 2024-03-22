@@ -1,11 +1,11 @@
 <template>
   <div>
     <div>
-      <b-button
+      <!-- <b-button
         @click="testMethod"
         label="testbuild"
         style="margin-top: 20px"
-      />
+      /> -->
     </div>
     <!-- BuildGame Settings -->
     <b-dropdown append-to-body aria-role="menu" trap-focus>

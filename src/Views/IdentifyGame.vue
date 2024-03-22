@@ -1,11 +1,11 @@
 <template>
   <div>
-    <b-button
+    <!-- <b-button
       @click="testMethod"
       label="TESTBUTTON"
       style="margin-top: 40px"
       class="has-text-centered"
-    />
+    /> -->
     <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 50px">
       Identify the Scale Shown
     </h1>

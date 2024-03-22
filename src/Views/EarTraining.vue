@@ -240,7 +240,7 @@ for (var scale of ScaleType.all()) {
 }
 
 export default {
-  name: "ListeningGames",
+  name: "EarTraining",
 
   components: {
     ListeningFretboard,

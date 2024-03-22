@@ -169,12 +169,6 @@
         v-if="this.ShowMusicSheet == 'true'"
         :notes="this.clickedNotes"
       />
-      <b-button
-        style="margin-bottom: 75px"
-        @click="$emit('remove-fretboard')"
-        icon-left="trash"
-        >Remove Fretboard</b-button
-      >
     </div>
     <router-view></router-view>
   </div>

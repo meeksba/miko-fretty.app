@@ -1,8 +1,9 @@
+// import {Sampler, start, Tone} from 'tone';
 /* eslint-disable */
-import * as Tone from 'tone';
+import { Sampler, start, Transport, Sequence }from 'tone';
 import { Chord } from 'tonal';
 
-export const guitarSounds = new Tone.Sampler({
+export const guitarSounds = new Sampler({
 	urls: {
         'F4': 'F4.[mp3|ogg]',
         'F#2': 'Fs2.[mp3|ogg]',
@@ -192,12 +193,11 @@ export function flatToSharp(scale) {
 
 export function playNote(key){
     let note = fretNote[key]
-    Tone.start();
+    start();
     guitarSounds.triggerAttackRelease([note] , 0.75);
 }
-
 export function playNoteByName(name){
-    Tone.start();
+    start();
     guitarSounds.triggerAttackRelease(name , 0.75);
 }
 
@@ -205,7 +205,7 @@ export function playChord(type, root){
     let chord = Chord.notes(type, root + "3");
     chord.push(root + "4");  //Add octave to make fuller sound
     console.log("chord ",chord)
-    Tone.start();
+    start();
     guitarSounds.triggerAttackRelease(chord,1)
 
 }
@@ -213,43 +213,43 @@ export function playChord(type, root){
 export function playChordIndividually(type, root){
     let chord = Chord.notes(type, root + "3");
     chord.push(root + "4");  //Add octave to make fuller sound
-    Tone.start();
+    start();
     let index = 0;
-    const seq = new Tone.Sequence((time, note) => {
+    const seq = new Sequence((time, note) => {
 	    playNoteByName(note);
         index++
         if(index == chord.length){
             seq.stop();
-            Tone.Transport.stop();
+            Transport.stop();
         }
         }, chord,'4n').start(0);
-        Tone.Transport.start();
+        Transport.start();
 }
 
 export function playInterval(notes){
-    Tone.start()
+    start()
     let index = 0;
-    const seq = new Tone.Sequence((time, note) => {
+    const seq = new Sequence((time, note) => {
 	    playNoteByName(note);
         index++
         if(index == notes.length){
             seq.stop();
-            Tone.Transport.stop();
+            Transport.stop();
         }
         }, notes,'4n').start(0);
-        Tone.Transport.start();
+        Transport.start();
 }
 
 export function playScale(scale){
-    Tone.start()
+    start()
     let index = 0
-    const seq = new Tone.Sequence((time, note) => {
+    const seq = new Sequence((time, note) => {
 	    playNoteByName(note);
         index++
         if(index == scale.length){
             seq.stop();
-            Tone.Transport.stop();
+            Transport.stop();
         }
         }, scale,'4n').start(0);
-        Tone.Transport.start();
+        Transport.start();
 }
