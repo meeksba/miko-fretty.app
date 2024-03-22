@@ -220,6 +220,9 @@ export default {
       document.body.style.backgroundColor = this.lightMode
         ? "white"
         : "dimgrey";
+      document.getElementById("foot").style.backgroundColor = this.lightMode
+        ? "white"
+        : "dimgrey";
     },
     homePage() {
       this.showHome = true;

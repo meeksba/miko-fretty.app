@@ -6,10 +6,10 @@
       style="margin-top: 40px"
       class="has-text-centered"
     /> -->
-    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 50px">
+    <h1 class="has-text-centered" style="margin-top: px">
       Identify the Scale Shown
     </h1>
-    <h1 v-if="StartGame" class="has-text-centered">What Scale is This?</h1>
+    <!-- <h1 v-if="StartGame" class="has-text-centered">What Scale is This?</h1> -->
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <IdentifyFretboard
         :tuning="tuning"

@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h1 class="has-text-centered" style="margin-top: 50px; margin-bottom: 10px">
-      Explore Space
-    </h1>
+    <h1 class="has-text-centered" style="margin-bottom: 10px">Explore Space</h1>
     <div class="editor">
       <div class="columns is-multiline is-centered">
         <div class="column">
@@ -155,7 +153,9 @@
           :clickedKeys="clickedKeys"
           @clickNote="clickHandle"
         />
-        <h2 v-if="displayNotes">Notes Pressed: {{ this.clickedNotes }}</h2>
+        <h2 v-if="displayNotes" style="margin-bottom: 8px">
+          Notes Pressed: {{ this.clickedNotes }}
+        </h2>
         <h2 v-if="displayChords" style="margin-top: 5px">
           Chord(s) Detected: {{ this.chordsFound }}
         </h2>

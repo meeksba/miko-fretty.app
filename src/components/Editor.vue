@@ -131,6 +131,26 @@
                   </form>
                 </b-dropdown-item>
               </b-dropdown>
+              <b-button
+                style="margin-left: 5px; margin-top: 4px"
+                type="is-info"
+                size="is-small"
+                rounded
+                @click="showTutorial = true"
+                >TUTORIAL</b-button
+              >
+              <b-modal v-model="showTutorial">
+                <img
+                  src="./homePage.png"
+                  trap-focus
+                  style="max-width: 160%; max-height: 160%"
+                />
+              </b-modal>
+              <!-- <div><b-tag
+                type="is-success"
+                @close="testMethod">
+                Tutorial
+            </b-tag></div> -->
             </b-field>
           </b-field>
         </div>
@@ -202,6 +222,7 @@ export default {
       ShowMusicSheet: "true",
       ShowChords: "true",
       notation: "sharp",
+      showTutorial: false,
     };
   },
 

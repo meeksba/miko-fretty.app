@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 50px">
+    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 0px">
       Ear Training Games
     </h1>
     <h1
@@ -187,12 +187,12 @@
           <h4>Questions Remaining: {{ questionCount }}</h4>
         </b-field>
       </div>
-      <b-button
+      <!-- <b-button
         @click="testMethod"
         label="test button"
         style="margin-top: 40px"
         class="has-text-centered"
-      />
+      /> -->
       <!-- Score Header -->
       <h3 v-if="StartGame" class="has-text-centered" style="margin-top: 20px">
         Score

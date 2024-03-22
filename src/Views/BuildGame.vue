@@ -7,9 +7,26 @@
         style="margin-top: 20px"
       /> -->
     </div>
+    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given</h1>
+    <div class="card-image" style="text-align: center; overflow-x: auto">
+      <BuildFretboard
+        :tuning="tuning"
+        :notes="notes"
+        :notation="fretboardNotation"
+        :frets="frets"
+        :root="root"
+        :scale="scale_info"
+        :clickedKeys="clickedKeys"
+        @clickNote="clickHandle"
+      />
+    </div>
     <!-- BuildGame Settings -->
     <b-dropdown append-to-body aria-role="menu" trap-focus>
-      <b-button class="button" slot="trigger" icon-left="cog"
+      <b-button
+        class="button"
+        slot="trigger"
+        icon-left="cog"
+        style="margin-left: 40px"
         >Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
@@ -41,19 +58,6 @@
         </form>
       </b-dropdown-item>
     </b-dropdown>
-    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given</h1>
-    <div class="card-image" style="text-align: center; overflow-x: auto">
-      <BuildFretboard
-        :tuning="tuning"
-        :notes="notes"
-        :notation="fretboardNotation"
-        :frets="frets"
-        :root="root"
-        :scale="scale_info"
-        :clickedKeys="clickedKeys"
-        @clickNote="clickHandle"
-      />
-    </div>
     <section
       class="has-text-centered"
       style="

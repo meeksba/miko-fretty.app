@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import EarTraining from '../../src/Views/EarTraining.vue';
+import EarTraining from "../../src/Views/EarTraining.vue";
 
 // https://stackoverflow.com/questions/66565117/tone-js-test-with-jest-error-referenceerror-audiobuffer-is-not-defined
 jest.mock("tone", () => {

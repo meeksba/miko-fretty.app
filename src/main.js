@@ -35,6 +35,8 @@ import {
   Notification,
   Tooltip,
   Modal,
+  Tag,
+  Carousel,
 } from "buefy/src";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -118,6 +120,8 @@ Vue.use(Switch);
 Vue.use(Notification);
 Vue.use(Tooltip);
 Vue.use(Modal);
+Vue.use(Tag);
+Vue.use(Carousel);
 
 // https://buefy.org/documentation/constructor-options
 ConfigProgrammatic.setOptions({
