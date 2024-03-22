@@ -210,6 +210,9 @@ import Notation from "../components/Notation.vue";
 // import TuningSelection from "../components/TuningSelection.vue";
 // import NoteSelect from "./NoteSelect.vue";
 // import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
+import { collection, addDoc } from "firebase/firestore";
+import firebase from "firebase/compat/app";
+import { db } from "../main.js";
 import { Note, Scale, Midi, ScaleType, Mode } from "tonal";
 import { Tunings } from "../tunings.js";
 import * as guitarSounds from "../guitarsounds";
@@ -265,7 +268,7 @@ export default {
         "7M",
         "8P",
       ],
-      gameDifficulty: "Medium",
+      gameDifficulty: "",
       gameMode: "ChordMode",
       fretboardNotation: "flat",
       ShowMusicSheet: false,
@@ -278,6 +281,7 @@ export default {
       previousIntervals: [],
       intervalAns: null,
       playerAns: null,
+      quizQuestions: [],
       questionCount: 5,
       userScore: 0,
     };
@@ -438,6 +442,10 @@ export default {
     submitAnswerChordGame() {
       console.log("Player Answer: ", this.playerAns);
       console.log("Correct Answer: ", this.chordAns);
+      this.quizQuestions.push({
+        Answer: "(" + this.scale.tonic + ")" + this.chordAns,
+        Player_Answer: this.playerAns,
+      });
       if (this.playerAns == this.chordAns) {
         this.userScore += 20;
         this.playerAns = null;
@@ -456,6 +464,10 @@ export default {
     submitAnswerIntervalGame() {
       console.log("Player interval: ", this.playerAns);
       console.log("Correct interval: ", this.intervalAns);
+      this.quizQuestions.push({
+        Answer: this.intervalAns,
+        Player_Answer: this.playerAns,
+      });
       if (this.playerAns == this.intervalAns) {
         this.userScore += 20;
         this.playerAns = null;
@@ -494,6 +506,8 @@ export default {
           this.$buefy.dialog.alert({
             message: `Thank you for playing the Chord Ear Training Game! You scored ${this.userScore}% `,
           });
+          this.addToCollection();
+          this.chordAns = null;
           this.StartGame = false;
           this.ShowBegin = true;
           this.questionCount = 5;
@@ -506,6 +520,8 @@ export default {
           this.$buefy.dialog.alert({
             message: `Thank you for playing the Interval Ear Training Game! You scored ${this.userScore}% `,
           });
+          this.addToCollection();
+          this.intervalAns = null;
           this.StartGame = false;
           this.ShowBegin = true;
           this.questionCount = 5;
@@ -515,6 +531,17 @@ export default {
         // this.scale.type = "";
         // this.ShowMusicSheet = false;
       }
+    },
+    addToCollection() {
+      addDoc(collection(db, "EarTrainingQuizzes"), {
+        userID: firebase.auth().currentUser.uid,
+        date: Date.now(),
+        mode: this.gameMode,
+        difficulty: this.gameDifficulty,
+        score: this.userScore,
+        questions: this.quizQuestions,
+      });
+      console.log("Added to Ear DB");
     },
 
     testMethod() {

@@ -3,16 +3,34 @@
     <!-- Navigation Buttons -->
     <div class="has-text-centered">
       <b-button
-        @click="showIdentity = !showIdentity"
+        @click="
+          showIdentity = true;
+          showBuild = false;
+          showEar = false;
+        "
         type="is-rounded is-info is-light"
         outlined
         >Scale Identification History</b-button
       >
       <b-button
-        @click="showBuild = !showBuild"
+        @click="
+          showBuild = true;
+          showIdentity = false;
+          showEar = false;
+        "
         type="is-rounded is-info is-light"
         outlined
         >Scale Building History</b-button
+      >
+      <b-button
+        @click="
+          showEar = true;
+          showIdentity = false;
+          showBuild = false;
+        "
+        type="is-rounded is-info is-light"
+        outlined
+        >Ear Training History</b-button
       >
     </div>
     <b-button @click="testMethod()">testaccountpage </b-button>
@@ -67,19 +85,28 @@
           numeric
           v-slot="props"
         >
-          {{ props.row.score }}
+          {{ props.row.score }}%
         </b-table-column>
 
         <b-table-column
-          field="questions"
-          label="Questions"
+          field="correctNotes"
+          label="Correct Answer"
           :td-attrs="columnTdAttrs"
-          centered
           v-slot="props"
         >
-          <div v-for="(info, index) in props.row.questions" :key="index">
-            Correct Answer: {{ info.Answer }} | Player Answer:
-            {{ info.Player_Answer }} <br />
+          <div v-for="(elem, index) in props.row.questions" :key="index">
+            {{ elem.Answer }}
+          </div>
+        </b-table-column>
+
+        <b-table-column
+          field="playerAnser"
+          label="Player Answer"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          <div v-for="(elem, index) in props.row.questions" :key="index">
+            {{ elem.Player_Answer }}
           </div>
         </b-table-column>
       </b-table>
@@ -169,6 +196,75 @@
         </b-table-column>
       </b-table>
     </div>
+    <!-- Ear Training Table -->
+    <div v-if="showEar">
+      <b-table :data="earInfo" striped label="Ear Training Game">
+        <b-table-column field="userID" label="Name of Game" width="40">
+          Ear Training
+        </b-table-column>
+
+        <b-table-column
+          field="date"
+          label="Date"
+          :th-attrs="dateThAttrs"
+          :td-attrs="columnTdAttrs"
+          centered
+          v-slot="props"
+        >
+          <span class="tag is-success">
+            {{ new Date(props.row.date).toLocaleDateString() }}
+          </span>
+        </b-table-column>
+
+        <b-table-column
+          field="gameMode"
+          label="Game Mode"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.mode }}
+        </b-table-column>
+        <b-table-column
+          field="difficulty"
+          label="Difficulty"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.difficulty }}
+        </b-table-column>
+
+        <b-table-column
+          field="score"
+          label="Score"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          {{ props.row.score }}%
+        </b-table-column>
+
+        <b-table-column
+          field="correctNotes"
+          label="Correct Answer"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          <div v-for="(elem, index) in props.row.questions" :key="index">
+            {{ elem.Answer }}
+          </div>
+        </b-table-column>
+
+        <b-table-column
+          field="playerAnser"
+          label="Player Answer"
+          :td-attrs="columnTdAttrs"
+          v-slot="props"
+        >
+          <div v-for="(elem, index) in props.row.questions" :key="index">
+            {{ elem.Player_Answer }}
+          </div>
+        </b-table-column>
+      </b-table>
+    </div>
   </section>
 </template>
 
@@ -192,15 +288,17 @@ export default {
     return {
       identityInfo: ref([]),
       buildInfo: ref([]),
-      identifyQuestions: [],
+      earInfo: ref([]),
       showIdentity: false,
       showBuild: false,
+      showEar: false,
     };
   },
 
   mounted() {
     this.getIdentityData("IdentifyQuizzes");
     this.getBuildData("BuildQuizzes");
+    this.getEarData("EarTrainingQuizzes");
     // this.getData("BuildQuizzes");
   },
 
@@ -231,6 +329,18 @@ export default {
       );
       onSnapshot(currentQuery, (snapshot) => {
         this.buildInfo = snapshot.docs.map((doc) => {
+          console.log("grabbingData from: ", collectionName);
+          return doc.data();
+        });
+      });
+    },
+    getEarData(collectionName) {
+      let currentQuery = query(
+        collection(db, collectionName),
+        where("userID", "==", firebase.auth().currentUser.uid)
+      );
+      onSnapshot(currentQuery, (snapshot) => {
+        this.earInfo = snapshot.docs.map((doc) => {
           console.log("grabbingData from: ", collectionName);
           return doc.data();
         });

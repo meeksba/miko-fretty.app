@@ -183,7 +183,6 @@ export default {
       playerScale: null,
       questionCount: 5,
       userScore: 0,
-      compiledQuizInfo: [],
       quizQuestions: [],
     };
   },
