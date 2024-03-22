@@ -1,3 +1,4 @@
+<!-- https://www.youtube.com/watch?v=skaPoOhp4OI -->
 <template>
   <section>
     <!-- Navigation Buttons -->
@@ -310,6 +311,8 @@ export default {
       // console.log("identifyquestions ", this.identifyQuestions);
       console.log("userID", firebase.auth().currentUser.uid);
     },
+    // https://stackoverflow.com/questions/70460935/read-collection-in-firebase-from-vue-js
+    // https://stackoverflow.com/questions/47065982/how-to-query-one-field-then-order-by-another-one-in-firebase-cloud-firestore
     getIdentityData(collectionName) {
       let currentQuery = query(
         collection(db, collectionName),

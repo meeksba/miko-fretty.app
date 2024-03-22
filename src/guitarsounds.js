@@ -1,5 +1,9 @@
 // import {Sampler, start, Tone} from 'tone';
 /* eslint-disable */
+// https://tonejs.github.io
+
+// https://github.com/nbrosowsky/tonejs-instruments?tab=readme-ov-file
+// Sounds from above
 import { Sampler, start, Transport, Sequence }from 'tone';
 import { Chord } from 'tonal';
 

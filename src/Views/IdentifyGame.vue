@@ -26,6 +26,21 @@
       class="has-text-centered"
       style="display: flex; flex-direction: column; align-items: center"
     >
+      <b-button
+        style="margin-left: 5px; margin-top: -45px; margin-bottom: 20px"
+        type="is-info"
+        size="is-small"
+        rounded
+        @click="showTutorial = true"
+        >TUTORIAL</b-button
+      >
+      <b-modal v-model="showTutorial">
+        <img
+          src="./identify.png"
+          trap-focus
+          style="max-width: 160%; max-height: 160%"
+        />
+      </b-modal>
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
@@ -181,6 +196,7 @@ export default {
       ShowBegin: true,
       playerTonic: null,
       playerScale: null,
+      showTutorial: false,
       questionCount: 5,
       userScore: 0,
       quizQuestions: [],
@@ -281,7 +297,7 @@ export default {
           this.scale.type = randInt < 0.5 ? "minor" : "major";
           return;
         case "Hard":
-          this.scale.type = "harmonic minor";
+          this.scale.type = randInt < 0.5 ? "harmonic minor" : "melodic minor";
       }
     },
     showSettings() {
@@ -366,7 +382,7 @@ export default {
       playNote(note.key);
       // console.log("clickednotes " + JSON.stringify(this.clickedNotes, null, 2));
     },
-
+    // https://stackoverflow.com/questions/51732600/how-to-save-the-simple-data-in-the-firebase-using-vue-js
     addToCollection() {
       addDoc(collection(db, "IdentifyQuizzes"), {
         userID: firebase.auth().currentUser.uid,

@@ -36,7 +36,7 @@ export function toNameInterval(x, scaleTonic) {
   }
   return chromaticScale.intervals[index];
 }
-
+// https://stackoverflow.com/questions/68268236/how-to-check-if-a-character-is-present-in-a-string-array
 export function toName(x, notation, scaleNotes) {
   if (notation == "Intervals") {
     return toNameInterval(x);

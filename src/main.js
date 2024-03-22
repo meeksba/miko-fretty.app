@@ -180,7 +180,7 @@ const router = new VueRouter({
   mode: "history",
   routes,
 });
-
+// https://stackoverflow.com/questions/63741877/how-to-detect-the-users-firebase-authentication-login-status-in-a-vue-js-projec
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.authRequired)) {
     if (firebase.auth().currentUser) {

@@ -7,7 +7,7 @@
         style="margin-top: 20px"
       /> -->
     </div>
-    <h1 v-if="ShowBegin" class="has-text-centered">Build the Scale Given</h1>
+    <h1 v-if="!StartGame" class="has-text-centered">Build the Scale Given</h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
       <BuildFretboard
         :tuning="tuning"
@@ -26,7 +26,7 @@
         class="button"
         slot="trigger"
         icon-left="cog"
-        style="margin-left: 40px"
+        style="margin-left: 4px"
         >Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
@@ -146,6 +146,21 @@
           outlined
         />
       </div>
+      <b-button
+        style="margin-top: 10px"
+        type="is-info"
+        size="is-small"
+        rounded
+        @click="showTutorial = true"
+        >TUTORIAL</b-button
+      >
+      <b-modal v-model="showTutorial">
+        <img
+          src="./build.png"
+          trap-focus
+          style="max-width: 160%; max-height: 160%"
+        />
+      </b-modal>
     </section>
     <!-- <Chords
       v-if="this.ShowChords == 'true'"
@@ -206,6 +221,7 @@ export default {
       ShowSettings: false,
       StartGame: false,
       ShowBegin: true,
+      showTutorial: false,
       tonicCount: 0,
       questionCount: 0,
       correctCount: 0,
@@ -347,10 +363,10 @@ export default {
             randInt < 0.5 ? "minor pentatonic" : "major pentatonic";
           return;
         case "Medium":
-          this.scale.type = randInt < 0.5 ? "minor" : "major";
+          this.scale.type = randInt < 0.5 ? "natural minor" : "major";
           return;
         case "Hard":
-          this.scale.type = "harmonic minor";
+          this.scale.type = randInt < 0.5 ? "harmonic minor" : "melodic minor";
       }
     },
     //this function returns a random element of an array

@@ -138,6 +138,21 @@
                 </b-dropdown-item>
               </b-dropdown>
             </b-field>
+            <b-button
+              style="margin-top: 36px"
+              type="is-info"
+              size="is-small"
+              rounded
+              @click="showTutorial = true"
+              >TUTORIAL</b-button
+            >
+            <b-modal v-model="showTutorial">
+              <img
+                src="./explore.png"
+                trap-focus
+                style="max-width: 160%; max-height: 160%"
+              />
+            </b-modal>
           </b-field>
         </div>
       </div>
@@ -203,6 +218,7 @@ export default {
       ShowMusicSheet: "true",
       ShowChords: "true",
       notation: "sharp",
+      showTutorial: false,
       displayChords: false,
       displayNotes: false,
       clickedKeys: [],

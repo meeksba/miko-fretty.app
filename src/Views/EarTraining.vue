@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-if="ShowBegin" class="has-text-centered" style="margin-top: 0px">
+    <h1 v-if="!StartGame" class="has-text-centered" style="margin-top: 0px">
       Ear Training Games
     </h1>
     <h1
@@ -32,6 +32,21 @@
       class="has-text-centered"
       style="display: flex; flex-direction: column; align-items: center"
     >
+      <b-button
+        style="margin-top: -10px; margin-bottom: 15px"
+        type="is-info"
+        size="is-small"
+        rounded
+        @click="showTutorial = true"
+        >TUTORIAL</b-button
+      >
+      <b-modal v-model="showTutorial">
+        <img
+          src="./Ear.png"
+          trap-focus
+          style="max-width: 160%; max-height: 160%"
+        />
+      </b-modal>
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
@@ -293,6 +308,7 @@ export default {
       ShowBegin: true,
       ShowSettings: false,
       StartGame: false,
+      showTutorial: false,
       chordAns: null,
       intervalNotes: [],
       previousIntervals: [],
