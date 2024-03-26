@@ -170,9 +170,9 @@
 </template>
 
 <script>
-import Editor from "./components/Editor.vue";
-import LoginForm from "./components/LoginForm.vue";
-import RegisterForm from "./components/RegisterForm.vue";
+import Editor from "./src/components/Editor.vue";
+import LoginForm from "./src/components/LoginForm.vue";
+import RegisterForm from "./src/components/RegisterForm.vue";
 import firebase from "firebase/compat/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "firebase/compat/auth";
