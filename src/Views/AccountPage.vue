@@ -34,7 +34,7 @@
         >Ear Training History</b-button
       >
     </div>
-    <b-button @click="testMethod()">testaccountpage </b-button>
+    <!-- <b-button @click="testMethod()">testaccountpage </b-button> -->
     <!-- Identify Table -->
     <div v-if="showIdentity">
       <b-table :data="identityInfo" striped>

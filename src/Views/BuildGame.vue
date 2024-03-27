@@ -26,7 +26,7 @@
         class="button"
         slot="trigger"
         icon-left="cog"
-        style="margin-left: 4px"
+        style="margin-left: 15px"
         >Settings</b-button
       >
       <b-dropdown-item aria-role="menu-item" :focusable="false" paddingless>
@@ -58,6 +58,7 @@
         </form>
       </b-dropdown-item>
     </b-dropdown>
+
     <section
       class="has-text-centered"
       style="
@@ -67,6 +68,21 @@
         margin-top: 1rem;
       "
     >
+      <b-button
+        style="margin-bottom: 20px"
+        type="is-info"
+        size="is-small"
+        rounded
+        @click="showTutorial = true"
+        >TUTORIAL</b-button
+      >
+      <b-modal v-model="showTutorial">
+        <img
+          src="./build.png"
+          trap-focus
+          style="max-width: 160%; max-height: 160%"
+        />
+      </b-modal>
       <!-- Begin Button -->
       <b-button
         v-if="ShowBegin"
@@ -126,8 +142,15 @@
       <div v-if="StartGame" class="has-text-centered">
         <h1>
           Build
-          <b>{{ scale.tonic }} {{ scale.type || this.arpeggioType }} </b> on the
-          Fretboard Above
+          <b
+            >{{ scale.tonic }}
+            {{
+              scale.type == "minor"
+                ? "natural minor"
+                : scale.type || this.arpeggioType
+            }}
+          </b>
+          on the Fretboard Above
         </h1>
         <b-button
           v-if="this.gameMode == 'Scale'"
@@ -146,21 +169,6 @@
           outlined
         />
       </div>
-      <b-button
-        style="margin-top: 10px"
-        type="is-info"
-        size="is-small"
-        rounded
-        @click="showTutorial = true"
-        >TUTORIAL</b-button
-      >
-      <b-modal v-model="showTutorial">
-        <img
-          src="./build.png"
-          trap-focus
-          style="max-width: 160%; max-height: 160%"
-        />
-      </b-modal>
     </section>
     <!-- <Chords
       v-if="this.ShowChords == 'true'"
@@ -363,7 +371,7 @@ export default {
             randInt < 0.5 ? "minor pentatonic" : "major pentatonic";
           return;
         case "Medium":
-          this.scale.type = randInt < 0.5 ? "natural minor" : "major";
+          this.scale.type = randInt < 0.5 ? "minor" : "major";
           return;
         case "Hard":
           this.scale.type = randInt < 0.5 ? "harmonic minor" : "melodic minor";
