@@ -121,7 +121,7 @@
               :y="string.y"
               dominant-baseline="central"
               fill="black"
-              :font-weight="normal"
+              font-weight="bold"
               text-anchor="middle"
             >
               {{ note.name }}

@@ -17,7 +17,7 @@
       What Interval Has Played?
     </h1>
     <div class="card-image" style="text-align: center; overflow-x: auto">
-      <ListeningFretboard
+      <EarTrainingFretboard
         :tuning="tuning"
         :notes="notes"
         :notation="fretboardNotation"
@@ -235,12 +235,9 @@
 </template>
 
 <script>
-import ListeningFretboard from "../components/ListeningFretboard.vue";
+import EarTrainingFretboard from "../components/EarTrainingFretboard.vue";
 import Chords from "../components/Chords.vue";
 import Notation from "../components/Notation.vue";
-// import TuningSelection from "../components/TuningSelection.vue";
-// import NoteSelect from "./NoteSelect.vue";
-// import { Note, Scale, Midi, ScaleType, Mode, Chord, Interval } from "tonal";
 import { collection, addDoc } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 import { db } from "../main.js";
@@ -258,7 +255,7 @@ export default {
   name: "EarTraining",
 
   components: {
-    ListeningFretboard,
+    EarTrainingFretboard,
     // TuningSelection,
     Notation,
     Chords,
@@ -398,7 +395,6 @@ export default {
       }
       this.calculateTonic(); //Set Initial Tonic
       this.calculateChordAns(); //Calculate Initial Chord Answer
-      this.scale.type = "major";
     },
     calculateRandomElement(inputArray) {
       //this method returns a random element of an array
@@ -432,18 +428,23 @@ export default {
       switch (randInt) {
         case 0:
           this.chordAns = "maj";
+          this.scale.type = "major";
           break;
         case 1:
           this.chordAns = "min";
+          this.scale.type = "minor";
           break;
         case 2:
           this.chordAns = "maj7";
+          this.scale.type = "major";
           break;
         case 3:
           this.chordAns = "min7";
+          this.scale.type = "minor";
           break;
         case 4:
           this.chordAns = "7";
+          this.scale.type = "major";
           break;
       }
     },

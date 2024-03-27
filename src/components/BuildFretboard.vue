@@ -121,7 +121,7 @@
               :y="string.y"
               dominant-baseline="central"
               :fill="root == note.num ? 'white' : 'black'"
-              :font-weight="root == note.num ? 'bold' : 'bold'"
+              font-weight="bold"
               text-anchor="middle"
             >
               {{ note.name }}

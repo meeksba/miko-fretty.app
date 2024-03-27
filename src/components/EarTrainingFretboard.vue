@@ -83,6 +83,7 @@
                 :y="string.y"
                 dominant-baseline="central"
                 fill="grey"
+                font-weight="bold"
                 text-anchor="middle"
               >
                 {{ note.name }}
@@ -121,7 +122,7 @@
               :y="string.y"
               dominant-baseline="central"
               :fill="root == note.num ? 'white' : 'black'"
-              :font-weight="root == note.num ? 'bold' : 'normal'"
+              font-weight="bold"
               text-anchor="middle"
             >
               {{ note.name }}
@@ -146,7 +147,7 @@
 import * as utils from "../utils";
 
 export default {
-  name: "ListeningFretboard",
+  name: "EarTrainingFretboard",
 
   props: {
     tuning: {

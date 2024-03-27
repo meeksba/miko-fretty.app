@@ -1,8 +1,11 @@
 // SCALES
 // Format: ["intervals", "name", "alias1", "alias2", ...]
 const SCALES = [
-  // 5-note scales
-  ["1P 2M 3M 5P 6M", "major pentatonic", "pentatonic"],
+  //root note only
+  ["1P", "tonic"][
+    // 5-note scales
+    ("1P 2M 3M 5P 6M", "major pentatonic", "pentatonic")
+  ],
   ["1P 3M 4P 5P 7M", "ionian pentatonic"],
   ["1P 3M 4P 5P 7m", "mixolydian pentatonic", "indian"],
   ["1P 2M 4P 5P 6M", "ritusen"],
